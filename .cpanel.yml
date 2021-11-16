@@ -1,0 +1,4 @@
+ deployment:
+  tasks:
+    - export DEPLOYPATH=/home/badminto/worktest.badmintonclub.ro
+    - /bin/cp -R * $DEPLOYPATH
