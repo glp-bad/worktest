@@ -6,8 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "buildAndCopyFile": "vue-cli-service build && copyfiles -u 1 ./dist/js/*.js ../public && copyfiles -u 1 ./dist/css/*.css ../public && copyfiles -u 1 ./dist/img/*.* ../public",
-    "copyCompileFile": "copyfiles -u 1 ./dist/js/*.js ../public && copyfiles -u 1 ./dist/css/*.css ../public && copyfiles -u 1 ./dist/img/*.* ../public"
+    "buildAndCopyFile": "vue-cli-service build && copyfiles -u 1 ./dist/js/*.js ../public && copyfiles -u 1 ./dist/css/*.css ../public && copyfiles -u 0 ./src/assets/*.* ../public/img",
+    "copyCompileFile": "copyfiles -u 1 ./dist/js/*.js ../public && copyfiles -u 1 ./dist/css/*.css ../public && copyfiles -u 2 ./src/assets/*.* ../public/img"
 
   },
   "dependencies": {
