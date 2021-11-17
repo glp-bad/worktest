@@ -1,6 +1,6 @@
 module.exports = {
   // outputDir: 'glp',
   filenameHashing: false,
-  // indexPath: 'welcome.blade.php',
+  indexPath: 'xxx.welcome.blade.php',
   configureWebpack: {}
 }
