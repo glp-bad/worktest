@@ -5,7 +5,7 @@
             <li><router-link to="/testTab">Tab test</router-link></li>
             <li><router-link to="/badmintonCourt">Badminton court</router-link></li>
             <li><router-link to="/test">Test grid</router-link></li>
-            <li><router-link to="/test">Test controale</router-link></li>
+            <li><router-link to="/testControale">Test controale</router-link></li>
             <li class="li-right" v-on:click="logout"> <a href="javascript:void(null);">Logout</a> </li>
             <li class="li-right"><a href="#about">About</a></li>
         </ul>

@@ -1,29 +1,32 @@
 
 <template>
-        <button @click="onClick" class="ff-button">
+        <button class="ff-button">
             <slot>Button</slot>
         </button>
 </template>
 
 <script lang="ts">
-
     import { Options, Vue } from 'vue-class-component';
 
     @Options({
         props: {
-            onClick: {
-                type: Function
-                // required: true
-            },
             widthButton: {
                 type: Number,
                 default: 0
+            },
+            heightButton: {
+                type: Number,
+                default: 25
             }
         },
         mounted(){
             if(this.widthButton > 0) {
                 this.$el.style.width = this.widthButton + 'px';
             }
+
+
+             this.$el.style.height = this.heightButton + 'px';
+
         }
     })
 

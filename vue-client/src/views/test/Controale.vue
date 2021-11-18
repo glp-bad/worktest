@@ -1,5 +1,8 @@
 <template>
-    <my-button :onClick="onClickCancel">Noul buton cu SLOT</my-button>
+    <my-button @click="myMethodTest"
+               :widthButton=300
+    >Test de click pe butonul meu</my-button>
+
 </template>
 
 <script lang="ts">
@@ -8,10 +11,15 @@
 
     @Options({
         components: {
-            'my-button': Button
+            'my-button' : Button
         },
-        onclickCancel(): void {
-            console.log('click cancel');
+        methods: {
+            myMethod: function () {
+                console.log("clikc pe CLick me");
+            },
+            myMethodTest: function () {
+                console.log('test de log pe butonul meu');
+            }
         }
     })
 
