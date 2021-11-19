@@ -19,6 +19,7 @@
                 default: 25
             }
         },
+        components: {},
         mounted(){
             if(this.widthButton > 0) {
                 this.$el.style.width = this.widthButton + 'px';
@@ -28,6 +29,7 @@
              this.$el.style.height = this.heightButton + 'px';
 
         }
+
     })
 
     export default class Button extends Vue {}
