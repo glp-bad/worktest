@@ -36,11 +36,16 @@
 <script>
     import Button from '@/components/base/Button.vue';
     import Icon from '@/components/base/Icon.vue';
+    import AlertWindow from "@/components/base/AlertWindow";
 
     export default {
         name: "controale",
         components: {
-            'my-icon': Icon, 'my-button': Button
+            'my-icon': Icon,
+            'my-button': Button,
+            'my-alert-window' : AlertWindow,
+        },
+        mounted() {
         },
         methods: {
             myMethodTest: function () {
