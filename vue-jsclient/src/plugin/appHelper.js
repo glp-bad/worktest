@@ -9,15 +9,6 @@ import cssList      from "../cssList";
 const appHelper = {
 	install: (app, options) => {
 
-        app.config.globalProperties.$startEndCurrentMonth = function () {
-            let formatString = 'dd/MM/yyyy';
-
-            let curDate = new Date();
-            let dataIn  = startOfMonth(curDate);
-            let dataSf  = endOfMonth(curDate);
-            return {monthIn: format(dataIn, formatString)  , monthSf: format(dataSf, formatString)};
-        }
-
         app.config.globalProperties.$url = {
             urlApp: "https://worktest.badmintonclub.ro",
             // environment: 'local',
@@ -110,6 +101,16 @@ const appHelper = {
                 }
 
             }
+
+
+        app.config.globalProperties.$startEndCurrentMonth = function () {
+            let formatString = 'dd/MM/yyyy';
+
+            let curDate = new Date();
+            let dataIn  = startOfMonth(curDate);
+            let dataSf  = endOfMonth(curDate);
+            return {monthIn: format(dataIn, formatString)  , monthSf: format(dataSf, formatString)};
+        }
 
         app.config.globalProperties.$check = {
             isUndef (v) {

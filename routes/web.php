@@ -20,7 +20,7 @@ Route::get('/', function () {    return view('welcome');});
 
 // Route::get('/*','App\TestHomeAccesController@ha');
 
-// Auth::routes();
+Auth::routes();
 // Route::post('app/searchOnTable','App\Http\Controller\App\TestSearchController@getDataSearch');
 // Route::post('app/searchOnTable','App\TestSearchController@getDataSearch');
 Route::post('app/searchOnTable', [TestSearchController::class, 'getDataSearch']);
