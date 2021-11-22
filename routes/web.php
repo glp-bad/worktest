@@ -3,7 +3,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\App\TestSearchController;
-use Illuminate\Support\Facades\Auth;
+// use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +20,7 @@ Route::get('/', function () {    return view('welcome');});
 
 // Route::get('/*','App\TestHomeAccesController@ha');
 
-Auth::routes();
+// Auth::routes();
 // Route::post('app/searchOnTable','App\Http\Controller\App\TestSearchController@getDataSearch');
 // Route::post('app/searchOnTable','App\TestSearchController@getDataSearch');
 Route::post('app/searchOnTable', [TestSearchController::class, 'getDataSearch']);
