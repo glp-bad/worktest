@@ -22,6 +22,10 @@
     <br>
     <br>
 
+    <my-drop-down-search :pDataMethod="'local'"
+                    :pUrlData="'searchTest'"
+    ></my-drop-down-search>
+
     <!-- "/img/angellist-brands.svg" -->
 
     <!-- <icon :urlSvg="'../../../src/assets/icons/apps_blue.svg'" /> -->
@@ -81,6 +85,7 @@
     import Icon from '@/components/base/Icon.vue';
     import AlertWindow from "@/components/base/AlertWindow.vue";
     import TestForm from "@/components/app/test/FormTest.vue";
+    import DropDownSearch from "@/components/base/DropDownSearch.vue";
 
     export default {
         name: "controale",
@@ -88,7 +93,8 @@
             'my-icon': Icon,
             'my-button': Button,
             'my-alert-window' : AlertWindow,
-	        'my-test-form': TestForm
+	        'my-test-form': TestForm,
+            'my-drop-down-search': DropDownSearch
         },
         mounted() {
         },
