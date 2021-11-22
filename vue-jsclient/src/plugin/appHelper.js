@@ -19,7 +19,7 @@ const appHelper = {
         }
 
         app.config.globalProperties.$url = {
-            urlApp: "https://worktest.badmintonclub.ro.mydev/",
+            urlApp: "https://www.worktest.badmintonclub.ro.mydev/",
             urlList: urlList,
             getUrl: function (name) {
                 let objFind = this.urlList.find( data => data.name === name);
