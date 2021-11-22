@@ -26,7 +26,7 @@ class TestSearchController extends Controller {
 
 	private function getRezult(){
 		$rezulset = array();
-        for ($x = 0; $x <= 400; $x++) {
+        for ($x = 0; $x <= 4000; $x++) {
             $rezulset[]=['id'=> $x, 'caption' => 'ma duc la piata de ' . $x];
         }
 
