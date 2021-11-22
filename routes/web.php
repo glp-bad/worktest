@@ -24,3 +24,4 @@ Auth::routes();
 // Route::post('app/searchOnTable','App\Http\Controller\App\TestSearchController@getDataSearch');
 // Route::post('app/searchOnTable','App\TestSearchController@getDataSearch');
 Route::post('app/searchOnTable', [TestSearchController::class, 'getDataSearch']);
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
