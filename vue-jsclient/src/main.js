@@ -26,8 +26,10 @@ let app = createApp(App);
 
 app.component("font-awesome-icon", FontAwesomeIcon);
 
-// 2. Assign the global variable before mounting => app.config.globalProperties.$globalVar = 'globalVar';
+// app.config.globalProperties.$vueUrlHosting = process.env.VUE_APP_URL_HOST; // global vbariable
+
 app.use(store).use(router);
 app.use(appHelper);
 app.use(VueAxios, axios);
 app.mount('#app');
+

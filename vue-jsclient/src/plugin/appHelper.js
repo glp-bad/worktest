@@ -8,11 +8,10 @@ import cssList      from "../cssList";
 
 const appHelper = {
 	install: (app, options) => {
-
         app.config.globalProperties.$url = {
-            urlApp: "https://worktest.badmintonclub.ro",
-            // environment: 'local',
-            environment: 'hosting',
+            urlAppHost: process.env.VUE_APP_URL_HOST,
+            urlAppLocal: process.env.VUE_APP_URL_LOCAL,
+            environment: process.env.VUE_APP_ENV,
             urlList: urlList,
             getUrl: function (name) {
                 let objFind = this.urlList.find( data => data.name === name);
@@ -21,18 +20,14 @@ const appHelper = {
                     return "url for [" +name+ "] not found"
                 }
 
-                let url = this.urlApp;
-                if(this.environment == 'local'){
-                    url = this.urlApp + '.mydev';
+                return this.getBaseUrl() + '/' +objFind.url;
+            },
+            getBaseUrl: function () {
+                let url = this.urlAppLocal;
+                if(this.environment == 'host'){
+                    url = this.urlAppHost;
                 }
-
-                return url + '/' +objFind.url;
-            },
-            getRoot: function(){
-                return this.urlApp;
-            },
-            getPathPdf: function(){
-                return this.urlApp + "public/pdf/" ;
+                return url;
             }
         },
             app.config.globalProperties.$css = {
