@@ -4,8 +4,26 @@ import router from './router'
 import store from './store'
 import appHelper from "@/plugin/appHelper";
 
+
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import { fab } from '@fortawesome/free-brands-svg-icons';
+import { far } from '@fortawesome/free-regular-svg-icons';
+import { dom } from "@fortawesome/fontawesome-svg-core";
+// import { faPhone } from "@fortawesome/free-solid-svg-icons";
+
+library.add(fas);
+library.add(fab);
+library.add(far);
+// library.add(faPhone);
+dom.watch();
+
 let app = createApp(App);
 
-// 2. Assign the global variable before mounting    // app.config.globalProperties.$globalVar = 'globalVar';
+app.component("font-awesome-icon", FontAwesomeIcon);
 
-app.use(store).use(router).use(appHelper).mount('#app');
+// 2. Assign the global variable before mounting => app.config.globalProperties.$globalVar = 'globalVar';
+app.use(store).use(router);
+app.use(appHelper);
+app.mount('#app');
