@@ -23,7 +23,7 @@
     <br>
 
     <my-drop-down-search :pDataMethod="'local'"
-                    :pUrlData="'searchTest'"
+                    :pUrlData="'searchTableTest'"
     ></my-drop-down-search>
 
     <!-- "/img/angellist-brands.svg" -->
