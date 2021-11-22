@@ -19,7 +19,9 @@ const appHelper = {
         }
 
         app.config.globalProperties.$url = {
-            urlApp: "https://worktest.badmintonclub.ro/",
+            urlApp: "https://worktest.badmintonclub.ro",
+            // environment: 'local',
+            environment: 'hosting',
             urlList: urlList,
             getUrl: function (name) {
                 let objFind = this.urlList.find( data => data.name === name);
@@ -28,7 +30,12 @@ const appHelper = {
                     return "url for [" +name+ "] not found"
                 }
 
-                return this.urlApp + objFind.url;
+                let url = this.urlApp;
+                if(this.environment == 'local'){
+                    url = this.urlApp + '.mydev';
+                }
+
+                return url + '/' +objFind.url;
             },
             getRoot: function(){
                 return this.urlApp;
