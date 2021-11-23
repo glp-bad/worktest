@@ -1,5 +1,5 @@
 export default [
-    {name: "login",             url: "public/login"},
+    {name: "login",             url: "public/app/login"},
 	{name: "logout",            url: "public/app/logout"},
 	{name: "test",              url: "public/app/testResponse"},
 	{name: "invoicesList",      url: "public/app/invoicesList"},

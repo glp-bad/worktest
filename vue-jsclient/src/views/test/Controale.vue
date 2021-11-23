@@ -123,6 +123,7 @@
 		        this.$refs.refCheck.show();
 	        },
 	        onClickRedSkull: function () {
+		        console.log('call de doua ori RedSkull !!!!');
 		        this.$refs.refRedSkull.setMessage("Radiatii. <br> Moarte !!!");
 		        this.$refs.refRedSkull.show();
 	        },

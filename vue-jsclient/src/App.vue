@@ -1,16 +1,24 @@
 <template>
+    <my-login @loginWindows = "emitLogin"></my-login>
     <menu-main/>
     <router-view/>
 </template>
 
 <script>
     import MenuMain from './components/app/MenuMain';
+    import Login from '@/components/app/Login.vue';
+
 
     export default {
         components: {
-            'menu-main': MenuMain
+            'menu-main': MenuMain,
+            'my-login': Login
         },
-        methods: {}
+        methods: {
+        	emitLogin: function () {
+                console.log('am incercat sa ma loghez');
+	        }
+        }
     }
 
 </script>
