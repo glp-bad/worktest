@@ -8,7 +8,7 @@ module.exports = {
   filenameHashing: false,
   indexPath: 'xxx.welcome.blade.php',
   devServer: {
-        // host: 'https://worktest.badmintonclub.ro.mydev'
+     host: 'https://worktest.badmintonclub.ro.mydev'
   },
   configureWebpack: {}
 }

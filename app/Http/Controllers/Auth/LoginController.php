@@ -45,6 +45,23 @@ class LoginController extends Controller
 
     public function login(Request $request){
 
+        // $email = Auth::user()->email;
+
+        /*
+        if ($request->hasSession()) {
+            $request->session()->put('auth.password_confirmed_at', time());
+        }
+        */
+        dd(Auth::user());
+        dd($request->hasSession());
+        dd($request->user());
+        //$areSesiune = $request->hasSession();
+        //dd($areSesiune);
+        //dd(Auth::user());
+
+        //$idUser = DB::table('t_s_useri')->where('cmail', $email)->value('id_user');
+        // Session::put(MyAppConstants::ID_USER, $idUser);
+
 	    $message = new MessageResponse(true,["log on"]);
 	    return json_encode($message);
     }
