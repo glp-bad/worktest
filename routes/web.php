@@ -4,7 +4,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\App\TestSearchController;
 use App\Http\Controllers\Auth\LoginController;
-// use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------

@@ -52,6 +52,29 @@ class LoginController extends Controller
             $request->session()->put('auth.password_confirmed_at', time());
         }
         */
+
+        dd(auth());
+
+	    $request->validate([
+		    'email' => 'required',
+		    'password' => 'required'
+	    ]);
+
+	    $credentials = $request->except(['_token']);
+
+	    if (auth()->attempt($credentials)) {
+		    $message = new MessageResponse(true,["log on"]);
+
+	    }else{
+		    $message = new MessageResponse(false,["autentificare esuata"]);
+
+	    }
+
+	    dd($message);
+
+	    dd($credentials);
+
+        dd(auth());
         dd(Auth::user());
         dd($request->hasSession());
         dd($request->user());
