@@ -20,7 +20,10 @@ use Illuminate\Support\Facades\Auth;
 Route::get('/', function () {    return view('welcome');});
 
 
-Route::post('app/login',[LoginController::class, 'login']);
+Route::post('app/login', [LoginController::class, 'login']);
+// Route::post('app/logout',            'Auth\LoginController@logout'                       )->middleware('auth');
+Route::post('app/logout', [LoginController::class, 'logout'] )->middleware('auth');
+
 // Route::get('/*','App\TestHomeAccesController@ha');
 // Auth::routes();
 // Route::post('app/searchOnTable','App\Http\Controller\App\TestSearchController@getDataSearch');

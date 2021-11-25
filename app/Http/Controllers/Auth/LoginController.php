@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use \Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -53,7 +54,7 @@ class LoginController extends Controller
         }
         */
 
-        dd(auth());
+        //dd(auth());
 
 	    $request->validate([
 		    'email' => 'required',
@@ -70,22 +71,18 @@ class LoginController extends Controller
 
 	    }
 
-	    dd($message);
-
-	    dd($credentials);
-
-        dd(auth());
-        dd(Auth::user());
-        dd($request->hasSession());
-        dd($request->user());
+	    // dd(Hash::make('LOIJNSU&^%$A7a67s'));
+	    //dd($credentials);
+        //dd(auth());
+        //dd(Auth::user());
+        //dd($request->hasSession());
+        //dd($request->user());
         //$areSesiune = $request->hasSession();
         //dd($areSesiune);
         //dd(Auth::user());
-
         //$idUser = DB::table('t_s_useri')->where('cmail', $email)->value('id_user');
         // Session::put(MyAppConstants::ID_USER, $idUser);
-
-	    $message = new MessageResponse(true,["log on"]);
+	    // $message = new MessageResponse(true,["log on"]);
 	    return json_encode($message);
     }
 

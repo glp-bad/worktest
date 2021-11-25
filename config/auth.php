@@ -14,8 +14,7 @@ return [
     */
 
     'defaults' => [
-        //'guard' => 'web',
-	    'guard' => 'myCustom',
+        'guard' => 'web',
         'passwords' => 'users',
     ],
 
@@ -40,11 +39,7 @@ return [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
-        ],
-	    'myCustom' => [
-	    	'driver' => 'session',
-		    'provider' => 'myHybrid'
-	    ]
+        ]
     ],
 
     /*
@@ -69,17 +64,7 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
-        ],
-
-	    'myUsers' => [
-		    'model' => App\Models\User::class,
-	    ],
-
-	    'myHybrid' => [
-		    'driver' => 'eloquent',
-		    'model' => App\UserHybrid::class,
-	    ]
-
+        ]
 
         // 'users' => [
         //     'driver' => 'database',

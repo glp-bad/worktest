@@ -1,13 +1,12 @@
 <template>
-    <my-login @loginWindows = "emitLogin"></my-login>
-    <menu-main/>
+    <my-login v-if="!this.login" ref="refLogin" @loginWindows = "emitLogin"></my-login>
+    <menu-main v-if="this.login" ref="refMenuLogout" @logoutMenuMain="emitMenuLogout" :key=this.engine.keyRender />
     <router-view/>
 </template>
 
 <script>
     import MenuMain from './components/app/MenuMain';
     import Login from '@/components/app/Login.vue';
-
 
     export default {
         components: {
@@ -16,9 +15,23 @@
         },
         methods: {
         	emitLogin: function () {
-                console.log('am incercat sa ma loghez');
+		        this.engine.keyRender ++;
+        		this.login = this.$refs.refLogin.isLogOn();
+		        this.$router.push('/');
+	        },
+	        emitMenuLogout: function () {
+        		if(this.$refs.refMenuLogout.isLogout()){
+			        this.engine.keyRender ++;
+                    this.login = false;
+                }
 	        }
-        }
+        },
+	    data() {
+		    return {
+			    login: false,
+			    engine: {keyRender: 1}
+		    }
+	    }
     }
 
 </script>

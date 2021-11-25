@@ -7,7 +7,7 @@
             </div>
 
             <div>
-                <form @submit.prevent="login">
+                <form @submit.prevent="logOn">
                     <div class="form-group row">
                         <label for="email" class="col-md-4 col-form-label text-md-right">E-Mail Address</label>
 
@@ -38,6 +38,7 @@
                     <div class="form-group row mb-0">
                         <div class="col-md-8 offset-md-4">
                             <my-button :type="submit">Login</my-button>
+                            <span v-if="this.requestLoginFail" class="red-label"> {{this.messageFail}} </span>
                         </div>
                     </div>
                 </form>
@@ -66,31 +67,43 @@
 
         },
         mounted() {
-	        this.post= {email:  "adresa@email.ro", password: "12345" };
+	        this.post= {email:  "gavrilapaul@hotmail.com", password: null };
 	        this.$vanilla.dragDiv(this.$refs.windowRef, this.$refs.headerRef);
         },
         methods: {
-        	login: function (){
-		        console.log('chem de doua ori procedura LOGIN -->');
-
+	        logOn: function (){
 		        // this.$emit(this.EMIT);
 
 		        this.axios.post(this.URI, this.post).then((response) => {
 				        if(response.data.succes){
-					        this.isLogin = true;
-					        this.$emit(this.EMIT);
+					        this.login = true;
+					        this.requestLoginFail = false;
 				        }else{
-					        this.isLogin = false;
-					        this.$emit(this.EMIT);
+					        this.privateSetLoginFail('Incorrect credentials. Try again.');
 				        }
+
+			            this.$emit(this.EMIT);
 			        }
-		        );
+		        ).catch( (error) => {
+		        	this.privateSetLoginFail('Refresh page and try again.');
+			        this.$emit(this.EMIT);
+                })
+            },
+            isLogOn: function () {
+                return this.login;
+            },
+            privateSetLoginFail: function (msg) {
+	            this.login = false;
+	            this.requestLoginFail = true;
+	            this.messageFail = msg;
             }
         },
         data() {
 	        return {
 		        post:{},
-		        isLogin: false
+		        login: false,
+                requestLoginFail: false,
+                messageFail: 'Login fail.'
 	        }
         }
     }

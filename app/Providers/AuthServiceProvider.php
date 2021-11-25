@@ -25,12 +25,5 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-
-        Auth::provider('myHybrid', function ($app, array $config) {
-            // Return an instance of Illuminate\Contracts\Auth\UserProvider...
-
-            return new MongoUserProvider($app->make('mongo.connection'));
-        });
-        //
     }
 }
