@@ -3,7 +3,7 @@
         <input :ref=REF_SEARCH type="text" v-on:keyup="keySearch" :placeholder=this.pPlaceHolder />
         <!-- <div class="icon" :ref=REF_ICON @click="iconClick"><i class="fas fa-search"></i></div> -->
         <div class="icon" :ref=REF_ICON @click="iconClick">
-            <font-awesome-icon :icon="['fas', 'search']" size="1x"/>
+            <font-awesome-icon :icon="['fas', 'search']" size="2x"/>
         </div>
 
 

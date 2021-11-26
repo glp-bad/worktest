@@ -15,7 +15,9 @@
             </table>
         </div>
         <div class="infoList" :ref=REF_BOTTOM_INFO>
-            <span>info nr records</span>
+            <div>
+                <span>info nr records</span>
+            </div>
         </div>
     </div>
 </template>

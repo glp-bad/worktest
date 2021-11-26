@@ -63,3 +63,20 @@
 	display: none;
 	transition: opacity 0.3s ease;
 }
+
+
+// tabela pentru aranjarea controalelor in formular
+.ff-form-table{
+	// border: 1px solid orangered;
+	border-collapse: collapse;
+
+	.label{
+		border: 1px solid blue;
+		text-align: right;
+
+	}
+	.control{
+		border: 1px solid blue;
+	}
+
+}

@@ -3,6 +3,7 @@
 // Variables
 @import 'variables';
 
+@import "textField";
 @import 'navbar';
 @import 'button';
 @import "alertWindow";
@@ -10,6 +11,7 @@
 @import "table";
 @import "form";
 @import "windowsLogin";
+
 
 body, html {
 	font-family: Nunito, Tahoma, sans-serif;

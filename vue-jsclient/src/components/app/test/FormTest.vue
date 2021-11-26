@@ -30,30 +30,50 @@
             </div>
 
             <div :class=formClass.content ref="contentRef">
+
+
+
+
                 <form>
+                    <table class="ff-form-table">
+                        <tr>
+                            <td class="label">
+                                <label :for=NUME.id>{{NUME.caption}}</label></td>
+                            <td class="control">
+                                <test-field
+                                        :id=NUME.id
+                                        :ref=NUME.ref
+                                        maska=""
+                                        :validate=NUME.validate
+                                        :minlength = NUME.minLength
+                                        :maxlength = NUME.maxLength
+                                        :size = NUME.sizeField
+                                ></test-field>
+
+                            </td>
+
+
+                            <td class="label">
+                                <label :for=PRENUME.id>{{PRENUME.caption}}</label></td>
+                            <td class="control">
+                                <test-field
+                                        :id=PRENUME.id
+                                        :ref=PRENUME.ref
+                                        maska=""
+                                        :validate=PRENUME.validate
+                                        :minlength = PRENUME.minLength
+                                        :maxlength = PRENUME.maxLength
+                                        :size = PRENUME.sizeField
+                                ></test-field>
+                            </td>
+
+                        </tr>
+                    </table>
+
 
                     <div>
-                        <label :for=NUME.id>{{NUME.caption}}</label>
-                        <test-field
-                                :id=NUME.id
-                                :ref=NUME.ref
-                                maska=""
-                                :validate=NUME.validate
-                                :minlength = NUME.minLength
-                                :maxlength = NUME.maxLength
-                                :size = NUME.sizeField
-                        ></test-field>
 
-                        <label :for=PRENUME.id>{{PRENUME.caption}}</label>
-                        <test-field
-                                :id=PRENUME.id
-                                :ref=PRENUME.ref
-                                maska=""
-                                :validate=PRENUME.validate
-                                :minlength = PRENUME.minLength
-                                :maxlength = PRENUME.maxLength
-                                :size = PRENUME.sizeField
-                        ></test-field>
+
 
                         <label :for=AGE.id>{{AGE.caption}}</label>
                         <test-field

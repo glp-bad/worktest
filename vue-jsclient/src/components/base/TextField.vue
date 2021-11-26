@@ -1,12 +1,15 @@
 
 <template>
-    <input :id=this.id
-           :name=this.id
-           :minlength = this.minlength
-           :maxlength = this.maxlength
-           v-model="dataModel"
-           ref="inputRef"
-           :size=this.size>
+    <div class="ff-input-text">
+        <input :id = this.id
+               :name = this.id
+               :minlength = this.minlength
+               :maxlength = this.maxlength
+               v-model = "dataModel"
+               ref = "inputRef"
+               :size = this.size
+               :placeholder=this.pPlaceHolder>
+    </div>
 </template>
 
 <script>
@@ -21,7 +24,13 @@
             validate: Function,
             minlength: Number,
 	        maxlength: Number,
-	        size: Number
+	        size: Number,
+	        pPlaceHolder:  {
+			        type: String,
+			        default: 'input data ...',
+			        required: false
+		        }
+
         },
 		directives: { maska },
 		mounted() {
