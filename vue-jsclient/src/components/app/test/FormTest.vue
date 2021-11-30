@@ -21,7 +21,6 @@
                          :cTypeWindows=6
         ></validate-window>
 
-
         <div :class=formClass.container :ref=CONTAINER_REF :id=cfgForm.id >
             <div :class=formClass.header ref="headerRef" >
                 <span class="caption" ref="captionRef"></span>
@@ -30,14 +29,10 @@
             </div>
 
             <div :class=formClass.content ref="contentRef">
-
-
-
-
                 <form>
                     <table class="ff-form-table">
                         <tr>
-                            <td class="label">
+                            <td class="label bold">
                                 <label :for=NUME.id>{{NUME.caption}}</label></td>
                             <td class="control">
                                 <test-field
@@ -52,8 +47,7 @@
 
                             </td>
 
-
-                            <td class="label">
+                            <td class="label bold">
                                 <label :for=PRENUME.id>{{PRENUME.caption}}</label></td>
                             <td class="control">
                                 <test-field
@@ -68,50 +62,55 @@
                             </td>
 
                         </tr>
+                        <tr>
+                            <td class="label bold">
+                                <label :for=AGE.id>{{AGE.caption}}</label></td>
+                            <td class="control">
+                                <test-field
+                                    :id=AGE.id
+                                    :ref=AGE.ref
+                                    maska=""
+                                    :validate   = AGE.validate
+                                    :minlength  = AGE.minLength
+                                    :maxlength  = AGE.maxLength
+                                    :size       = AGE.sizeField
+                                ></test-field>
+                            </td>
+                            <td class="label bold">
+                                <label :for=CONF_ACORD.id>{{CONF_ACORD.caption}}</label></td>
+                            <td class="control">
+                                <check-box
+                                    :id=CONF_ACORD.id
+                                    :ref=CONF_ACORD.ref
+                                    :validate   = CONF_ACORD.validate
+                                    :defaultValue = CONF_ACORD.defaultValue
+                                    :size       = CONF_ACORD.sizeField
+                                    :disabled = CONF_ACORD.disabled
+                                ></check-box>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td class="label bold">
+                                <label :for=SELECT_OPTION.id>{{SELECT_OPTION.caption}}</label></td>
+
+                            <td class="control">
+                                <lista-numere
+                                    :pId    =SELECT_OPTION.id
+                                    :ref    =SELECT_OPTION.ref
+                                    :pName  =SELECT_OPTION.ref
+                                    :pCaptionText   ="'... alege un numar'"
+                                    :pWidth         =SELECT_OPTION.width
+                                    :validate   =SELECT_OPTION.validate
+                                ></lista-numere>
+                            </td>
+                        </tr>
+
                     </table>
-
-
-                    <div>
-
-
-
-                        <label :for=AGE.id>{{AGE.caption}}</label>
-                        <test-field
-                                :id=AGE.id
-                                :ref=AGE.ref
-                                maska=""
-                                :validate   = AGE.validate
-                                :minlength  = AGE.minLength
-                                :maxlength  = AGE.maxLength
-                                :size       = AGE.sizeField
-                        ></test-field>
-
-
-                        <label :for=CONF_ACORD.id>{{CONF_ACORD.caption}}</label>
-                        <check-box
-                                :id=CONF_ACORD.id
-                                :ref=CONF_ACORD.ref
-                                :validate   = CONF_ACORD.validate
-                                :defaultValue = CONF_ACORD.defaultValue
-                                :size       = CONF_ACORD.sizeField
-                                :disabled = CONF_ACORD.disabled
-                        ></check-box>
-
-                        <label :for=SELECT_OPTION.id>{{SELECT_OPTION.caption}}</label>
-                        <lista-numere
-                                :pId    =SELECT_OPTION.id
-                                :ref    =SELECT_OPTION.ref
-                                :pName  =SELECT_OPTION.ref
-                                :pCaptionText   ="'... alege un numar'"
-                                :pWidth         =SELECT_OPTION.width
-                                :validate   =SELECT_OPTION.validate
-                        ></lista-numere>
-
-                    </div>
                 </form>
             </div>
-
             <div :class=formClass.button >
+                <br>
                 <button-send :onClick="sendData">Send data</button-send>
             </div>
             <div :class=formClass.bottomLine ></div>
@@ -224,7 +223,7 @@
 			configForm: function () {
 				this.cfgForm.id = '777TEST'; // this.$uuid.v1();
     			this.cfgForm.closeIcon = ['fas', 'times'];
-				this.$refs.containerRef.style.width = '900px';
+				// this.$refs.containerRef.style.width = '900px';
 				//this.$refs.containerRef.style.height = '120px';
 				// this.$refs.contentRef.style.width = '300px';
 				//this.$refs.contentRef.style.height = '300px';
