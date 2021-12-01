@@ -1,14 +1,20 @@
 .ff-grid {
     background: $ff-background-color-wokbench;
-    width: auto;
+    //width: 100%;
     display: inline-block;
+
+    overflow-y: auto;
+    overflow-x: auto;
+    //height: 200px;
 
     .ff-table{
         border-collapse: collapse;
-        border: 1px solid darken($ff-base,20%);
 
         .ff-thead{
             background: $ff-base;
+            position: sticky;
+            top: 0;
+
             th {
                 border: 1px solid darken($ff-base,20%);
                 font-size: map-get($ff-grid,"header-font-size");
@@ -18,7 +24,6 @@
                 // &:first-child {border-left: none;}
                 padding: 5px;
                 text-align: left;
-
                 div{
                     white-space: nowrap;
                     overflow: hidden;
@@ -44,6 +49,10 @@
 
                     div{
                         padding: 3px;
+
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
                     }
                 }
 
