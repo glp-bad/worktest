@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Controale from '../views/test/Controale.vue'
+import GridTest from '../views/test/GridTest'
 
 const routes = [
   {
@@ -16,7 +17,8 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
-   {     name: 'TestControale',   path: '/testControale',  component: Controale   }
+   {     name: 'TestControale',   path: '/testControale',  component: Controale   },
+   {     name: 'TestGrid',        path: '/testGrid',  component: GridTest   }
 ]
 
 const router = createRouter({

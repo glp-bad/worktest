@@ -93,9 +93,23 @@ const appHelper = {
                         document.onmouseup = null;
                         document.onmousemove = null;
                     }
+                },
+                getAtributeValueFromArrayObject: function (objArray, propNameId, propId, propNameReturn){
+                    let returnVal = null;
+                    for (let i = 0; i < objArray.length; i++) {
+                        if(objArray[i][propNameId] == propId){
+                            returnVal = objArray[i][propNameReturn];
+                            break;
+                        }
+                    }
+
+                    return returnVal;
                 }
 
-            }
+            },
+
+
+
 
 
         app.config.globalProperties.$startEndCurrentMonth = function () {

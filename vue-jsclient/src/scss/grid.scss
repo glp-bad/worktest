@@ -1,0 +1,62 @@
+.ff-grid {
+    background: $ff-background-color-wokbench;
+    width: auto;
+    display: inline-block;
+
+    .ff-table{
+        border-collapse: collapse;
+        border: 1px solid darken($ff-base,20%);
+
+        .ff-thead{
+            background: $ff-base;
+            th {
+                border: 1px solid darken($ff-base,20%);
+                font-size: map-get($ff-grid,"header-font-size");
+                font-weight: bold;
+                color: #FFFFFF;
+                // border-left: 1px solid darken($ff-base,70%);
+                // &:first-child {border-left: none;}
+                padding: 5px;
+                text-align: left;
+
+                div{
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    cursor: default;
+                }
+
+            }
+
+        }
+        .ff-tbody{
+            tr {
+                height: $ff_table_list_height;
+                &:hover {
+                    background: lighten($ff-hover-color, 35%);
+                    // cursor: pointer;
+                    cursor: default;
+                }
+
+                td{
+
+                    border-left: 1px dotted darken($ff-base,5%);
+
+                    div{
+                        padding: 3px;
+                    }
+                }
+
+            }
+
+        }
+
+        tr {
+            &:nth-child(even) {
+                background: lighten($ff-base, 50%);
+            }
+        }
+
+    }
+}
+
