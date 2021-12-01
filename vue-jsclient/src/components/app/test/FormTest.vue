@@ -1,6 +1,6 @@
 <template>
 
-    <div>
+
         <validate-window ref="validateWindowRef"
                          :cWidth=500
                          :cHeight=200
@@ -76,7 +76,7 @@
                                     :size       = AGE.sizeField
                                 ></test-field>
                             </td>
-                            <td class="label bold">
+                            <td class="label-right bold">
                                 <label :for=CONF_ACORD.id>{{CONF_ACORD.caption}}</label></td>
                             <td class="control">
                                 <check-box
@@ -94,7 +94,7 @@
                             <td class="label bold">
                                 <label :for=SELECT_OPTION.id>{{SELECT_OPTION.caption}}</label></td>
 
-                            <td class="control">
+                            <td colspan="2" class="control">
                                 <lista-numere
                                     :pId    =SELECT_OPTION.id
                                     :ref    =SELECT_OPTION.ref
@@ -109,14 +109,17 @@
                     </table>
                 </form>
             </div>
+
             <div :class=formClass.button >
-                <br>
-                <button-send :onClick="sendData">Send data</button-send>
+                <div :class=formClass.buttonPozition  >
+                    <button-send :onClick="sendData">Send data</button-send>
+                </div>
             </div>
+
             <div :class=formClass.bottomLine ></div>
 
         </div>
-    </div>
+
 </template>
 
 <script>

@@ -1,5 +1,7 @@
-.ff-form {
 
+$ff-caption-height: 20px;
+
+.ff-form {
 	// margin: 0 auto;
 	margin: 200px auto;
 	position: absolute;  // for draggale
@@ -12,21 +14,27 @@
 
 	.form-header {
 		background-color: darken(map-get($ff-modal-window, "caption-color"), 10%);
-		height: 20px;
-		// margin-bottom: 20px;
+		height: $ff-caption-height;
 		cursor: move;
 
 		.caption {
 			float: left;
 			color: map-get($ff-modal-window, "caption-color-font");
-			margin-left: 10px;
-		}
+            display: inline-block;
+            padding-left: 10px;
+
+            // vertical center height
+            line-height: $ff-caption-height; vertical-align: middle;
+        }
 
 		.closeButton {
 			float: right;
 			color: map-get($ff-modal-window, "caption-color-font");
-			margin-right: 8px;
+            padding-right: 8px;
 			cursor:pointer;
+
+            // vertical center height
+            line-height: $ff-caption-height; vertical-align: middle;
 		}
 	}
 
@@ -35,14 +43,18 @@
 	}
 
 	.form-button{
-		background-color:	map-get($ff-modal-window, "background-color");
-        margin: 5px;
+        width: 100%;
+        display: inline-block;
+        .buttons{
+            float: right;
+            padding: 10px;
+        }
 	}
 
 	.form-bottom-line {
 		background-color: darken(map-get($ff-modal-window, "caption-color"), 10%);
 		height: 6px;
-		// margin-top: 8px;
+        float: bottom;
 	}
 
 }
@@ -67,7 +79,7 @@
 	border-collapse: collapse;
 
 	.label-right{
-		//border: 1px solid blue;
+		// border: 1px solid blue;
 		text-align: right;
         padding-right: 5px;
         color: $ff-font-label-formular;
@@ -76,7 +88,7 @@
 	}
 
     .label-left{
-        //border: 1px solid blue;
+        // border: 1px solid blue;
         text-align: left;
         color: $ff-font-label-formular;
         padding-right: 5px;
@@ -88,7 +100,7 @@
     }
 
 	.control{
-		// border: 1px solid blue;
+		//border: 1px solid blue;
 	}
 
 }

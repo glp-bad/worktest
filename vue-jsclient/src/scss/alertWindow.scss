@@ -1,3 +1,6 @@
+
+$ff-caption-alert-height: 22px;
+
 .alertWindow{
 	position: fixed;
 	z-index: 9999;
@@ -27,12 +30,15 @@
 
 		.header{
 				background-color: darken(map-get($ff-modal-window,"caption-color"),10%);
-				height: 22px;
+				height: $ff-caption-alert-height;
 				cursor: move;
 
 			span {
 					color: map-get($ff-modal-window,"caption-color-font");
 					margin-left: 10px;
+
+                    // vertical center height
+                    line-height: $ff-caption-alert-height; vertical-align: middle;
 				}
 		}
 

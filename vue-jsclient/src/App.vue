@@ -28,7 +28,7 @@
         },
 	    data() {
 		    return {
-			    login: false,
+			    login: true,
 			    engine: {keyRender: 1}
 		    }
 	    }
