@@ -9,6 +9,7 @@
 
     .ff-table{
         border-collapse: collapse;
+	    table-layout: fixed;
 
         .ff-thead{
             background: $ff-base;
@@ -44,12 +45,9 @@
                 }
 
                 td{
-
                     border-left: 1px dotted darken($ff-base,5%);
-
                     div{
                         padding: 3px;
-
                         white-space: nowrap;
                         overflow: hidden;
                         text-overflow: ellipsis;

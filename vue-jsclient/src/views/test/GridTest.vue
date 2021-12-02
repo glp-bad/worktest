@@ -14,10 +14,10 @@
         props: {},
         created() {
             this.gridCaption = [
-                {id: "1", caption: "Nume", width: 50},
-                {id: "2", caption: "Actiune", width: 400},
-                {id: "3", caption: "Rezultat", width: 100},
-                {id: "4", caption: "Variabila", width: 150}
+                {id: "1", caption: "Nume", width: 50, tableCaption:'name'},
+                {id: "2", caption: "Actiune", width: 400, tableCaption:'act'},
+                {id: "3", caption: "Rezultat", width: 100, tableCaption:'rez'},
+                {id: "4", caption: "Variabila", width: 150, tableCaption:'var'}
             ]
         },
         mounted() {

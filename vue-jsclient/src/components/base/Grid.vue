@@ -11,8 +11,8 @@
             </thead>
             <tbody class="ff-tbody">
                 <tr v-for="tr in this.rezultData">
-                    <td v-for="td in tr">
-                        <div>{{td}}</div>
+                    <td v-for="(td, index) in tr">
+                        <div :style="cgfTDStyle(index)" :title="td">{{td}}</div>
                     </td>
                 </tr>
             </tbody>
@@ -25,7 +25,7 @@
 	export default {
 		name: "grid",
 		created() {
-            this.REF_DIV_TABLE      = 'refDivTable',
+            this.REF_DIV_TABLE  = 'refDivTable',
 			this.REF_THEAD      = 'refThead'
 		},
 		props: {
@@ -48,22 +48,32 @@
                 divTable.style.height = this.pHeight  + 'px';
             },
             cfgGridHeader: function (headerCells) {
+
                 for (let i = 0; i < headerCells.length; i++) {
                     let width = this.$vanilla.getAtributeValueFromArrayObject(this.pHeader,'id',headerCells[i].getAttribute('id'),'width');
 
-                    this.engine.widthGridFromCell = this.engine.widthGridFromCell + width;
+                    this.engine.widthGridFromCell = this.engine.widthGridFromCell + width + this.engine.constantaWidth;
+
+                    console.log(headerCells[i].style);
 
                     headerCells[i].style.width = width + 'px';
-                    headerCells[i].style.fixedWidth = width + 'px';
+                    //headerCells[i].style.fixedWidth = width + 'px';
                     //headerCells[i].firstChild.style.width = width + 'px';
                     //headerCells[i].firstChild.style.fixedWidth = width + 'px';
 
                 }
             },
+            cgfTDStyle: function (fieldName) {
+	            let width = this.$vanilla.getAtributeValueFromArrayObject(this.pHeader,'tableCaption',fieldName,'width');
+
+	            return {
+	            	width: width + 'px'
+                }
+            },
             getDataFromServer: function () {
 
                 let dataTest = new Array();
-                dataTest.push({name: 'Vasile',  act: 'se duce la piata si face cumparaturii 004', rez: 'nu a castigat nimic 004', var: 'variaza + 4'});
+                dataTest.push({name: 'Vasile',  act: 'se duce la piata si face cumparaturii 004 si inca un shir foarte lung sper eu', rez: 'nu a castigat nimic 004', var: 'variaza + 4'});
                 dataTest.push({name: 'Ion',     act: 'se duce la piata si face cumparaturii 005', rez: 'nu a castigat nimic 005', var: 'variaza + 5'});
 
                 for(let i=0; i<10; i++){
@@ -80,7 +90,8 @@
 		data () {
 			return {
 				engine:{
-				    widthGridFromCell: 0
+				    widthGridFromCell: 0,
+                    constantaWidth: 16
                 },
                 rezultData: new Array()
             }
