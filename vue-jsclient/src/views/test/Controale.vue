@@ -22,6 +22,11 @@
     <br>
     <br>
 
+    <my-button>Text.......<font-awesome-icon :icon="['fas', 'search']" size="1x"/></my-button>&nbsp;
+
+    <br>
+    <br>
+
     <my-drop-down-search :pDataMethod="'local'"
                     :pUrlData="'searchTableTest'"
     ></my-drop-down-search>

@@ -3,17 +3,35 @@
         <table class="ff-table">
             <thead class="ff-thead" :ref=this.REF_THEAD>
                 <tr>
-                    <th v-for="ph in pHeader" :id=ph.id>
-                        <div :title=ph.caption>
-                            {{ph.caption}}</div>
-                    </th>
+                    <template v-for="ph in pHeader">
+                        <th :id=ph.id v-if="ph.type == 'field'" class="th--left-align">
+                            <div :title=ph.caption>
+                                {{ph.caption}}</div>
+                        </th>
+
+
+                    </template>
                  </tr>
             </thead>
             <tbody class="ff-tbody">
                 <tr v-for="tr in this.rezultData">
-                    <td v-for="(td, index) in tr">
-                        <div :style="cgfTDStyle(index)" :title="td">{{td}}</div>
-                    </td>
+                    <template v-for="(td, index) in tr">
+                        <td>
+                            <div :style="cgfTDStyle(index)" :title="td">{{td}}</div>
+                        </td>
+                    </template>
+                    <template v-for="ph in pHeader">
+                        <td v-if="ph.type == 'printButton'">
+                            <div>
+                                <my-button heightButton=20><font-awesome-icon :icon="['fas', 'print']" size="1x"/></my-button>
+                            </div>
+                        </td>
+                        <td v-if="ph.type == 'editButton'">
+                            <div>
+                                <my-button heightButton=20><font-awesome-icon :icon="['fas', 'edit']" size="1x"/></my-button>
+                            </div>
+                        </td>
+                    </template>
                 </tr>
             </tbody>
             <tfoot></tfoot>
@@ -22,15 +40,22 @@
 </template>
 
 <script>
+
+	import Button from '@/components/base/Button.vue';
+
 	export default {
 		name: "grid",
+		components: {
+			'my-button': Button
+		},
 		created() {
             this.REF_DIV_TABLE  = 'refDivTable',
 			this.REF_THEAD      = 'refThead'
 		},
 		props: {
 		    pHeader: {type: Array, required: true},
-            pHeight: {type: Number, default: 300, required: false}
+            pHeight: {type: Number, default: 300, required: false},
+            pPrintButton: {type:Boolean, default: false, required: false}
 		},
 		mounted() {
 		    this.getDataFromServer();
@@ -42,6 +67,7 @@
 
                 let headerCells = this.$refs[this.REF_THEAD].rows[0].cells;
                 this.cfgGridHeader(headerCells);
+                this.cfgGridCRUDbutton();
 
                 // form, ordinea conteaza pentru: this.engine.widthGridFromCell
                 divTable.style.width = this.engine.widthGridFromCell  + 'px';
@@ -54,14 +80,17 @@
 
                     this.engine.widthGridFromCell = this.engine.widthGridFromCell + width + this.engine.constantaWidth;
 
-                    console.log(headerCells[i].style);
-
                     headerCells[i].style.width = width + 'px';
                     //headerCells[i].style.fixedWidth = width + 'px';
                     //headerCells[i].firstChild.style.width = width + 'px';
                     //headerCells[i].firstChild.style.fixedWidth = width + 'px';
 
                 }
+            },
+            cfgGridCRUDbutton: function () {
+            	let header = this.$refs[this.REF_THEAD];
+            	// console.log(header);
+
             },
             cgfTDStyle: function (fieldName) {
 	            let width = this.$vanilla.getAtributeValueFromArrayObject(this.pHeader,'tableCaption',fieldName,'width');

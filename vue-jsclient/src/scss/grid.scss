@@ -24,7 +24,18 @@
                 // border-left: 1px solid darken($ff-base,70%);
                 // &:first-child {border-left: none;}
                 padding: 5px;
-                text-align: left;
+
+	            &--left-align {
+		            @extend th;
+		            text-align: left;
+	            }
+
+	            &--center-align {
+		            @extend th;
+		            text-align: center;
+	            }
+
+
                 div{
                     white-space: nowrap;
                     overflow: hidden;
