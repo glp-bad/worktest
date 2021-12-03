@@ -18,27 +18,26 @@
             <tbody class="ff-tbody">
                 <tr v-for="tr in this.rezultData" :idPk="tr.id">
                     <template v-for="(td, index) in tr">
-                        <td>
+                        <td v-if="index != 'id'">
                             <div class="div--left-align" :style="cgfTDStyle(index)" :title="td">{{td}}</div>
                         </td>
                     </template>
-                    <template v-for="ph in pHeader">
-                        <td v-if="ph.type == 'action'">
-                            <div class="div--center-align-action-group" >
-                                <div class="toolbar-icon-inline" >
-                                   <template v-for="ba in ph.action">
-                                       <div class="divButton" v-if="ba.type == 'printButton'">
-                                           <my-button @click=this.pPrintMethod :heightButton=22 :iconColor=1 :title="'print'">
-                                               <font-awesome-icon :icon="['fas', 'print']" size="1x"/>
-                                           </my-button>
-                                       </div>
-                                       <div class="divButton" v-if="ba.type == 'editButton'"><my-button @click=ba.actionMethod :heightButton=22 :iconColor=2 :title="'edit'"><font-awesome-icon :icon="['fas', 'edit']" size="1x"/></my-button></div>
-                                       <div class="divButton" v-if="ba.type == 'deleteButton'"><my-button :heightButton=22 :iconColor=3 :title="'delete'"><font-awesome-icon :icon="['fas', 'times']" size="1x"/></my-button></div>
-                                   </template>
+                    <td>
+                                <div class="div--center-align-action-group" >
+                                    <div class="toolbar-icon-inline" >
+                                        <template v-for="ph in pHeader.actionButton">
+                                           <div class="divButton" v-if="ph.type == 'printButton'">
+                                               <my-button @click=this.pPrintMethod :heightButton=22 :iconColor=1 :title="'print'">
+                                                   <font-awesome-icon :icon="['fas', 'print']" size="1x"/>
+                                               </my-button>
+                                           </div>
+                                           <div class="divButton" v-if="ph.type == 'editButton'"><my-button @click=ph.actionMethod :heightButton=22 :iconColor=2 :title="'edit'"><font-awesome-icon :icon="['fas', 'edit']" size="1x"/></my-button></div>
+                                           <div class="divButton" v-if="ph.type == 'deleteButton'"><my-button :heightButton=22 :iconColor=3 :title="'delete'"><font-awesome-icon :icon="['fas', 'times']" size="1x"/></my-button></div>
+                                        </template>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                    </template>
+
+                    </td>
                 </tr>
             </tbody>
             <tfoot></tfoot>
@@ -127,7 +126,7 @@
 			return {
 				engine:{
 				    widthGridFromCell: 0,
-                    constantaWidth: 18
+                    constantaWidth: 18+3
                 },
                 rezultData: new Array()
             }

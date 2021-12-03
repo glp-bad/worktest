@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import appHelper from "@/plugin/appHelper";
+import constantsComponent from "@/plugin/constantsComponent";
 
 import VueAxios from 'vue-axios';
 import axios    from 'axios';
@@ -29,6 +30,7 @@ app.component("font-awesome-icon", FontAwesomeIcon);
 // app.config.globalProperties.$vueUrlHosting = process.env.VUE_APP_URL_HOST; // global vbariable
 
 app.use(store).use(router);
+app.use(constantsComponent);
 app.use(appHelper);
 app.use(VueAxios, axios);
 app.mount('#app');

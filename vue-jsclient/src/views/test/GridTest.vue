@@ -30,10 +30,13 @@
                     {id: "1", caption: "Nume",      width: 50,  tableCaption:'name',    type: 'field'},
                     {id: "2", caption: "Actiune",   width: 400, tableCaption:'act',     type: 'field'},
                     {id: "3", caption: "Rezultat",  width: 100, tableCaption:'rez',     type: 'field'},
-                    {id: "4", caption: "Variabila", width: 150, tableCaption:'var',     type: 'field'}
+                    {id: "4", caption: "Variabila", width: 150, tableCaption:'var',     type: 'field'},
+                    {id: "5", caption: "Actiune", width: 60, tableCaption:null,         type: 'action'}
                 ],
-                action: [
-
+                actionButton: [
+                    {id: "6", tooltip: "Print",     width: 40, tableCaption: null,      type: 'printButton', actionMethod: 'gridPrint'  },
+                    {id: "7", tooltip: "Edit",      width: 50, tableCaption: null,      type: 'editButton', actionMethod: 'gridEdit'    },
+                    {id: "8", tooltip: "Delete",      width: 50, tableCaption: null,    type: 'deleteButton', actionMethod: 'gridDelete'}
                 ]
             },
             this.gridCaption = [
@@ -60,8 +63,7 @@
         methods: {
             gridPrint: function (event) {
                 let tr = event.target.closest('tr');
-
-                console.log(tr.getAttribute('idPk'));
+                console.log(tr.getAttribute(this.$constGrid.idName));
 
             }
         },
