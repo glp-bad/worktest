@@ -35,7 +35,6 @@
 		            text-align: center;
 	            }
 
-
                 div{
                     white-space: nowrap;
                     overflow: hidden;
@@ -57,11 +56,36 @@
 
                 td{
                     border-left: 1px dotted darken($ff-base,5%);
-                    div{
+                    .div{
                         padding: 3px;
                         white-space: nowrap;
                         overflow: hidden;
                         text-overflow: ellipsis;
+
+                        &--left-align {
+                            @extend .div;
+                            text-align: left;
+                        }
+
+                        &--center-align {
+                            @extend .div;
+                            text-align: center;
+                        }
+
+                        &--center-align-action-group {
+                            // @extend .div;
+                            text-align: center;
+                        }
+
+                        &--action-group {
+                            @extend .div;
+                            display: inline-flex;
+                            width: 100%;
+
+                            div{
+                                margin-left: 1%;
+                            }
+                        }
                     }
                 }
 

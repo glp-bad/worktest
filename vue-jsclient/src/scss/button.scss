@@ -23,13 +23,62 @@
 }
 
 
-.ff-icon-button {
-	background-color: $ff-base;
-	border: none;
-	color:      $ff-button-font-color;
-	font-size:  $ff-button-font-size;
-	font-weight:bold;
-	// padding:2px 2px;
-	cursor:pointer;
+.ff-button-icon {
+    // box-shadow: 1px 1px 2px -2px darken($ff-base,35%);
+    // -webkit-box-shadow: 1px 2px 1px -1px darken($ff-base,35%);
+    // background-color: $ff-base;
 
+    //color:      $ff-button-font-color;
+    //font-size:  $ff-button-font-size;
+
+    background: transparent;
+	border: none;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover{
+        background-color: $ff-base;
+    }
+
+    &--green {
+        @extend .ff-button-icon;
+        color: darkgreen;
+    }
+
+    &--blue {
+        @extend .ff-button-icon;
+        color: darkblue;
+    }
+
+    &--red {
+        @extend .ff-button-icon;
+        color: darkred;
+    }
 }
+
+
+.ff-button-icon-toolbar {
+    border: none ;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover{
+        background-color: $ff-base;
+    }
+
+    &--green {
+        @extend .ff-button-icon-toolbar;
+        color: darkgreen;
+    }
+
+    &--blue {
+        @extend .ff-button-icon-toolbar;
+        color: darkblue;
+    }
+
+    &--red {
+        @extend .ff-button-icon-toolbar;
+        color: darkred;
+    }
+}
+
