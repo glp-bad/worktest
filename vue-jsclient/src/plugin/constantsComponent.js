@@ -17,6 +17,9 @@ const constantsComponent = {
                     return {id: id, caption: caption,   width: width,  tableFieldName: tableFieldName,    type: type};
                 }
             },
+            BODY:{
+                FIELD_NAME: 'fieldName'
+            },
             getActionButton: function (id, tooltip, emitAction, icon) {
                 return {id: id, tooltip: tooltip, emitAction: emitAction, icon: icon };
             }

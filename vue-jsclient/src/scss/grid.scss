@@ -7,6 +7,10 @@
     overflow-x: auto;
     //height: 200px;
 
+    .selected{
+        background: lighten($ff-hover-color, 55%) !important;
+    }
+
     .ff-table{
         border-collapse: collapse;
 	    table-layout: fixed;

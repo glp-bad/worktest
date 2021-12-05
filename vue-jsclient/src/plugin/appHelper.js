@@ -109,9 +109,6 @@ const appHelper = {
             },
 
 
-
-
-
         app.config.globalProperties.$startEndCurrentMonth = function () {
             let formatString = 'dd/MM/yyyy';
 
@@ -182,13 +179,17 @@ const appHelper = {
         }
 
         app.config.globalProperties.$app = {
+            getObjectReturnComponent (data) {
+                return JSON.parse(JSON.stringify(data));
+            },
             getFormMessageClass (field, caption, message) {
                 return {
                     field: field,
                     caption: caption,
                     message: message
                 }
-            }, /**
+            },
+            /**
              *
              * @param messages  (array from getFormMessageClass)
              * @returns {string}

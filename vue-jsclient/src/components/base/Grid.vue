@@ -1,8 +1,8 @@
 <template>
     <div class="ff-grid" :ref=this.REF_DIV_TABLE>
-        <table class="ff-table">
+        <table class="ff-table" :ref=REF_TABLE>
             <thead class="ff-thead" :ref=this.REF_THEAD>
-                <tr>
+                <tr :idPk="-1">
                     <template v-for="ph in pHeader.header">
                         <th :id=ph.id v-if="ph.type == 'field'" class="th--left-align">
                             <div :title=ph.caption>
@@ -15,19 +15,19 @@
                     </template>
                  </tr>
             </thead>
-            <tbody class="ff-tbody">
-                <tr v-for="tr in this.rezultData" :idPk="tr.id">
+            <tbody class="ff-tbody" :ref=REF_TABLE_BODY>
+                <tr v-for="tr in this.rezultData" :idPk="tr.id" v-on:keydown.prevent="cfgKeyNavigate($event)" v-on:click.prevent="cfgMouseNavigate($event)">
                     <template v-for="(td, index) in tr">
                         <td v-if="index != 'id'" :tabindex=this.cfgGetTabIndex()>
-                            <div class="div--left-align" :style="cgfTDStyle(index)" :title="td">{{td}}</div>
+                            <div class="div--left-align " :style="cgfTDStyle(index)" :title="td" :fieldName="index">{{td}}</div>
                         </td>
                     </template>
-                    <td>
+                    <td :tabindex=this.cfgGetTabIndex()>
                         <div class="div--center-align-action-group" >
                             <div class="toolbar-icon-inline" >
                                 <template v-for="ph in pHeader.actionButton">
                                    <div class="divButton">
-                                       <my-button @click=this.emitAction(ph.emitAction) :heightButton=22 :buttonType=1 :title="ph.tooltip" :style=cfgIconColor(ph.icon.color)>
+                                       <my-button @click="this.emitAction($event, ph.emitAction)" :heightButton=22 :buttonType=1 :title="ph.tooltip" :style=cfgIconColor(ph.icon.color)>
                                            <font-awesome-icon :icon=this.cfgIconPictureAction(ph.icon) size="1x"/>
                                        </my-button>
                                    </div>
@@ -57,20 +57,101 @@
         },
 		created() {
             this.REF_DIV_TABLE  = 'refDivTable',
+            this.REF_TABLE      = 'refTable',
 			this.REF_THEAD      = 'refThead',
+            this.REF_TABLE_BODY = 'refBody',
+            this.CLASS_SELECTED = 'selected',
             this.engine={
                 widthGridFromCell: 0,
                 constantaWidth: 18+4,
-                tabIndexValue: 0
+                tabIndexValue: 0,
+                tdCurent: null,
+                trCurent: null,
+                maximRows: 0
             }
 		},
 		mounted() {
 		    this.getDataFromServer();
 		    this.cfgGrid();
+
+            this.$nextTick(function () {
+                this.initGrid();
+            });
+
 		},
         methods:{
-		    emitAction:function(action){
-                this.$emit(action);
+            getDataSelected: function () {
+                return this.selectdRow;
+            },
+            initGrid: function (){
+                this.engine.maximRows = this.rezultData.length;
+                if(this.engine.maximRows > 0){
+                    this.privateSelectedRow(this.$refs[this.REF_TABLE_BODY].rows[0]);
+                }
+            },
+            setFocus: function (){
+                this.engine.tdCurent.focus();
+            },
+            privateSelectedRow: function (tr) {
+                if(  !this.$check.isUndef(this.engine.trCurent)){
+                    this.engine.trCurent.removeAttribute('class', this.CLASS_SELECTED);
+                }
+
+                this.engine.trCurent = tr;
+                if(this.$check.isUndef(this.engine.tdCurent)){
+                    this.engine.tdCurent = this.engine.trCurent.cells[0];
+                }else{
+                    this.engine.tdCurent = this.engine.trCurent.cells[this.engine.tdCurent.cellIndex];
+                }
+
+                this.engine.trCurent.setAttribute('class', this.CLASS_SELECTED);
+
+                this.privateGetDataFromTr();
+
+                this.setFocus();
+            },
+            privateGetDataFromTr: function (){
+
+                let finalSelected = {};
+                finalSelected[this.$constGrid.ID_NAME] = this.engine.trCurent.getAttribute(this.$constGrid.ID_NAME);
+
+                let cells = this.engine.trCurent.cells;
+
+                for (const c of cells) {
+                    let fieldName = c.firstChild.getAttribute(this.$constGrid.BODY.FIELD_NAME);
+                   if(this.pHeader.returnField.includes(fieldName)){
+                        finalSelected[fieldName] = c.innerText;
+                    }
+                }
+                this.selectdRow = finalSelected;
+            },
+            privateSelectedCell: function (td) {
+                this.engine.tdCurent = td;
+                this.setFocus();
+            },
+            privateArrowDown: function () {
+                if(this.engine.trCurent.sectionRowIndex < (this.rezultData.length - 1)) {
+                    this.privateSelectedRow(this.engine.trCurent.nextSibling);
+                }
+            },
+            privateArrowUp: function () {
+                if(this.engine.trCurent.sectionRowIndex > 0) {
+                    this.privateSelectedRow(this.engine.trCurent.previousSibling);
+                }
+            },
+            privateArrowRight: function () {
+                if(!this.$check.isUndef(this.engine.tdCurent.nextElementSibling) ){
+                    this.privateSelectedCell(this.engine.tdCurent.nextElementSibling);
+                }
+            },
+            privateArrowLeft: function () {
+                if(!this.$check.isUndef(this.engine.tdCurent.previousElementSibling) ){
+                    this.privateSelectedCell(this.engine.tdCurent.previousElementSibling);
+                }
+            },
+		    emitAction:function(event, action) {
+                this.cfgMouseNavigate(event);
+                this.$emit(action, this.selectdRow);
             },
             cfgGrid: function () {
                 let divTable = this.$refs[this.REF_DIV_TABLE];
@@ -83,7 +164,28 @@
                 divTable.style.width = this.engine.widthGridFromCell  + 'px';
                 divTable.style.height = this.pHeight  + 'px';
             },
-            cfgIconPictureAction: function (icon){
+            cfgKeyNavigate: function (event){
+                if (event.key == 'ArrowRight') {
+                    this.privateArrowRight();
+                }else if(event.key == 'ArrowLeft'){
+                    this.privateArrowLeft();
+                }else if(event.key == 'ArrowDown'){
+                    this.privateArrowDown();
+                }else if(event.key == 'ArrowUp'){
+                    this.privateArrowUp();
+                }else if(event.key == 'Enter'){
+                    //this.selectData();
+                    //this.$emit(this.engine.emit.selectData);
+                }else if(event.key == 'Tab'){
+                    //this.$emit(this.engine.emit.tabKey);
+                }
+                // console.log('Am apasaat pe: ' + event.key);
+            },
+            cfgMouseNavigate(event){
+                this.engine.tdCurent = event.target.closest('td');
+                this.privateSelectedRow(event.target.closest('tr'));
+            },
+            cfgIconPictureAction: function (icon) {
                 return [icon.fawIcon, icon.icon];
             },
             cfgIconColor: function (color) {
@@ -92,7 +194,6 @@
                 }
             },
             cfgGridHeader: function (headerCells) {
-
                 for (let i = 0; i < headerCells.length; i++) {
                     let width = this.$vanilla.getAtributeValueFromArrayObject(this.pHeader.header,'id',headerCells[i].getAttribute('id'),'width');
 
@@ -101,13 +202,11 @@
                     //headerCells[i].style.fixedWidth = width + 'px';
                     //headerCells[i].firstChild.style.width = width + 'px';
                     //headerCells[i].firstChild.style.fixedWidth = width + 'px';
-
                 }
             },
             cfgGridCRUDbutton: function () {
             	let header = this.$refs[this.REF_THEAD];
             	// console.log(header);
-
             },
             cfgGetTabIndex: function(){
               this.engine.tabIndexValue++;
@@ -122,23 +221,22 @@
             getDataFromServer: function () {
 
                 let dataTest = new Array();
-                dataTest.push({name: 'Vasile',  act: 'se duce la piata si face cumparaturii 004 si inca un shir foarte lung sper eu', rez: 'nu a castigat nimic 004', var: 'variaza + 4', id: 92});
-                dataTest.push({name: 'Ion',     act: 'se duce la piata si face cumparaturii 005', rez: 'nu a castigat nimic 005', var: 'variaza + 5', id: 93});
+                dataTest.push({name: 'Vasile',  'fact de curaj': 'se duce la piata si face cumparaturii 004 si inca un shir foarte lung sper eu', rez: 'nu a castigat nimic 004', var: 'variaza + 4', id: 92});
+                dataTest.push({name: 'Ion',     'fact de curaj': 'se duce la piata si face cumparaturii 005', rez: 'nu a castigat nimic 005', var: 'variaza + 5', id: 93});
 
-                for(let i=0; i<10; i++){
-                    dataTest.push({name: i+' Vasile',  act: 'se duce la piata si face cumparaturii 00' + i, rez: 'nu a castigat nimic ' +i, var: 'variaza +' + i, id: i});
-                    dataTest.push({name: i+' Ion',  act: 'se duce la piata si face cumparaturii 00' + i, rez: 'nu a castigat nimic ' +i, var: 'variaza +' + i, id: i+30});
+                for(let i=0; i<5; i++){
+                    dataTest.push({name: i+' Vasile',  'fact de curaj': 'se duce la piata si face cumparaturii 00' + i, rez: 'nu a castigat nimic ' +i, var: 'variaza +' + i, id: i});
+                    // dataTest.push({name: i+' Ion',  act: 'se duce la piata si face cumparaturii 00' + i, rez: 'nu a castigat nimic ' +i, var: 'variaza +' + i, id: i+30});
                 }
 
                 this.rezultData = dataTest;
-
-
             }
 
         },
 		data () {
 			return {
-                rezultData: new Array()
+                rezultData: new Array(),
+                selectdRow: {}
             }
 		}
 	}

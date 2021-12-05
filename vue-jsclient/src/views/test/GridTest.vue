@@ -1,5 +1,5 @@
 <template>
-    <my-grid :pHeader=this.gridCaption @invoicePrint="invoicePrint" @editCeva="editCeva"
+    <my-grid ref="gridPrint" :pHeader=this.gridCaption @invoicePrint="invoicePrint" @editCeva="editCeva"
     ></my-grid>
 
     <br>
@@ -27,7 +27,7 @@
             this.gridCaption = {
                 header: [
                     this.$constGrid.HEADER.getHeader(1,'Nume',50,'name', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
-                    this.$constGrid.HEADER.getHeader(2,'Actiune din functie',400,'act', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
+                    this.$constGrid.HEADER.getHeader(2,'Actiune din functie',400,'fact de curaj', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
                     this.$constGrid.HEADER.getHeader(3,'Rezultat mai bun',120,'rez', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
                     this.$constGrid.HEADER.getHeader(4,'Variabile',50,'var', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
                     this.$constGrid.HEADER.getHeader(5,'action',50,null, this.$constGrid.HEADER.CAPTION_TYPE_ACTION)
@@ -37,15 +37,19 @@
                     this.$constGrid.getActionButton(6, 'Print din functie', 'invoicePrint', this.$constGrid.ICON_PRINT),
                     this.$constGrid.getActionButton(7, 'Edit din functie', 'deleteCeva', this.$constGrid.ICON_DELETE),
                     this.$constGrid.getActionButton(8, 'Delete din functie', 'editCeva', this.$constGrid.ICON_EDIT)
-                ]
+                ],
+                returnField: ['name', 'fact de curaj']
             }
 
         },
         mounted() {
         },
         methods: {
-            invoicePrint: function () {
+            invoicePrint: function (selectData) {
                 console.log('acum printez');
+                const reqObject = this.$app.getObjectReturnComponent(selectData);
+
+                console.log(reqObject);
             },
             editCeva: function () {
                 console.log('editez ceva');
