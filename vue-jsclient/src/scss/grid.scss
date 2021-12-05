@@ -1,6 +1,6 @@
 .ff-grid {
     background: $ff-background-color-wokbench;
-    //width: 100%;
+    // width: 100%;
     display: inline-block;
 
     overflow-y: auto;
@@ -47,9 +47,8 @@
         }
         .ff-tbody{
             tr {
-                height: $ff_table_list_height;
                 &:hover {
-                    background: lighten($ff-hover-color, 35%);
+                    background: lighten($ff-hover-color, 55%);
                     // cursor: pointer;
                     cursor: default;
                 }

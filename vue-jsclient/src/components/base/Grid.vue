@@ -18,25 +18,22 @@
             <tbody class="ff-tbody">
                 <tr v-for="tr in this.rezultData" :idPk="tr.id">
                     <template v-for="(td, index) in tr">
-                        <td v-if="index != 'id'">
+                        <td v-if="index != 'id'" :tabindex=this.cfgGetTabIndex()>
                             <div class="div--left-align" :style="cgfTDStyle(index)" :title="td">{{td}}</div>
                         </td>
                     </template>
                     <td>
-                                <div class="div--center-align-action-group" >
-                                    <div class="toolbar-icon-inline" >
-                                        <template v-for="ph in pHeader.actionButton">
-                                           <div class="divButton" v-if="ph.type == 'printButton'">
-                                               <my-button @click=this.pPrintMethod :heightButton=22 :iconColor=1 :title="'print'">
-                                                   <font-awesome-icon :icon="['fas', 'print']" size="1x"/>
-                                               </my-button>
-                                           </div>
-                                           <div class="divButton" v-if="ph.type == 'editButton'"><my-button @click=ph.actionMethod :heightButton=22 :iconColor=2 :title="'edit'"><font-awesome-icon :icon="['fas', 'edit']" size="1x"/></my-button></div>
-                                           <div class="divButton" v-if="ph.type == 'deleteButton'"><my-button :heightButton=22 :iconColor=3 :title="'delete'"><font-awesome-icon :icon="['fas', 'times']" size="1x"/></my-button></div>
-                                        </template>
-                                    </div>
-                                </div>
-
+                        <div class="div--center-align-action-group" >
+                            <div class="toolbar-icon-inline" >
+                                <template v-for="ph in pHeader.actionButton">
+                                   <div class="divButton">
+                                       <my-button @click=this.emitAction(ph.emitAction) :heightButton=22 :buttonType=1 :title="ph.tooltip" :style=cfgIconColor(ph.icon.color)>
+                                           <font-awesome-icon :icon=this.cfgIconPictureAction(ph.icon) size="1x"/>
+                                       </my-button>
+                                   </div>
+                                </template>
+                            </div>
+                        </div>
                     </td>
                 </tr>
             </tbody>
@@ -54,21 +51,27 @@
 		components: {
 			'my-button': Button
 		},
+        props: {
+            pHeader: {type: Object, required: true},
+            pHeight: {type: Number, default: 300, required: false}
+        },
 		created() {
             this.REF_DIV_TABLE  = 'refDivTable',
-			this.REF_THEAD      = 'refThead'
-		},
-		props: {
-		    pHeader: {type: Array, required: true},
-            pHeight: {type: Number, default: 300, required: false},
-            pPrintButton: {type: Boolean, default: false, required: false},
-            pPrintMethod:  {type: Function, default: null, required: false}
+			this.REF_THEAD      = 'refThead',
+            this.engine={
+                widthGridFromCell: 0,
+                constantaWidth: 18+4,
+                tabIndexValue: 0
+            }
 		},
 		mounted() {
 		    this.getDataFromServer();
 		    this.cfgGrid();
 		},
         methods:{
+		    emitAction:function(action){
+                this.$emit(action);
+            },
             cfgGrid: function () {
                 let divTable = this.$refs[this.REF_DIV_TABLE];
 
@@ -79,6 +82,14 @@
                 // form, ordinea conteaza pentru: this.engine.widthGridFromCell
                 divTable.style.width = this.engine.widthGridFromCell  + 'px';
                 divTable.style.height = this.pHeight  + 'px';
+            },
+            cfgIconPictureAction: function (icon){
+                return [icon.fawIcon, icon.icon];
+            },
+            cfgIconColor: function (color) {
+                return {
+                    color: color
+                }
             },
             cfgGridHeader: function (headerCells) {
 
@@ -98,9 +109,12 @@
             	// console.log(header);
 
             },
+            cfgGetTabIndex: function(){
+              this.engine.tabIndexValue++;
+              return this.engine.tabIndexValue;
+            },
             cgfTDStyle: function (fieldName) {
-	            let width = this.$vanilla.getAtributeValueFromArrayObject(this.pHeader,'tableCaption',fieldName,'width');
-
+	            let width = this.$vanilla.getAtributeValueFromArrayObject(this.pHeader.header,this.$constGrid.HEADER.TABLE_FIELD_NAME,fieldName,'width');
 	            return {
 	            	width: width + 'px'
                 }
@@ -124,10 +138,6 @@
         },
 		data () {
 			return {
-				engine:{
-				    widthGridFromCell: 0,
-                    constantaWidth: 18+3
-                },
                 rezultData: new Array()
             }
 		}
