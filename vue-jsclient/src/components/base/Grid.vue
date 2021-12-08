@@ -99,7 +99,8 @@
 		        this.axios
 			        .post(uri, this.post)
 			        .then(response => {
-				            this.rezultData = response.data;
+			             this.rezultData = response.data;
+				            // this.rezultData = Object.freeze(response.data);
 				        }
 
 			        )
@@ -133,6 +134,8 @@
                 this.engine.trCurent.setAttribute('class', this.CLASS_SELECTED);
 
                 this.privateGetDataFromTr();
+
+                 console.log("privateSelectedRow: preiau datele");
 
                 this.setFocus();
             },
@@ -286,7 +289,7 @@
         },
 		data () {
 			return {
-                rezultData: new Array(),
+				rezultData: new Array(),
                 selectdRow: {},
                 showSelectedData: '...',
 				post:  {wordSearch: null}

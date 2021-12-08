@@ -20,7 +20,7 @@ class TestSearchController extends Controller {
 
 
 	public function getGridDataTest(Request $request){
-		return $this->getRezultForGrid();
+		return json_encode($this->getRezultForGrid());
 	}
 
 
