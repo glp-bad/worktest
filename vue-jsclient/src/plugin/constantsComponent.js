@@ -4,7 +4,7 @@ const constantsComponent = {
             ID_NAME: 'idPk',
             ICON_CLASS: 'fas',
             ICON_PRINT:  {fawIcon:'fas', icon: 'print', color: "darkgreen"},
-            ICON_EDIT:   {fawIcon:'fas', icon: 'edit', color: "darkblue"},
+            ICON_EDIT:   {fawIcon:'fas', icon: 'edit',  color: "darkblue"},
             ICON_DELETE: {fawIcon:'fas', icon: 'times', color: "darkred"},
             getIcon: function (fawIcon, icon, color) {
                 return {fawIcon:fawIcon, icon: icon, color: color}

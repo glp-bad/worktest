@@ -40,10 +40,11 @@
                 cfg: {
 	                width: 590,
                     height: 300,
-                    urlData: 'gridDataTest'
+                    urlData: 'gridDataTest',
+                    paginateLocal: true         // when false server paginate
                 },
                 toolbar: {
-                	show: true,
+                	show: false,
 	                fieldShow: {
                 		field: ['contract'],
                         separator: " ",

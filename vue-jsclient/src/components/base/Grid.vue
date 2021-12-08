@@ -43,8 +43,8 @@
 
         </div>
 
-        <div class="toolbar" v-if="pConfig.toolbar.show">
-            <div class="toolbarButton">
+        <div class="toolbar">
+            <div class="toolbarButton"  v-if="pConfig.toolbar.show">
                 <template v-for="ph in pConfig.toolbar.actionButton">
                     <div class="divButton">
                         <my-button @click="this.emitActionToolbar($event, ph.emitAction)" :heightButton=22 :buttonType=2 :title="ph.tooltip" :style=cfgIconColor(ph.icon.color)>
@@ -52,8 +52,44 @@
                         </my-button>
                     </div>
                 </template>
+
+                <div class="dataSelected" :title=this.showSelectedData>{{this.showSelectedData}}</div>
             </div>
-            <div class="dataSelected" :title=this.showSelectedData>{{this.showSelectedData}}</div>
+
+            <div class="paginate" >
+                <div class="divButton">
+                    <my-button @click="this.goToPage($event, this.engine.paginate.buttonGoStart.id)" :heightButton=22 :buttonType=2 :title='"goto first pagina"'>
+                        <font-awesome-icon :icon=this.cfgIconPictureAction(this.engine.paginate.buttonGoStart.icon) size="1x"/>
+                    </my-button>
+                </div>
+                <div class="divButton">
+                    <my-button @click="this.goToPage($event, this.engine.paginate.buttonGoLeft.id)" :heightButton=22 :buttonType=2 :title='"previous page"'>
+                        <font-awesome-icon :icon=this.cfgIconPictureAction(this.engine.paginate.buttonGoLeft.icon) size="1x"/>
+                    </my-button>
+                </div>
+
+                <!-- <template  v-for="index in 10" :key='index'> -->
+                <template  v-for="(pgn, index) in this.paginate.buttonPageNumber" :key='index'>
+                    <div class="divButton">
+                        <my-button @click="this.goToPage($event, pgn)" :widthButton=35 :heightButton=22 :buttonType=2 :title='this.privateGetPageTitle(pgn)'>
+                           {{pgn}}
+                        </my-button>
+                    </div>
+                </template>
+
+
+                <div class="divButton">
+                    <my-button @click="this.goToPage($event, this.engine.paginate.buttonGoRight.id)" :heightButton=22 :buttonType=2 :title='"next page"'>
+                        <font-awesome-icon :icon=this.cfgIconPictureAction(this.engine.paginate.buttonGoRight.icon) size="1x"/>
+                    </my-button>
+                </div>
+                <div class="divButton">
+                    <my-button @click="this.goToPage($event, this.engine.paginate.buttonGoToEnd.id)" :heightButton=22 :buttonType=2 :title='"goto last page"'>
+                        <font-awesome-icon :icon=this.cfgIconPictureAction(this.engine.paginate.buttonGoToEnd.icon) size="1x"/>
+                    </my-button>
+                </div>
+            </div>
+
         </div>
 
     </div>
@@ -81,7 +117,26 @@
                 tabIndexValue: 0,
                 tdCurent: null,
                 trCurent: null,
-                maximRows: 0
+                maximRows: 0,
+                paginate: {
+                    buttonGoStart:{
+                        id: 'b1',
+                        icon: {fawIcon:'fas', icon: 'angle-double-left', color: "darkred"}
+                    },
+                    buttonGoLeft: {
+                        id: 'b2',
+                        icon: {fawIcon:'fas', icon: 'angle-left', color: "darkred"}
+                    },
+                    buttonGoRight: {
+                        id: 'b3',
+                        icon: {fawIcon:'fas', icon: 'angle-right', color: "darkred"}
+                    },
+                    buttonGoToEnd:{
+                        id: 'b4',
+                        icon: {fawIcon:'fas', icon: 'angle-double-right', color: "darkred"}
+                    },
+                    maxButtonPage: 6
+                }
             }
         },
 		mounted() {
@@ -126,6 +181,19 @@
             },
             setFocus: function (){
                 this.engine.tdCurent.focus();
+            },
+            goToPage: function(event, buttonNumber){
+                let buttonId = null;
+                if(buttonNumber.slice(0,1) == 'b'){
+                    buttonId = buttonNumber;
+                }else{
+                    buttonId = parseInt(buttonNumber);
+                }
+
+                console.log(buttonId);
+            },
+            privateGetPageTitle: function (page){
+	            return 'goto page ' + page;
             },
             privateSelectedRow: function (tr) {
 
@@ -282,20 +350,16 @@
                 }
             },
             getTestData: function () {
-
-	        	console.log('START generate lista->>>>>>');
-
                 let dataTest = new Array();
                 //dataTest.push({name: 'Vasile',  'fact de curaj': 'se duce la piata si face cumparaturii 004 si inca un shir foarte lung sper eu', rez: 'nu a castigat nimic 004', var: 'variaza + 4', id: 92});
                 //dataTest.push({name: 'Ion',     'fact de curaj': 'se duce la piata si face cumparaturii 005', rez: 'nu a castigat nimic 005', var: 'variaza + 5', id: 93});
 
-                for(let i=0; i<1000; i++){
+                for(let i=0; i<11; i++){
                     dataTest.push({id: i, caption: i+' Vasile fact de curaj', contract: '766600' + i });
                     // dataTest.push({name: i+' Ion',  act: 'se duce la piata si face cumparaturii 00' + i, rez: 'nu a castigat nimic ' +i, var: 'variaza +' + i, id: i+30});
                 }
 
-	            console.log('END generate lista <<<<<<<');
-
+                // this.paginate = this.$vanilla.paginateArray(dataTest);
                 return dataTest;
             }
 
@@ -305,7 +369,10 @@
 				rezultData: new Array(),
                 selectdRow: {},
                 showSelectedData: '...',
-				post:  {wordSearch: null}
+                paginate: {
+				    buttonPageNumber: ['7','8','9','10','11','12']
+                },
+				post: {wordSearch: null}
             }
 		}
 	}

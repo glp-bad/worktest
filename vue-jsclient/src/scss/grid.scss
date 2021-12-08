@@ -144,6 +144,15 @@ $ff-caption-text-height: 22px;
 
 		}
 
+
+        .paginate{
+            display: inline-flex;
+            .divButton {
+                margin-left: 4px;
+            }
+
+        }
+
 	}
 
 }
