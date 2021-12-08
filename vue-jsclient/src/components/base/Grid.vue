@@ -1,44 +1,61 @@
 <template>
-    <div class="ff-grid" :ref=this.REF_DIV_TABLE>
-        <table class="ff-table" :ref=REF_TABLE>
-            <thead class="ff-thead" :ref=this.REF_THEAD>
-                <tr :idPk="-1">
-                    <template v-for="ph in pHeader.header">
-                        <th :id=ph.id v-if="ph.type == 'field'" class="th--left-align">
-                            <div :title=ph.caption>
-                                {{ph.caption}}</div>
-                        </th>
-                        <th :id=ph.id v-if="ph.type !== 'field'" class="th--center-align">
-                            <div :title=ph.caption>
-                                {{ph.caption}}</div>
-                        </th>
-                    </template>
-                 </tr>
-            </thead>
-            <tbody class="ff-tbody" :ref=REF_TABLE_BODY>
-                <tr v-for="tr in this.rezultData" :idPk="tr.id" v-on:keydown.prevent="cfgKeyNavigate($event)" v-on:click.prevent="cfgMouseNavigate($event)">
-                    <template v-for="(td, index) in tr">
-                        <td v-if="index != 'id'" :tabindex=this.cfgGetTabIndex()>
-                            <div class="div--left-align " :style="cgfTDStyle(index)" :title="td" :fieldName="index">{{td}}</div>
-                        </td>
-                    </template>
-                    <td :tabindex=this.cfgGetTabIndex()>
-                        <div class="div--center-align-action-group" >
-                            <div class="toolbar-icon-inline" >
-                                <template v-for="ph in pHeader.actionButton">
-                                   <div class="divButton">
-                                       <my-button @click="this.emitAction($event, ph.emitAction)" :heightButton=22 :buttonType=1 :title="ph.tooltip" :style=cfgIconColor(ph.icon.color)>
-                                           <font-awesome-icon :icon=this.cfgIconPictureAction(ph.icon) size="1x"/>
-                                       </my-button>
-                                   </div>
-                                </template>
+    <div class="ff-grid-container">
+        <div class="ff-grid" :ref=this.REF_DIV_TABLE>
+            <table class="ff-table" :ref=REF_TABLE>
+                <thead class="ff-thead" :ref=this.REF_THEAD>
+                    <tr :idPk="-1">
+                        <template v-for="ph in pConfig.header">
+                            <th :id=ph.id v-if="ph.type == 'field'" class="th--left-align">
+                                <div :title=ph.caption>
+                                    {{ph.caption}}</div>
+                            </th>
+                            <th :id=ph.id v-if="ph.type !== 'field'" class="th--center-align">
+                                <div :title=ph.caption>
+                                    {{ph.caption}}</div>
+                            </th>
+                        </template>
+                     </tr>
+                </thead>
+                <tbody class="ff-tbody" :ref=REF_TABLE_BODY>
+                    <tr v-for="tr in this.rezultData" :idPk="tr.id" v-on:keydown.prevent="cfgKeyNavigate($event)" v-on:click.prevent="cfgMouseNavigate($event)">
+                        <template v-for="(td, index) in tr">
+                            <td v-if="index != 'id'" :tabindex=this.cfgGetTabIndex()>
+                                <div class="div--left-align " :style="cgfTDStyle(index)" :title="td" :fieldName="index">{{td}}</div>
+                            </td>
+                        </template>
+                        <td :tabindex=this.cfgGetTabIndex()>
+                            <div class="div--center-align-action-group" >
+                                <div class="toolbar-icon-inline" >
+                                    <template v-for="ph in pConfig.actionButtonHeader">
+                                       <div class="divButton">
+                                           <my-button @click="this.emitAction($event, ph.emitAction)" :heightButton=22 :buttonType=1 :title="ph.tooltip" :style=cfgIconColor(ph.icon.color)>
+                                               <font-awesome-icon :icon=this.cfgIconPictureAction(ph.icon) size="1x"/>
+                                           </my-button>
+                                       </div>
+                                    </template>
+                                </div>
                             </div>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-            <tfoot></tfoot>
-        </table>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot></tfoot>
+            </table>
+
+        </div>
+
+        <div class="toolbar" v-if="pConfig.toolbar.show">
+            <div class="toolbarButton">
+                <template v-for="ph in pConfig.toolbar.actionButton">
+                    <div class="divButton">
+                        <my-button @click="this.emitActionToolbar($event, ph.emitAction)" :heightButton=22 :buttonType=2 :title="ph.tooltip" :style=cfgIconColor(ph.icon.color)>
+                            <font-awesome-icon :icon=this.cfgIconPictureAction(ph.icon) size="1x"/>
+                        </my-button>
+                    </div>
+                </template>
+            </div>
+            <div class="dataSelected" :title=this.showSelectedData>{{this.showSelectedData}}</div>
+        </div>
+
     </div>
 </template>
 
@@ -52,8 +69,7 @@
 			'my-button': Button
 		},
         props: {
-            pHeader: {type: Object, required: true},
-            pHeight: {type: Number, default: 300, required: false}
+            pConfig: {type: Object, required: true}
         },
 		created() {
             this.REF_DIV_TABLE  = 'refDivTable',
@@ -62,8 +78,6 @@
             this.REF_TABLE_BODY = 'refBody',
             this.CLASS_SELECTED = 'selected',
             this.engine={
-                widthGridFromCell: 0,
-                constantaWidth: 18+4,
                 tabIndexValue: 0,
                 tdCurent: null,
                 trCurent: null,
@@ -119,11 +133,30 @@
 
                 for (const c of cells) {
                     let fieldName = c.firstChild.getAttribute(this.$constGrid.BODY.FIELD_NAME);
-                   if(this.pHeader.returnField.includes(fieldName)){
+                   if(this.pConfig.returnField.includes(fieldName)){
                         finalSelected[fieldName] = c.innerText;
                     }
                 }
+
                 this.selectdRow = finalSelected;
+
+                this.privateMakeShowDataSelected();
+            },
+            privateMakeShowDataSelected: function (){
+	            if(this.pConfig.toolbar.show) {
+
+	            	let text = '';
+
+		            for (const cfield of this.pConfig.toolbar.fieldShow.field) {
+		            	text += this.selectdRow[cfield] + this.pConfig.toolbar.fieldShow.separator;
+                    }
+
+                    if(this.pConfig.toolbar.fieldShow.includeIdPk){
+	                    text = '('+ this.selectdRow[this.$constGrid.ID_NAME] +') ' + text;
+                    }
+
+		            this.showSelectedData =  text;
+	            }
             },
             privateSelectedCell: function (td) {
                 this.engine.tdCurent = td;
@@ -153,6 +186,11 @@
                 this.cfgMouseNavigate(event);
                 this.$emit(action, this.selectdRow);
             },
+	        emitActionToolbar: function (event, action) {
+            	if(this.pConfig.toolbar.show) {
+		            this.$emit(action, this.getDataSelected());
+	            }
+	        },
             cfgGrid: function () {
                 let divTable = this.$refs[this.REF_DIV_TABLE];
 
@@ -160,9 +198,14 @@
                 this.cfgGridHeader(headerCells);
                 this.cfgGridCRUDbutton();
 
-                // form, ordinea conteaza pentru: this.engine.widthGridFromCell
-                divTable.style.width = this.engine.widthGridFromCell  + 'px';
-                divTable.style.height = this.pHeight  + 'px';
+
+                let widthPixel = this.pConfig.cfg.width;
+                if(parseInt(widthPixel) != NaN){
+	                widthPixel = widthPixel  + 'px';
+                }
+
+                divTable.style.width = widthPixel;
+                divTable.style.height = this.pConfig.cfg.height  + 'px';
             },
             cfgKeyNavigate: function (event){
                 if (event.key == 'ArrowRight') {
@@ -195,9 +238,7 @@
             },
             cfgGridHeader: function (headerCells) {
                 for (let i = 0; i < headerCells.length; i++) {
-                    let width = this.$vanilla.getAtributeValueFromArrayObject(this.pHeader.header,'id',headerCells[i].getAttribute('id'),'width');
-
-                    this.engine.widthGridFromCell = this.engine.widthGridFromCell + width + this.engine.constantaWidth;
+                    let width = this.$vanilla.getAtributeValueFromArrayObject(this.pConfig.header,'id',headerCells[i].getAttribute('id'),'width');
                     headerCells[i].style.width = width + 'px';
                     //headerCells[i].style.fixedWidth = width + 'px';
                     //headerCells[i].firstChild.style.width = width + 'px';
@@ -213,7 +254,7 @@
               return this.engine.tabIndexValue;
             },
             cgfTDStyle: function (fieldName) {
-	            let width = this.$vanilla.getAtributeValueFromArrayObject(this.pHeader.header,this.$constGrid.HEADER.TABLE_FIELD_NAME,fieldName,'width');
+	            let width = this.$vanilla.getAtributeValueFromArrayObject(this.pConfig.header,this.$constGrid.HEADER.TABLE_FIELD_NAME,fieldName,'width');
 	            return {
 	            	width: width + 'px'
                 }
@@ -224,7 +265,7 @@
                 dataTest.push({name: 'Vasile',  'fact de curaj': 'se duce la piata si face cumparaturii 004 si inca un shir foarte lung sper eu', rez: 'nu a castigat nimic 004', var: 'variaza + 4', id: 92});
                 dataTest.push({name: 'Ion',     'fact de curaj': 'se duce la piata si face cumparaturii 005', rez: 'nu a castigat nimic 005', var: 'variaza + 5', id: 93});
 
-                for(let i=0; i<5; i++){
+                for(let i=0; i<10; i++){
                     dataTest.push({name: i+' Vasile',  'fact de curaj': 'se duce la piata si face cumparaturii 00' + i, rez: 'nu a castigat nimic ' +i, var: 'variaza +' + i, id: i});
                     // dataTest.push({name: i+' Ion',  act: 'se duce la piata si face cumparaturii 00' + i, rez: 'nu a castigat nimic ' +i, var: 'variaza +' + i, id: i+30});
                 }
@@ -236,7 +277,8 @@
 		data () {
 			return {
                 rezultData: new Array(),
-                selectdRow: {}
+                selectdRow: {},
+                showSelectedData: '...'
             }
 		}
 	}

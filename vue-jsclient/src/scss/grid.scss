@@ -1,107 +1,149 @@
-.ff-grid {
-    background: $ff-background-color-wokbench;
-    // width: 100%;
-    display: inline-block;
+$ff-caption-text-height: 22px;
 
-    overflow-y: auto;
-    overflow-x: auto;
-    //height: 200px;
 
-    .selected{
-        background: lighten($ff-hover-color, 55%) !important;
-    }
+.ff-grid-container {
+	display: inline-grid;
 
-    .ff-table{
-        border-collapse: collapse;
-	    table-layout: fixed;
+	.ff-grid {
+		background: $ff-background-color-wokbench;
+		// width: 100%;
+		display: inline-block;
 
-        .ff-thead{
-            background: $ff-base;
-            position: sticky;
-            top: 0;
+		overflow-y: auto;
+		overflow-x: auto;
+		//height: 200px;
 
-            th {
-                border: 1px solid darken($ff-base,20%);
-                font-size: map-get($ff-grid,"header-font-size");
-                font-weight: bold;
-                color: #FFFFFF;
-                // border-left: 1px solid darken($ff-base,70%);
-                // &:first-child {border-left: none;}
-                padding: 5px;
+		.selected {
+			background: lighten($ff-hover-color, 55%) !important;
+		}
 
-	            &--left-align {
-		            @extend th;
-		            text-align: left;
-	            }
+		.ff-table {
+			border-collapse: collapse;
+			table-layout: fixed;
 
-	            &--center-align {
-		            @extend th;
-		            text-align: center;
-	            }
+			.ff-thead {
+				background: $ff-base;
+				position: sticky;
+				top: 0;
 
-                div{
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    cursor: default;
-                }
+				th {
+					border: 1px solid darken($ff-base, 20%);
+					font-size: map-get($ff-grid, "header-font-size");
+					font-weight: bold;
+					color: #FFFFFF;
+					// border-left: 1px solid darken($ff-base,70%);
+					// &:first-child {border-left: none;}
+					padding: 5px;
 
-            }
+					&--left-align {
+						@extend th;
+						text-align: left;
+					}
 
-        }
-        .ff-tbody{
-            tr {
-                &:hover {
-                    background: lighten($ff-hover-color, 55%);
-                    // cursor: pointer;
-                    cursor: default;
-                }
+					&--center-align {
+						@extend th;
+						text-align: center;
+					}
 
-                td{
-                    border-left: 1px dotted darken($ff-base,5%);
-                    .div{
-                        padding: 3px;
-                        white-space: nowrap;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
+					div {
+						white-space: nowrap;
+						overflow: hidden;
+						text-overflow: ellipsis;
+						cursor: default;
+					}
 
-                        &--left-align {
-                            @extend .div;
-                            text-align: left;
-                        }
+				}
 
-                        &--center-align {
-                            @extend .div;
-                            text-align: center;
-                        }
+			}
+			.ff-tbody {
+				tr {
+					&:hover {
+						background: lighten($ff-hover-color, 55%);
+						// cursor: pointer;
+						cursor: default;
+					}
 
-                        &--center-align-action-group {
-                            // @extend .div;
-                            text-align: center;
-                        }
+					td {
+						border-left: 1px dotted darken($ff-base, 5%);
+						.div {
+							padding: 3px;
+							white-space: nowrap;
+							overflow: hidden;
+							text-overflow: ellipsis;
 
-                        &--action-group {
-                            @extend .div;
-                            display: inline-flex;
-                            width: 100%;
+							&--left-align {
+								@extend .div;
+								text-align: left;
+							}
 
-                            div{
-                                margin-left: 1%;
-                            }
-                        }
-                    }
-                }
+							&--center-align {
+								@extend .div;
+								text-align: center;
+							}
 
-            }
+							&--center-align-action-group {
+								// @extend .div;
+								text-align: center;
+							}
 
-        }
+							&--action-group {
+								@extend .div;
+								display: inline-flex;
+								width: 100%;
 
-        tr {
-            &:nth-child(even) {
-                background: lighten($ff-base, 50%);
-            }
-        }
+								div {
+									margin-left: 1%;
+								}
+							}
+						}
+					}
 
-    }
+				}
+
+			}
+
+			tr {
+				&:nth-child(even) {
+					background: lighten($ff-base, 50%);
+				}
+			}
+
+		}
+	}
+
+	.toolbar{
+		//top right bottom left
+		padding: 5px 10px 2px 5px;
+		display: inline-flex;
+		justify-content: flex-start;
+
+
+		.toolbarButton {
+			display: inline-flex;
+			.divButton {
+				margin-left: 4px;
+			}
+		}
+
+		.dataSelected{
+			padding-left: 5px;
+			width: 200px;
+
+			// center flex type
+			//display: flex;
+			//justify-content: center;
+			//align-content: center;
+			//flex-direction: column;
+
+			line-height: $ff-caption-text-height; vertical-align: middle;
+
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+
+
+		}
+
+	}
+
 }
-

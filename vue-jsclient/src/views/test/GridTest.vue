@@ -1,13 +1,12 @@
 <template>
-    <my-grid ref="gridPrint" :pHeader=this.gridCaption @invoicePrint="invoicePrint" @editCeva="editCeva"
+    <my-grid ref="gridPrint"
+             :pConfig=this.gridConfig
+             @invoicePrint="invoicePrint"
+             @editCeva="editCeva"
+             @deleteCevaToolbar="deleteCevaToolbar"
     ></my-grid>
 
     <br>
-
-    <div class="toolbar-icon-inline">
-        <div class="divButton"><my-button :heightButton=22 :buttonType=2 ><font-awesome-icon :icon="['fas', 'print']" size="1x"/></my-button></div>
-        <div class="divButton"><my-button :heightButton=22 :buttonType=2 ><font-awesome-icon :icon="['fas', 'edit']" size="1x"/></my-button></div>
-    </div>
 
 </template>
 
@@ -23,8 +22,7 @@
         },
         props: {},
         created() {
-
-            this.gridCaption = {
+            this.gridConfig = {
                 header: [
                     this.$constGrid.HEADER.getHeader(1,'Nume',50,'name', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
                     this.$constGrid.HEADER.getHeader(2,'Actiune din functie',400,'fact de curaj', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
@@ -32,15 +30,31 @@
                     this.$constGrid.HEADER.getHeader(4,'Variabile',50,'var', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
                     this.$constGrid.HEADER.getHeader(5,'action',50,null, this.$constGrid.HEADER.CAPTION_TYPE_ACTION)
                 ],
-                actionButton: [
-                    this.$constGrid.getActionButton(9, 'Altceva din functie', 'altCeca', this.$constGrid.getIcon('fas','skull', '#adad00')),
+	            actionButtonHeader: [
+                	this.$constGrid.getActionButton(9, 'Altceva din functie', 'altCeca', this.$constGrid.getIcon('fas','skull', '#adad00')),
                     this.$constGrid.getActionButton(6, 'Print din functie', 'invoicePrint', this.$constGrid.ICON_PRINT),
                     this.$constGrid.getActionButton(7, 'Edit din functie', 'deleteCeva', this.$constGrid.ICON_DELETE),
                     this.$constGrid.getActionButton(8, 'Delete din functie', 'editCeva', this.$constGrid.ICON_EDIT)
                 ],
-                returnField: ['name', 'fact de curaj']
+                returnField: ['name', 'fact de curaj'],
+                cfg: {
+	                width: 'auto',
+                    height: 300
+                },
+                toolbar: {
+                	show: false,
+	                fieldShow: {
+                		field: ['fact de curaj'],
+                        separator: " ",
+                        includeIdPk: true
+                    },
+                	actionButton : [
+		                this.$constGrid.getActionButton( null,  'Print din functie', 'invoicePrintToolbar', this.$constGrid.ICON_PRINT),
+		                this.$constGrid.getActionButton( null,  'Edit din functie',   'deleteCevaToolbar', this.$constGrid.ICON_DELETE),
+		                this.$constGrid.getActionButton( null,  'Delete din functie', 'editCevaToolbar', this.$constGrid.ICON_EDIT)
+                    ]
+                }
             }
-
         },
         mounted() {
         },
@@ -53,7 +67,12 @@
             },
             editCeva: function () {
                 console.log('editez ceva');
+            },
+	        deleteCevaToolbar: function (selectData){
+		        console.log('delete de la toolabar');
+		        console.log(selectData);
             }
+
         },
         data() {
             return {}
