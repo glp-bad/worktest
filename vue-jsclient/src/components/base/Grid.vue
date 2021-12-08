@@ -94,6 +94,18 @@
 
 		},
         methods:{
+	        getDataFromServer: function () {
+		        let uri = this.$url.getUrl(this.pConfig.cfg.urlData);
+		        this.axios
+			        .post(uri, this.post)
+			        .then(response => {
+				            this.rezultData = response.data;
+				        }
+
+			        )
+			        .catch(error => console.log(error));
+
+	        },
             getDataSelected: function () {
                 return this.selectdRow;
             },
@@ -259,7 +271,7 @@
 	            	width: width + 'px'
                 }
             },
-            getDataFromServer: function () {
+            getTestData: function () {
 
                 let dataTest = new Array();
                 dataTest.push({name: 'Vasile',  'fact de curaj': 'se duce la piata si face cumparaturii 004 si inca un shir foarte lung sper eu', rez: 'nu a castigat nimic 004', var: 'variaza + 4', id: 92});
@@ -269,8 +281,6 @@
                     dataTest.push({name: i+' Vasile',  'fact de curaj': 'se duce la piata si face cumparaturii 00' + i, rez: 'nu a castigat nimic ' +i, var: 'variaza +' + i, id: i});
                     // dataTest.push({name: i+' Ion',  act: 'se duce la piata si face cumparaturii 00' + i, rez: 'nu a castigat nimic ' +i, var: 'variaza +' + i, id: i+30});
                 }
-
-                this.rezultData = dataTest;
             }
 
         },
@@ -278,7 +288,8 @@
 			return {
                 rezultData: new Array(),
                 selectdRow: {},
-                showSelectedData: '...'
+                showSelectedData: '...',
+				post:  {wordSearch: null}
             }
 		}
 	}

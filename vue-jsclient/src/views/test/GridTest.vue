@@ -24,10 +24,10 @@
         created() {
             this.gridConfig = {
                 header: [
-                    this.$constGrid.HEADER.getHeader(1,'Nume',50,'name', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
-                    this.$constGrid.HEADER.getHeader(2,'Actiune din functie',400,'fact de curaj', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
-                    this.$constGrid.HEADER.getHeader(3,'Rezultat mai bun',120,'rez', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
-                    this.$constGrid.HEADER.getHeader(4,'Variabile',50,'var', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
+                    this.$constGrid.HEADER.getHeader(1,'Descriere',400,'caption', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
+                    this.$constGrid.HEADER.getHeader(2,'Contract',50,'contract', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
+                    //this.$constGrid.HEADER.getHeader(3,'Rezultat mai bun',120,'rez', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
+                    //this.$constGrid.HEADER.getHeader(4,'Variabile',50,'var', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
                     this.$constGrid.HEADER.getHeader(5,'action',50,null, this.$constGrid.HEADER.CAPTION_TYPE_ACTION)
                 ],
 	            actionButtonHeader: [
@@ -36,15 +36,16 @@
                     this.$constGrid.getActionButton(7, 'Edit din functie', 'deleteCeva', this.$constGrid.ICON_DELETE),
                     this.$constGrid.getActionButton(8, 'Delete din functie', 'editCeva', this.$constGrid.ICON_EDIT)
                 ],
-                returnField: ['name', 'fact de curaj'],
+                returnField: ['contract'],
                 cfg: {
-	                width: 'auto',
-                    height: 300
+	                width: 590,
+                    height: 300,
+                    urlData: 'gridDataTest'
                 },
                 toolbar: {
-                	show: false,
+                	show: true,
 	                fieldShow: {
-                		field: ['fact de curaj'],
+                		field: ['contract'],
                         separator: " ",
                         includeIdPk: true
                     },
@@ -61,16 +62,18 @@
         methods: {
             invoicePrint: function (selectData) {
                 console.log('acum printez');
-                const reqObject = this.$app.getObjectReturnComponent(selectData);
+                // const reqObject = this.$app.getObjectReturnComponent(selectData);
+                // console.log(reqObject);
 
-                console.log(reqObject);
             },
             editCeva: function () {
                 console.log('editez ceva');
+
             },
 	        deleteCevaToolbar: function (selectData){
-		        console.log('delete de la toolabar');
-		        console.log(selectData);
+		        console.log('delete de la toolbar');
+		        // console.log(selectData);
+
             }
 
         },

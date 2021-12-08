@@ -10,5 +10,6 @@ export default [
 	{name: "badmintonCourt",    url: "public/app/badmintonCourt"},
 	{name: "addName",           url: "public/app/addName"},
 	{name: "searchTest",        url: "public/app/search"},
-    {name: "searchTableTest",   url: "public/app/searchOnTable"}
+    {name: "searchTableTest",   url: "public/app/searchOnTable"},
+	{name: "gridDataTest",      url: "public/app/gridDataTest"},
 ]
