@@ -17,9 +17,9 @@
                      </tr>
                 </thead>
                 <tbody class="ff-tbody" :ref=REF_TABLE_BODY>
-                    <tr v-for="tr in this.rezultData" :idPk="tr.id" v-on:keydown.prevent="cfgKeyNavigate($event)" v-on:click.prevent="cfgMouseNavigate($event)">
+                    <tr v-for="(tr, index) in this.rezultData" :idPk="tr.id" v-on:keydown.prevent="cfgKeyNavigate($event)" v-on:click.prevent="cfgMouseNavigate($event)" v-bind:key="index">
                         <template v-for="(td, index) in tr">
-                            <td v-if="index != 'id'" :tabindex=this.cfgGetTabIndex()>
+                            <td v-if="index != 'id'" :tabindex=this.cfgGetTabIndex() v-bind:key="index">
                                 <div class="div--left-align " :style="cgfTDStyle(index)" :title="td" :fieldName="index">{{td}}</div>
                             </td>
                         </template>
@@ -77,13 +77,13 @@
 			this.REF_THEAD      = 'refThead',
             this.REF_TABLE_BODY = 'refBody',
             this.CLASS_SELECTED = 'selected',
-            this.engine={
+            this.engine = {
                 tabIndexValue: 0,
                 tdCurent: null,
                 trCurent: null,
                 maximRows: 0
             }
-		},
+        },
 		mounted() {
 		    this.getDataFromServer();
 		    this.cfgGrid();
@@ -93,18 +93,26 @@
             });
 
 		},
+        computed: {
+	        rows(){
+		        return this.rezultData;
+	        }
+        },
         methods:{
 	        getDataFromServer: function () {
+	        	/*
 		        let uri = this.$url.getUrl(this.pConfig.cfg.urlData);
 		        this.axios
 			        .post(uri, this.post)
 			        .then(response => {
 			             this.rezultData = response.data;
-				            // this.rezultData = Object.freeze(response.data);
 				        }
 
 			        )
 			        .catch(error => console.log(error));
+                */
+
+		        this.rezultData = this.getTestData();
 
 	        },
             getDataSelected: function () {
@@ -120,6 +128,7 @@
                 this.engine.tdCurent.focus();
             },
             privateSelectedRow: function (tr) {
+
                 if(  !this.$check.isUndef(this.engine.trCurent)){
                     this.engine.trCurent.removeAttribute('class', this.CLASS_SELECTED);
                 }
@@ -134,8 +143,6 @@
                 this.engine.trCurent.setAttribute('class', this.CLASS_SELECTED);
 
                 this.privateGetDataFromTr();
-
-                 console.log("privateSelectedRow: preiau datele");
 
                 this.setFocus();
             },
@@ -276,14 +283,20 @@
             },
             getTestData: function () {
 
-                let dataTest = new Array();
-                dataTest.push({name: 'Vasile',  'fact de curaj': 'se duce la piata si face cumparaturii 004 si inca un shir foarte lung sper eu', rez: 'nu a castigat nimic 004', var: 'variaza + 4', id: 92});
-                dataTest.push({name: 'Ion',     'fact de curaj': 'se duce la piata si face cumparaturii 005', rez: 'nu a castigat nimic 005', var: 'variaza + 5', id: 93});
+	        	console.log('START generate lista->>>>>>');
 
-                for(let i=0; i<10; i++){
-                    dataTest.push({name: i+' Vasile',  'fact de curaj': 'se duce la piata si face cumparaturii 00' + i, rez: 'nu a castigat nimic ' +i, var: 'variaza +' + i, id: i});
+                let dataTest = new Array();
+                //dataTest.push({name: 'Vasile',  'fact de curaj': 'se duce la piata si face cumparaturii 004 si inca un shir foarte lung sper eu', rez: 'nu a castigat nimic 004', var: 'variaza + 4', id: 92});
+                //dataTest.push({name: 'Ion',     'fact de curaj': 'se duce la piata si face cumparaturii 005', rez: 'nu a castigat nimic 005', var: 'variaza + 5', id: 93});
+
+                for(let i=0; i<1000; i++){
+                    dataTest.push({id: i, caption: i+' Vasile fact de curaj', contract: '766600' + i });
                     // dataTest.push({name: i+' Ion',  act: 'se duce la piata si face cumparaturii 00' + i, rez: 'nu a castigat nimic ' +i, var: 'variaza +' + i, id: i+30});
                 }
+
+	            console.log('END generate lista <<<<<<<');
+
+                return dataTest;
             }
 
         },

@@ -25,16 +25,16 @@
             this.gridConfig = {
                 header: [
                     this.$constGrid.HEADER.getHeader(1,'Descriere',400,'caption', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
-                    this.$constGrid.HEADER.getHeader(2,'Contract',50,'contract', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
+                    this.$constGrid.HEADER.getHeader(2,'Contract',70,'contract', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
                     //this.$constGrid.HEADER.getHeader(3,'Rezultat mai bun',120,'rez', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
                     //this.$constGrid.HEADER.getHeader(4,'Variabile',50,'var', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
                     this.$constGrid.HEADER.getHeader(5,'action',50,null, this.$constGrid.HEADER.CAPTION_TYPE_ACTION)
                 ],
 	            actionButtonHeader: [
-                	this.$constGrid.getActionButton(9, 'Altceva din functie', 'altCeca', this.$constGrid.getIcon('fas','skull', '#adad00')),
-                    this.$constGrid.getActionButton(6, 'Print din functie', 'invoicePrint', this.$constGrid.ICON_PRINT),
-                    this.$constGrid.getActionButton(7, 'Edit din functie', 'deleteCeva', this.$constGrid.ICON_DELETE),
-                    this.$constGrid.getActionButton(8, 'Delete din functie', 'editCeva', this.$constGrid.ICON_EDIT)
+                	//this.$constGrid.getActionButton(9, 'Altceva din functie', 'altCeca', this.$constGrid.getIcon('fas','skull', '#adad00')),
+                    this.$constGrid.getActionButton(6, 'Print din functie', 'invoicePrint', this.$constGrid.ICON_PRINT)
+                    //this.$constGrid.getActionButton(7, 'Edit din functie', 'deleteCeva', this.$constGrid.ICON_DELETE),
+                    //this.$constGrid.getActionButton(8, 'Delete din functie', 'editCeva', this.$constGrid.ICON_EDIT)
                 ],
                 returnField: ['contract'],
                 cfg: {

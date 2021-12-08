@@ -41,7 +41,7 @@ class TestSearchController extends Controller {
 
 	private function getRezultForGrid(){
 		$rezulset = array();
-		for ($x = 0; $x <= 1000; $x++) {
+		for ($x = 0; $x <= 2000; $x++) {
 			$rezulset[]=['id'=> $x, 'caption' => 'GRID ma duc la piata de ' . $x, "contract" => $x*473];
 		}
 
