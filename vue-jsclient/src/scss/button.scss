@@ -39,11 +39,17 @@
 .ff-button-icon-toolbar {
     border: none ;
     border-radius: 4px;
-    cursor: pointer;
 
-    &:hover{
-        background-color: $ff-base;
-    }
+	&:not(.disable):hover {
+		background-color: $ff-base;
+		cursor: pointer;
 
+	}
+
+}
+
+.ff-button-selected {
+	background-color: $ff-base;
+	border: 1px solid darken($ff-base, 20%);
 }
 

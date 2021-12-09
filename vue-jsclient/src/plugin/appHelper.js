@@ -120,6 +120,7 @@ const appHelper = {
                         next_page: (total_pages > page) ? page + 1 : null,
                         total: items.length,
                         total_pages: total_pages,
+	                    page_number_scroll: new Array(),
                         data: paginatedItems
                     };
                 }

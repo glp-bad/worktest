@@ -26,6 +26,11 @@
                 default: "button"
             }
         },
+	    created() {
+		    this.CLASS_DISABLE = 'disable',
+			this.CLASS_PERMANENT_OVER = 'ff-button-selected'
+
+	    },
         mounted(){
             if(this.widthButton > 0) {
                 this.$el.style.width = this.widthButton + 'px';
@@ -33,6 +38,25 @@
             this.$el.style.height = this.heightButton + 'px';
         },
         methods:{
+	        disable: function (dsb) {
+	        	if(dsb){
+			        this.$el.setAttribute('disabled',true);
+			        this.$el.classList.add(this.CLASS_DISABLE);
+
+                }else{
+			        this.$el.removeAttribute ('disabled');
+			        this.$el.classList.remove(this.CLASS_DISABLE);
+                }
+
+            },
+            permanentOver: function (on) {
+	        	if(on){
+			        this.$el.classList.add(this.CLASS_PERMANENT_OVER);
+                }else{
+			        this.$el.classList.remove(this.CLASS_PERMANENT_OVER);
+                }
+
+            },
             getClassButton: function () {
                 let returnValue = 'ff-button';
 

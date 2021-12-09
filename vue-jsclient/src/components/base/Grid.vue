@@ -17,7 +17,7 @@
                      </tr>
                 </thead>
                 <tbody class="ff-tbody" :ref=REF_TABLE_BODY>
-                    <tr v-for="(tr, index) in this.rezultData" :idPk="tr.id" v-on:keydown.prevent="cfgKeyNavigate($event)" v-on:click.prevent="cfgMouseNavigate($event)" v-bind:key="index">
+                    <tr v-for="(tr, index) in this.paginate.pag.data" :idPk="tr.id" v-on:keydown.prevent="cfgKeyNavigate($event)" v-on:click.prevent="cfgMouseNavigate($event)" v-bind:key="index">
                         <template v-for="(td, index) in tr">
                             <td v-if="index != 'id'" :tabindex=this.cfgGetTabIndex() v-bind:key="index">
                                 <div class="div--left-align " :style="cgfTDStyle(index)" :title="td" :fieldName="index">{{td}}</div>
@@ -58,34 +58,49 @@
 
             <div class="paginate" >
                 <div class="divButton">
-                    <my-button @click="this.goToPage($event, this.engine.paginate.buttonGoStart.id)" :heightButton=22 :buttonType=2 :title='"goto first pagina"'>
+                    <my-button @click="this.goToPage($event, this.engine.paginate.buttonGoStart.id)"
+                               :ref=this.engine.paginate.buttonGoStart.ref
+                               :heightButton=22
+                               :buttonType=2
+                               :title='"goto first pagina"'>
                         <font-awesome-icon :icon=this.cfgIconPictureAction(this.engine.paginate.buttonGoStart.icon) size="1x"/>
                     </my-button>
                 </div>
                 <div class="divButton">
-                    <my-button @click="this.goToPage($event, this.engine.paginate.buttonGoLeft.id)" :heightButton=22 :buttonType=2 :title='"previous page"'>
+                    <my-button @click="this.goToPage($event, this.engine.paginate.buttonGoLeft.id)"
+                               :ref=this.engine.paginate.buttonGoLeft.ref
+                               :heightButton=22
+                               :buttonType=2
+                               :title='"previous page"'>
                         <font-awesome-icon :icon=this.cfgIconPictureAction(this.engine.paginate.buttonGoLeft.icon) size="1x"/>
                     </my-button>
                 </div>
 
                 <!-- <template  v-for="index in 10" :key='index'> -->
-                <template  v-for="(pgn, index) in this.paginate.buttonPageNumber" :key='index'>
-                    <div class="divButton">
+                <template  v-for="(pgn, index) in this.paginate.pag.page_number_scroll" :key='index'>
+                    <div class="divButtonDinamic">
                         <my-button @click="this.goToPage($event, pgn)" :widthButton=35 :heightButton=22 :buttonType=2 :title='this.privateGetPageTitle(pgn)'>
                            {{pgn}}
                         </my-button>
                     </div>
                 </template>
 
-
                 <div class="divButton">
-                    <my-button @click="this.goToPage($event, this.engine.paginate.buttonGoRight.id)" :heightButton=22 :buttonType=2 :title='"next page"'>
+                    <my-button @click="this.goToPage($event, this.engine.paginate.buttonGoRight.id)"
+                               :ref=this.engine.paginate.buttonGoRight.ref
+                               :heightButton=22
+                               :buttonType=2
+                               :title='"next page"'>
                         <font-awesome-icon :icon=this.cfgIconPictureAction(this.engine.paginate.buttonGoRight.icon) size="1x"/>
                     </my-button>
                 </div>
                 <div class="divButton">
-                    <my-button @click="this.goToPage($event, this.engine.paginate.buttonGoToEnd.id)" :heightButton=22 :buttonType=2 :title='"goto last page"'>
-                        <font-awesome-icon :icon=this.cfgIconPictureAction(this.engine.paginate.buttonGoToEnd.icon) size="1x"/>
+                    <my-button @click="this.goToPage($event, this.engine.paginate.buttonGoEnd.id)"
+                               :ref=this.engine.paginate.buttonGoEnd.ref
+                               :heightButton=22
+                               :buttonType=2
+                               :title='"goto last page"'>
+                        <font-awesome-icon :icon=this.cfgIconPictureAction(this.engine.paginate.buttonGoEnd.icon) size="1x"/>
                     </my-button>
                 </div>
             </div>
@@ -112,28 +127,34 @@
             this.REF_TABLE      = 'refTable',
 			this.REF_THEAD      = 'refThead',
             this.REF_TABLE_BODY = 'refBody',
-            this.CLASS_SELECTED = 'selected',
             this.engine = {
                 tabIndexValue: 0,
                 tdCurent: null,
                 trCurent: null,
                 maximRows: 0,
+	            CLASS_SELECTED: 'selected',
+                CLASS_DINAMIC_BUTTON_PAG: 'divButtonDinamic',
+	            CLASS_PERMANENT_OVER: 'ff-button-selected',
                 paginate: {
                     buttonGoStart:{
                         id: 'b1',
-                        icon: {fawIcon:'fas', icon: 'angle-double-left', color: "darkred"}
+                        icon: {fawIcon:'fas', icon: 'angle-double-left', color: "darkred"},
+                        ref: 'refGoStart'
                     },
                     buttonGoLeft: {
                         id: 'b2',
-                        icon: {fawIcon:'fas', icon: 'angle-left', color: "darkred"}
+                        icon: {fawIcon:'fas', icon: 'angle-left', color: "darkred"},
+	                    ref: 'refGoLeft'
                     },
                     buttonGoRight: {
                         id: 'b3',
-                        icon: {fawIcon:'fas', icon: 'angle-right', color: "darkred"}
+                        icon: {fawIcon:'fas', icon: 'angle-right', color: "darkred"},
+	                    ref: 'refGoRight'
                     },
-                    buttonGoToEnd:{
+                    buttonGoEnd:{
                         id: 'b4',
-                        icon: {fawIcon:'fas', icon: 'angle-double-right', color: "darkred"}
+                        icon: {fawIcon:'fas', icon: 'angle-double-right', color: "darkred"},
+	                    ref: 'refGoEnd'
                     },
                     maxButtonPage: 6
                 }
@@ -142,63 +163,150 @@
 		mounted() {
 		    this.getDataFromServer();
 		    this.cfgGrid();
+			this.goToPage(null, '1');
 
             this.$nextTick(function () {
                 this.initGrid();
+	            this.goToPage(null, '1');       // prima data initializam page
             });
 
 		},
         computed: {
-	        rows(){
-		        return this.rezultData;
-	        }
         },
-        methods:{
+        methods: {
 	        getDataFromServer: function () {
-	        	/*
+		        /*
 		        let uri = this.$url.getUrl(this.pConfig.cfg.urlData);
 		        this.axios
 			        .post(uri, this.post)
 			        .then(response => {
 			             this.rezultData = response.data;
 				        }
-
 			        )
 			        .catch(error => console.log(error));
                 */
-
 		        this.rezultData = this.getTestData();
 
+	        }, getDataSelected: function () {
+		        return this.selectdRow;
+	        }, initGrid: function () {
+		        this.engine.maximRows = this.paginate.pag.data.length;
+		        if (this.engine.maximRows > 0) {
+			        this.privateSelectedRow(this.$refs[this.REF_TABLE_BODY].rows[0]);
+		        }
+
+	        }, setFocus: function () {
+		        this.engine.tdCurent.focus();
 	        },
-            getDataSelected: function () {
-                return this.selectdRow;
-            },
-            initGrid: function (){
-                this.engine.maximRows = this.rezultData.length;
-                if(this.engine.maximRows > 0){
-                    this.privateSelectedRow(this.$refs[this.REF_TABLE_BODY].rows[0]);
+
+            goToPage: function (event, buttonNumber) {
+		        let pageNumber = null;
+		        if (buttonNumber.slice(0, 1) == 'b') {
+
+			        if (buttonNumber == this.engine.paginate.buttonGoStart.id) {
+				        pageNumber = 1;
+
+			        }
+			        else if (buttonNumber == this.engine.paginate.buttonGoLeft.id) {
+				        pageNumber = this.paginate.pag.pre_page;
+
+			        }
+			        else if (buttonNumber == this.engine.paginate.buttonGoRight.id) {
+				        pageNumber = this.paginate.pag.next_page;
+
+			        }
+			        else if (buttonNumber == this.engine.paginate.buttonGoEnd.id) {
+				        pageNumber = this.paginate.pag.total_pages;
+
+			        }
+
+		        }
+		        else {
+			        pageNumber = parseInt(buttonNumber);
+
+		        }
+
+
+		        this.paginate.pag = this.$vanilla.paginateArray(this.rezultData, pageNumber);
+	            this.privateCfgPaginateInitButtonNumber(pageNumber);
+		        this.privateCfgPaginateToolBar();
+	        },
+            privateCfgPaginateInitButtonNumber: function (pageNumber){
+	            // ruleaza o singura cand initializeaza numarul de butoane
+
+	            let arrayPage =  this.paginate.pag.page_number_scroll;
+
+	            console.log('trece pe aici !!!',   arrayPage );
+
+	            if (this.paginate.pag.page_number_scroll.length == 0) {
+
+		            let nrb = this.paginate.pag.total_pages;
+		            if (nrb > this.engine.paginate.maxButtonPage) {
+			            nrb = this.engine.paginate.maxButtonPage;
+		            }
+
+		            for (let i = 1; i <= nrb; i++) {
+			            this.paginate.pag.page_number_scroll.push(i.toString());
+		            }
+	            }else{
+
+
+
+	            	if(pageNumber > this.engine.paginate.maxButtonPage){
+
+			            for (let i = pageNumber; i <= this.engine.paginate.maxButtonPage; i++) {
+				            this.paginate.pag.page_number_scroll.push(i.toString());
+			            }
+
+                    }
                 }
             },
-            setFocus: function (){
-                this.engine.tdCurent.focus();
-            },
-            goToPage: function(event, buttonNumber){
-                let buttonId = null;
-                if(buttonNumber.slice(0,1) == 'b'){
-                    buttonId = buttonNumber;
-                }else{
-                    buttonId = parseInt(buttonNumber);
+            privateCfgPaginateToolBar:function(){
+	        	let disableLeft = false;
+	            let disableRight = false;
+
+	        	if(this.paginate.pag.page == 1){
+			        disableLeft = true;
                 }
 
-                console.log(buttonId);
+                if(this.paginate.pag.page == this.paginate.pag.total_pages){
+	                disableRight = true;
+                }
+
+                this.privateCfgButtonPage();
+
+	            this.$refs[this.engine.paginate.buttonGoStart.ref].disable(disableLeft);
+	            this.$refs[this.engine.paginate.buttonGoLeft.ref].disable(disableLeft);
+
+	            this.$refs[this.engine.paginate.buttonGoEnd.ref].disable(disableRight);
+	            this.$refs[this.engine.paginate.buttonGoRight.ref].disable(disableRight);
+
+            },
+            privateCfgButtonPage: function (){
+
+	        	let bHTMLCollection = this.$el.getElementsByClassName(this.engine.CLASS_DINAMIC_BUTTON_PAG);
+
+	        	for(let i = 0;i <= bHTMLCollection.length; i++){
+                    let div  = bHTMLCollection[i];
+                    if(!this.$check.isUndef(div)){
+                    	let button = div.firstChild;
+	                    if(this.paginate.pag.page == parseInt(button.textContent)){
+		                    button.classList.add(this.engine.CLASS_PERMANENT_OVER);
+                        }else{
+		                    button.classList.remove(this.engine.CLASS_PERMANENT_OVER);
+                        }
+                    }
+                }
+
             },
             privateGetPageTitle: function (page){
 	            return 'goto page ' + page;
+
             },
             privateSelectedRow: function (tr) {
 
                 if(  !this.$check.isUndef(this.engine.trCurent)){
-                    this.engine.trCurent.removeAttribute('class', this.CLASS_SELECTED);
+                    this.engine.trCurent.removeAttribute('class', this.engine.CLASS_SELECTED);
                 }
 
                 this.engine.trCurent = tr;
@@ -208,11 +316,12 @@
                     this.engine.tdCurent = this.engine.trCurent.cells[this.engine.tdCurent.cellIndex];
                 }
 
-                this.engine.trCurent.setAttribute('class', this.CLASS_SELECTED);
+                this.engine.trCurent.setAttribute('class', this.engine.CLASS_SELECTED);
 
                 this.privateGetDataFromTr();
 
                 this.setFocus();
+
             },
             privateGetDataFromTr: function (){
 
@@ -231,6 +340,7 @@
                 this.selectdRow = finalSelected;
 
                 this.privateMakeShowDataSelected();
+
             },
             privateMakeShowDataSelected: function (){
 	            if(this.pConfig.toolbar.show) {
@@ -247,39 +357,47 @@
 
 		            this.showSelectedData =  text;
 	            }
+
             },
             privateSelectedCell: function (td) {
                 this.engine.tdCurent = td;
                 this.setFocus();
+
             },
             privateArrowDown: function () {
-                if(this.engine.trCurent.sectionRowIndex < (this.rezultData.length - 1)) {
+                if(this.engine.trCurent.sectionRowIndex < (this.paginate.pag.data.length - 1)) {
                     this.privateSelectedRow(this.engine.trCurent.nextSibling);
                 }
+
             },
             privateArrowUp: function () {
                 if(this.engine.trCurent.sectionRowIndex > 0) {
                     this.privateSelectedRow(this.engine.trCurent.previousSibling);
                 }
+
             },
             privateArrowRight: function () {
                 if(!this.$check.isUndef(this.engine.tdCurent.nextElementSibling) ){
                     this.privateSelectedCell(this.engine.tdCurent.nextElementSibling);
                 }
+
             },
             privateArrowLeft: function () {
                 if(!this.$check.isUndef(this.engine.tdCurent.previousElementSibling) ){
                     this.privateSelectedCell(this.engine.tdCurent.previousElementSibling);
                 }
+
             },
 		    emitAction:function(event, action) {
                 this.cfgMouseNavigate(event);
                 this.$emit(action, this.selectdRow);
+
             },
 	        emitActionToolbar: function (event, action) {
             	if(this.pConfig.toolbar.show) {
 		            this.$emit(action, this.getDataSelected());
 	            }
+
 	        },
             cfgGrid: function () {
                 let divTable = this.$refs[this.REF_DIV_TABLE];
@@ -296,6 +414,7 @@
 
                 divTable.style.width = widthPixel;
                 divTable.style.height = this.pConfig.cfg.height  + 'px';
+
             },
             cfgKeyNavigate: function (event){
                 if (event.key == 'ArrowRight') {
@@ -354,7 +473,7 @@
                 //dataTest.push({name: 'Vasile',  'fact de curaj': 'se duce la piata si face cumparaturii 004 si inca un shir foarte lung sper eu', rez: 'nu a castigat nimic 004', var: 'variaza + 4', id: 92});
                 //dataTest.push({name: 'Ion',     'fact de curaj': 'se duce la piata si face cumparaturii 005', rez: 'nu a castigat nimic 005', var: 'variaza + 5', id: 93});
 
-                for(let i=0; i<11; i++){
+                for(let i=0; i<88; i++){
                     dataTest.push({id: i, caption: i+' Vasile fact de curaj', contract: '766600' + i });
                     // dataTest.push({name: i+' Ion',  act: 'se duce la piata si face cumparaturii 00' + i, rez: 'nu a castigat nimic ' +i, var: 'variaza +' + i, id: i+30});
                 }
@@ -370,7 +489,8 @@
                 selectdRow: {},
                 showSelectedData: '...',
                 paginate: {
-				    buttonPageNumber: ['7','8','9','10','11','12']
+				    buttonPageNumber: ['1','2','3','4','5','6'],
+                    pag: this.$vanilla.paginateArray(new Array())
                 },
 				post: {wordSearch: null}
             }
