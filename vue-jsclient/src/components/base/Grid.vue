@@ -55,54 +55,74 @@
 
                 <div class="dataSelected" :title=this.showSelectedData>{{this.showSelectedData}}</div>
             </div>
+        </div>
+        <div class="paginate" >
+            <div class="divButton">
+                <my-button @click="this.goToPage($event, this.engine.paginate.buttonGoStart.id)"
+                           :ref=this.engine.paginate.buttonGoStart.ref
+                           :heightButton=22
+                           :buttonType=2
+                           :title='"goto first pagina"'>
+                    <font-awesome-icon :icon=this.cfgIconPictureAction(this.engine.paginate.buttonGoStart.icon) size="1x"/>
+                </my-button>
+            </div>
+            <div class="divButton">
+                <my-button @click="this.goToPage($event, this.engine.paginate.buttonGoLeft.id)"
+                           :ref=this.engine.paginate.buttonGoLeft.ref
+                           :heightButton=22
+                           :buttonType=2
+                           :title='"previous page"'>
+                    <font-awesome-icon :icon=this.cfgIconPictureAction(this.engine.paginate.buttonGoLeft.icon) size="1x"/>
+                </my-button>
+            </div>
 
-            <div class="paginate" >
-                <div class="divButton">
-                    <my-button @click="this.goToPage($event, this.engine.paginate.buttonGoStart.id)"
-                               :ref=this.engine.paginate.buttonGoStart.ref
-                               :heightButton=22
-                               :buttonType=2
-                               :title='"goto first pagina"'>
-                        <font-awesome-icon :icon=this.cfgIconPictureAction(this.engine.paginate.buttonGoStart.icon) size="1x"/>
+            <template  v-for="(pgn, index) in this.paginate.pag.buttons.bt" :key='index'>
+                <div class="divButtonDinamic" v-if="!pgn.isDisable">
+                    <my-button v-bind:class="{'ff-button-selected': pgn.selected}" @click="this.goToPage($event, pgn.caption)" :widthButton=35 :heightButton=22 :buttonType=2 :title='this.privateGetPageTitle(pgn.caption)'>
+                       {{pgn.caption}}
                     </my-button>
                 </div>
-                <div class="divButton">
-                    <my-button @click="this.goToPage($event, this.engine.paginate.buttonGoLeft.id)"
-                               :ref=this.engine.paginate.buttonGoLeft.ref
-                               :heightButton=22
-                               :buttonType=2
-                               :title='"previous page"'>
-                        <font-awesome-icon :icon=this.cfgIconPictureAction(this.engine.paginate.buttonGoLeft.icon) size="1x"/>
-                    </my-button>
+                <div class="divButtonDinamic" v-if="pgn.isDisable">
+                    <div class="divSapacer" :style="{widht:'35px'}"></div>
                 </div>
+            </template>
 
-                <!-- <template  v-for="index in 10" :key='index'> -->
-                <template  v-for="(pgn, index) in this.paginate.pag.page_number_scroll" :key='index'>
-                    <div class="divButtonDinamic">
-                        <my-button @click="this.goToPage($event, pgn)" :widthButton=35 :heightButton=22 :buttonType=2 :title='this.privateGetPageTitle(pgn)'>
-                           {{pgn}}
-                        </my-button>
-                    </div>
-                </template>
+            <div class="divButton">
+                <my-button @click="this.goToPage($event, this.engine.paginate.buttonGoRight.id)"
+                           :ref=this.engine.paginate.buttonGoRight.ref
+                           :heightButton=22
+                           :buttonType=2
+                           :title='"next page"'>
+                    <font-awesome-icon :icon=this.cfgIconPictureAction(this.engine.paginate.buttonGoRight.icon) size="1x"/>
+                </my-button>
+            </div>
+            <div class="divButton">
+                <my-button @click="this.goToPage($event, this.engine.paginate.buttonGoEnd.id)"
+                           :ref=this.engine.paginate.buttonGoEnd.ref
+                           :heightButton=22
+                           :buttonType=2
+                           :title='"goto last page"'>
+                    <font-awesome-icon :icon=this.cfgIconPictureAction(this.engine.paginate.buttonGoEnd.icon) size="1x"/>
+                </my-button>
+            </div>
+            <div class="divButtonGoTo">
+                <my-button @click="this.jumpPage($event)"
+                           :heightButton=22
+                           :buttonType=2
+                           :title='"goto number page"'>
+                    Goto page
+                </my-button>
+            </div>
+            <div class="divInputGoto">
+                <page-nr-field :ref=this.REF_INPUT_PAGE_NR
+                               :size=1
+                               :pPlaceHolder="'nr. page'">
 
-                <div class="divButton">
-                    <my-button @click="this.goToPage($event, this.engine.paginate.buttonGoRight.id)"
-                               :ref=this.engine.paginate.buttonGoRight.ref
-                               :heightButton=22
-                               :buttonType=2
-                               :title='"next page"'>
-                        <font-awesome-icon :icon=this.cfgIconPictureAction(this.engine.paginate.buttonGoRight.icon) size="1x"/>
-                    </my-button>
-                </div>
-                <div class="divButton">
-                    <my-button @click="this.goToPage($event, this.engine.paginate.buttonGoEnd.id)"
-                               :ref=this.engine.paginate.buttonGoEnd.ref
-                               :heightButton=22
-                               :buttonType=2
-                               :title='"goto last page"'>
-                        <font-awesome-icon :icon=this.cfgIconPictureAction(this.engine.paginate.buttonGoEnd.icon) size="1x"/>
-                    </my-button>
-                </div>
+                </page-nr-field>
+            </div>
+
+            <div class="divLabelInfo">
+                <label>{{this.paginate.pag.page}}/{{this.paginate.pag.total_pages}}</label>
             </div>
 
         </div>
@@ -113,11 +133,14 @@
 <script>
 
 	import Button from '@/components/base/Button.vue';
+	import TextField from "@/components/base/TextField.vue";
+	// import { reactive, isReactive, readonly } from 'vue';
 
 	export default {
 		name: "grid",
 		components: {
-			'my-button': Button
+			'my-button': Button,
+            'page-nr-field': TextField
 		},
         props: {
             pConfig: {type: Object, required: true}
@@ -127,6 +150,8 @@
             this.REF_TABLE      = 'refTable',
 			this.REF_THEAD      = 'refThead',
             this.REF_TABLE_BODY = 'refBody',
+	        this.REF_INPUT_PAGE_NR = 'refPageNumber',
+
             this.engine = {
                 tabIndexValue: 0,
                 tdCurent: null,
@@ -156,9 +181,11 @@
                         icon: {fawIcon:'fas', icon: 'angle-double-right', color: "darkred"},
 	                    ref: 'refGoEnd'
                     },
-                    maxButtonPage: 6
+                    maxButtonPage: 5
                 }
-            }
+            },
+            this.paginate.pag.buttons.bt = this.$vanilla.generateButton(this.pConfig.paginate.nrButtonShow);
+
         },
 		mounted() {
 		    this.getDataFromServer();
@@ -169,6 +196,8 @@
                 this.initGrid();
 	            this.goToPage(null, '1');       // prima data initializam page
             });
+
+			// this.$vanilla.paginateArray(new Array())
 
 		},
         computed: {
@@ -187,19 +216,68 @@
                 */
 		        this.rezultData = this.getTestData();
 
-	        }, getDataSelected: function () {
+	        },
+            getDataSelected: function () {
 		        return this.selectdRow;
-	        }, initGrid: function () {
+	        },
+            initGrid: function () {
 		        this.engine.maximRows = this.paginate.pag.data.length;
 		        if (this.engine.maximRows > 0) {
 			        this.privateSelectedRow(this.$refs[this.REF_TABLE_BODY].rows[0]);
 		        }
 
-	        }, setFocus: function () {
+	        },
+            setFocus: function () {
 		        this.engine.tdCurent.focus();
 	        },
 
+	        privatedPageToolDraw: function (pageNumber){
+		        let buttonArrayLenght = this.paginate.pag.buttons.bt.length;
+		        let firstPageButton = parseInt(this.paginate.pag.buttons.bt[0].caption);
+		        let lastPageButton = parseInt(this.paginate.pag.buttons.bt[buttonArrayLenght - 1].caption);
+
+		        let newPageNumber = pageNumber;
+		        let changeLabel = false;
+		        if(pageNumber>lastPageButton || pageNumber<firstPageButton){
+			        changeLabel = true;
+		        }
+
+		        for(let i=0; i < buttonArrayLenght; i++ ) {
+
+	        	    if(changeLabel){
+			            this.paginate.pag.buttons.bt[i].caption = newPageNumber.toString();
+			            newPageNumber++;
+                    }
+
+			        let isSelected = false;
+			        if(this.paginate.pag.buttons.bt[i].caption == pageNumber.toString()) {
+				        isSelected = true;
+			        }
+			        this.paginate.pag.buttons.bt[i].selected = isSelected;
+
+			        let isDisabled = false;
+			        if(parseInt(this.paginate.pag.buttons.bt[i].caption) > this.paginate.pag.total_pages){
+				        isDisabled = true;
+			        }
+
+			        this.paginate.pag.buttons.bt[i].isDisable = isDisabled;
+                }
+
+
+
+            },
+
+	        jumpPage: function () {
+                let input = this.$refs[this.REF_INPUT_PAGE_NR];
+                let pageNumber = parseInt(input.getValue());
+
+                if(input.getValue()>=1 && pageNumber<=this.paginate.pag.total_pages){
+                	this.goToPage(null, pageNumber.toString());
+                }
+
+	        },
             goToPage: function (event, buttonNumber) {
+
 		        let pageNumber = null;
 		        if (buttonNumber.slice(0, 1) == 'b') {
 
@@ -213,11 +291,9 @@
 			        }
 			        else if (buttonNumber == this.engine.paginate.buttonGoRight.id) {
 				        pageNumber = this.paginate.pag.next_page;
-
 			        }
 			        else if (buttonNumber == this.engine.paginate.buttonGoEnd.id) {
 				        pageNumber = this.paginate.pag.total_pages;
-
 			        }
 
 		        }
@@ -226,42 +302,25 @@
 
 		        }
 
-
-		        this.paginate.pag = this.$vanilla.paginateArray(this.rezultData, pageNumber);
-	            this.privateCfgPaginateInitButtonNumber(pageNumber);
-		        this.privateCfgPaginateToolBar();
+		        // new way
+	            this.privatedPageToolDraw(pageNumber);
+	            this.privateSetPaginatePag(pageNumber);
+	            this.privateCfgPaginateArrowButton();
 	        },
-            privateCfgPaginateInitButtonNumber: function (pageNumber){
-	            // ruleaza o singura cand initializeaza numarul de butoane
+            privateSetPaginatePag: function (pageNumber){
 
-	            let arrayPage =  this.paginate.pag.page_number_scroll;
+	        	let paginate = this.$vanilla.paginateArray(this.rezultData, pageNumber);
 
-	            console.log('trece pe aici !!!',   arrayPage );
+	        	this.paginate.pag.data        = paginate.data;
+	            this.paginate.pag.next_page   = paginate.next_page;
+	            this.paginate.pag.page        = paginate.page;
+	            // this.paginate.pag.per_page = paginate.per_page;
+	            this.paginate.pag.pre_page    = paginate.pre_page;
+	            this.paginate.pag.total       = paginate.total;
+	            this.paginate.pag.total_pages = paginate.total_pages;
 
-	            if (this.paginate.pag.page_number_scroll.length == 0) {
-
-		            let nrb = this.paginate.pag.total_pages;
-		            if (nrb > this.engine.paginate.maxButtonPage) {
-			            nrb = this.engine.paginate.maxButtonPage;
-		            }
-
-		            for (let i = 1; i <= nrb; i++) {
-			            this.paginate.pag.page_number_scroll.push(i.toString());
-		            }
-	            }else{
-
-
-
-	            	if(pageNumber > this.engine.paginate.maxButtonPage){
-
-			            for (let i = pageNumber; i <= this.engine.paginate.maxButtonPage; i++) {
-				            this.paginate.pag.page_number_scroll.push(i.toString());
-			            }
-
-                    }
-                }
             },
-            privateCfgPaginateToolBar:function(){
+            privateCfgPaginateArrowButton:function(){
 	        	let disableLeft = false;
 	            let disableRight = false;
 
@@ -273,30 +332,13 @@
 	                disableRight = true;
                 }
 
-                this.privateCfgButtonPage();
+                // this.privateCfgButtonPage();
 
 	            this.$refs[this.engine.paginate.buttonGoStart.ref].disable(disableLeft);
 	            this.$refs[this.engine.paginate.buttonGoLeft.ref].disable(disableLeft);
 
 	            this.$refs[this.engine.paginate.buttonGoEnd.ref].disable(disableRight);
 	            this.$refs[this.engine.paginate.buttonGoRight.ref].disable(disableRight);
-
-            },
-            privateCfgButtonPage: function (){
-
-	        	let bHTMLCollection = this.$el.getElementsByClassName(this.engine.CLASS_DINAMIC_BUTTON_PAG);
-
-	        	for(let i = 0;i <= bHTMLCollection.length; i++){
-                    let div  = bHTMLCollection[i];
-                    if(!this.$check.isUndef(div)){
-                    	let button = div.firstChild;
-	                    if(this.paginate.pag.page == parseInt(button.textContent)){
-		                    button.classList.add(this.engine.CLASS_PERMANENT_OVER);
-                        }else{
-		                    button.classList.remove(this.engine.CLASS_PERMANENT_OVER);
-                        }
-                    }
-                }
 
             },
             privateGetPageTitle: function (page){
@@ -431,7 +473,6 @@
                 }else if(event.key == 'Tab'){
                     //this.$emit(this.engine.emit.tabKey);
                 }
-                // console.log('Am apasaat pe: ' + event.key);
             },
             cfgMouseNavigate(event){
                 this.engine.tdCurent = event.target.closest('td');
@@ -456,7 +497,6 @@
             },
             cfgGridCRUDbutton: function () {
             	let header = this.$refs[this.REF_THEAD];
-            	// console.log(header);
             },
             cfgGetTabIndex: function(){
               this.engine.tabIndexValue++;
@@ -473,7 +513,7 @@
                 //dataTest.push({name: 'Vasile',  'fact de curaj': 'se duce la piata si face cumparaturii 004 si inca un shir foarte lung sper eu', rez: 'nu a castigat nimic 004', var: 'variaza + 4', id: 92});
                 //dataTest.push({name: 'Ion',     'fact de curaj': 'se duce la piata si face cumparaturii 005', rez: 'nu a castigat nimic 005', var: 'variaza + 5', id: 93});
 
-                for(let i=0; i<88; i++){
+                for(let i=0; i<7000; i++){
                     dataTest.push({id: i, caption: i+' Vasile fact de curaj', contract: '766600' + i });
                     // dataTest.push({name: i+' Ion',  act: 'se duce la piata si face cumparaturii 00' + i, rez: 'nu a castigat nimic ' +i, var: 'variaza +' + i, id: i+30});
                 }
@@ -489,7 +529,7 @@
                 selectdRow: {},
                 showSelectedData: '...',
                 paginate: {
-				    buttonPageNumber: ['1','2','3','4','5','6'],
+				    buttonPageNumber: ['22','23','34','45','56','68'],
                     pag: this.$vanilla.paginateArray(new Array())
                 },
 				post: {wordSearch: null}

@@ -105,13 +105,28 @@ const appHelper = {
 
                     return returnVal;
                 },
+
+	            // for buttons.bt   paginate toolbar
+	            generateButton(nrButton){
+
+		            let buttonArray = new Array();
+		            for(let i=0; i < nrButton; i++){
+			            buttonArray.push(
+				            {
+					            id:i, caption: (i+1).toString(), selected: false, isDisable: false
+				            }
+			            );
+		            }
+		            return buttonArray;
+	            },
                 paginateArray: function (items, page, per_page){
                     var page = page || 1,
                         per_page = per_page || 10,
                         offset = (page - 1) * per_page;
 
-                    var   paginatedItems = items.slice(offset).slice(0, per_page);
+                    var  paginatedItems = items.slice(offset).slice(0, per_page);
                     var  total_pages = Math.ceil(items.length / per_page);
+
 
                     return {
                         page: page,
@@ -120,8 +135,19 @@ const appHelper = {
                         next_page: (total_pages > page) ? page + 1 : null,
                         total: items.length,
                         total_pages: total_pages,
-	                    page_number_scroll: new Array(),
-                        data: paginatedItems
+                        data: paginatedItems,
+	                    buttons: {
+		                    label: null,
+		                    intializeButtonPage: false,
+		                    bt: [
+			                    {id:0, caption: '1', selected: false, isDisable: false},
+			                    {id:1, caption: '2', selected: false, isDisable: false},
+			                    {id:2, caption: '3', selected: false, isDisable: false},
+			                    {id:3, caption: '4', selected: false,  isDisable: false},
+			                    {id:4, caption: '5', selected: false, isDisable: false},
+			                    {id:5, caption: '6', selected: false, isDisable: false}
+		                    ]
+	                    }
                     };
                 }
             },

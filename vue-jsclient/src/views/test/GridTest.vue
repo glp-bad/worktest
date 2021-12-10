@@ -44,7 +44,7 @@
                     paginateLocal: true         // when false server paginate
                 },
                 toolbar: {
-                	show: false,
+                	show: true,
 	                fieldShow: {
                 		field: ['contract'],
                         separator: " ",
@@ -55,6 +55,9 @@
 		                this.$constGrid.getActionButton( null,  'Edit din functie',   'deleteCevaToolbar', this.$constGrid.ICON_DELETE),
 		                this.$constGrid.getActionButton( null,  'Delete din functie', 'editCevaToolbar', this.$constGrid.ICON_EDIT)
                     ]
+                },
+                paginate:{
+                	nrButtonShow: 5
                 }
             }
         },
