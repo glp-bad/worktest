@@ -39,7 +39,7 @@
                 returnField: ['contract'],
                 cfg: {
 	                width: 590,
-                    height: 300,
+                    height: 800,
                     urlData: 'gridDataTest',
                     paginateLocal: true         // when false server paginate
                 },

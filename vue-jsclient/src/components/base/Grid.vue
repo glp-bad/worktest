@@ -43,19 +43,6 @@
 
         </div>
 
-        <div class="toolbar">
-            <div class="toolbarButton"  v-if="pConfig.toolbar.show">
-                <template v-for="ph in pConfig.toolbar.actionButton">
-                    <div class="divButton">
-                        <my-button @click="this.emitActionToolbar($event, ph.emitAction)" :heightButton=22 :buttonType=2 :title="ph.tooltip" :style=cfgIconColor(ph.icon.color)>
-                            <font-awesome-icon :icon=this.cfgIconPictureAction(ph.icon) size="1x"/>
-                        </my-button>
-                    </div>
-                </template>
-
-                <div class="dataSelected" :title=this.showSelectedData>{{this.showSelectedData}}</div>
-            </div>
-        </div>
         <div class="paginate" >
             <div class="divButton">
                 <my-button @click="this.goToPage($event, this.engine.paginate.buttonGoStart.id)"
@@ -79,7 +66,7 @@
             <template  v-for="(pgn, index) in this.paginate.pag.buttons.bt" :key='index'>
                 <div class="divButtonDinamic" v-if="!pgn.isDisable">
                     <my-button v-bind:class="{'ff-button-selected': pgn.selected}" @click="this.goToPage($event, pgn.caption)" :widthButton=35 :heightButton=22 :buttonType=2 :title='this.privateGetPageTitle(pgn.caption)'>
-                       {{pgn.caption}}
+                        {{pgn.caption}}
                     </my-button>
                 </div>
                 <div class="divButtonDinamic" v-if="pgn.isDisable">
@@ -125,6 +112,20 @@
                 <label>{{this.paginate.pag.page}}/{{this.paginate.pag.total_pages}}</label>
             </div>
 
+        </div>
+
+        <div class="toolbar">
+            <div class="toolbarButton"  v-if="pConfig.toolbar.show">
+                <template v-for="ph in pConfig.toolbar.actionButton">
+                    <div class="divButton">
+                        <my-button @click="this.emitActionToolbar($event, ph.emitAction)" :heightButton=22 :buttonType=2 :title="ph.tooltip" :style=cfgIconColor(ph.icon.color)>
+                            <font-awesome-icon :icon=this.cfgIconPictureAction(ph.icon) size="1x"/>
+                        </my-button>
+                    </div>
+                </template>
+
+                <div class="dataSelected" :title=this.showSelectedData>{{this.showSelectedData}}</div>
+            </div>
         </div>
 
     </div>
