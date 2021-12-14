@@ -39,9 +39,10 @@
                 returnField: ['contract'],
                 cfg: {
 	                width: 590,
-                    height: 800,
+                    height: 350,
                     urlData: 'gridDataTest',
-                    paginateLocal: true         // when false server paginate
+                    paginateLocal: true,         // when false server paginate
+                    recordsPerPage: 13
                 },
                 toolbar: {
                 	show: true,
@@ -66,8 +67,8 @@
         methods: {
             invoicePrint: function (selectData) {
                 console.log('acum printez');
-                // const reqObject = this.$app.getObjectReturnComponent(selectData);
-                // console.log(reqObject);
+                const reqObject = this.$app.getObjectReturnComponent(selectData);
+                console.log(reqObject);
 
             },
             editCeva: function () {
@@ -76,7 +77,6 @@
             },
 	        deleteCevaToolbar: function (selectData){
 		        console.log('delete de la toolbar');
-		        // console.log(selectData);
 
             }
 

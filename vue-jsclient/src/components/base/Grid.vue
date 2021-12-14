@@ -115,7 +115,7 @@
         </div>
 
         <div class="toolbar">
-            <div class="toolbarButton"  v-if="pConfig.toolbar.show">
+            <div class="toolbarButton"  v-if="pConfig.toolbar.show" :ref=this.REF_TOOLBAR >
                 <template v-for="ph in pConfig.toolbar.actionButton">
                     <div class="divButton">
                         <my-button @click="this.emitActionToolbar($event, ph.emitAction)" :heightButton=22 :buttonType=2 :title="ph.tooltip" :style=cfgIconColor(ph.icon.color)>
@@ -152,6 +152,7 @@
 			this.REF_THEAD      = 'refThead',
             this.REF_TABLE_BODY = 'refBody',
 	        this.REF_INPUT_PAGE_NR = 'refPageNumber',
+            this.REF_TOOLBAR = 'refToolbar',
 
             this.engine = {
                 tabIndexValue: 0,
@@ -230,9 +231,32 @@
 	        },
             setFocus: function () {
 		        this.engine.tdCurent.focus();
-	        },
 
-	        privatedPageToolDraw: function (pageNumber){
+	        },
+            resetSelectionRow: function(){
+	        	this.selectdRow = {};
+	        	this.showSelectedData = '';
+	        	this.enabledToolBar(false);
+	            this.privateRemoveSelectedRow();
+
+            },
+            enabledToolBar: function (enabled){
+
+
+	        	let buttons = this.$refs[this.REF_TOOLBAR].getElementsByTagName('button');
+
+	            for(let i=0; i<buttons.length; i++){
+
+		            if(enabled){
+			            this.$vanilla.enabledButton(buttons[i]);
+		            }else{
+			            this.$vanilla.disableButton(buttons[i]);
+		            }
+
+                }
+
+            },
+            privatedPageToolDraw: function (pageNumber){
 		        let buttonArrayLenght = this.paginate.pag.buttons.bt.length;
 		        let firstPageButton = parseInt(this.paginate.pag.buttons.bt[0].caption);
 		        let lastPageButton = parseInt(this.paginate.pag.buttons.bt[buttonArrayLenght - 1].caption);
@@ -307,15 +331,17 @@
 	            this.privatedPageToolDraw(pageNumber);
 	            this.privateSetPaginatePag(pageNumber);
 	            this.privateCfgPaginateArrowButton();
+
+	            // reset data selection
+	            this.resetSelectionRow();
 	        },
             privateSetPaginatePag: function (pageNumber){
 
-	        	let paginate = this.$vanilla.paginateArray(this.rezultData, pageNumber);
+	        	let paginate = this.$vanilla.paginateArray(this.rezultData, pageNumber, this.pConfig.cfg.recordsPerPage);
 
 	        	this.paginate.pag.data        = paginate.data;
 	            this.paginate.pag.next_page   = paginate.next_page;
 	            this.paginate.pag.page        = paginate.page;
-	            // this.paginate.pag.per_page = paginate.per_page;
 	            this.paginate.pag.pre_page    = paginate.pre_page;
 	            this.paginate.pag.total       = paginate.total;
 	            this.paginate.pag.total_pages = paginate.total_pages;
@@ -345,6 +371,11 @@
             privateGetPageTitle: function (page){
 	            return 'goto page ' + page;
 
+            },
+	        privateRemoveSelectedRow: function(){
+		        if(  !this.$check.isUndef(this.engine.trCurent)){
+			        this.engine.trCurent.removeAttribute('class', this.engine.CLASS_SELECTED);
+		        }
             },
             privateSelectedRow: function (tr) {
 
@@ -381,6 +412,8 @@
                 }
 
                 this.selectdRow = finalSelected;
+
+                this.enabledToolBar(true);
 
                 this.privateMakeShowDataSelected();
 
@@ -437,6 +470,9 @@
 
             },
 	        emitActionToolbar: function (event, action) {
+
+
+
             	if(this.pConfig.toolbar.show) {
 		            this.$emit(action, this.getDataSelected());
 	            }
@@ -514,7 +550,7 @@
                 //dataTest.push({name: 'Vasile',  'fact de curaj': 'se duce la piata si face cumparaturii 004 si inca un shir foarte lung sper eu', rez: 'nu a castigat nimic 004', var: 'variaza + 4', id: 92});
                 //dataTest.push({name: 'Ion',     'fact de curaj': 'se duce la piata si face cumparaturii 005', rez: 'nu a castigat nimic 005', var: 'variaza + 5', id: 93});
 
-                for(let i=0; i<7000; i++){
+                for(let i=0; i<41; i++){
                     dataTest.push({id: i, caption: i+' Vasile fact de curaj', contract: '766600' + i });
                     // dataTest.push({name: i+' Ion',  act: 'se duce la piata si face cumparaturii 00' + i, rez: 'nu a castigat nimic ' +i, var: 'variaza +' + i, id: i+30});
                 }

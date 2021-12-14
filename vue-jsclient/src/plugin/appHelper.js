@@ -44,6 +44,14 @@ const appHelper = {
             },
 
             app.config.globalProperties.$vanilla = {
+        	    disableButton: function(htmlButton){
+		            htmlButton.setAttribute('disabled',true);
+		            htmlButton.classList.add('disable');                    // class name
+	            },
+	            enabledButton: function(htmlButton){
+		            htmlButton.removeAttribute('disabled');
+		            htmlButton.classList.remove('disable');                    // class name
+	            },
                 removeClasses: function(htmlElementArray, className){
                     for (var i = 0; i < htmlElementArray.length; i++){
                         htmlElementArray[i].classList.remove(className);
