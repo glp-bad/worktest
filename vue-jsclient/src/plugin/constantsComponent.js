@@ -1,5 +1,10 @@
 const constantsComponent = {
 	install: (app, options) => {
+		app.config.globalProperties.$constComponent = {
+			ICON_SPINNER: ['fas', 'spinner']
+
+
+		},
         app.config.globalProperties.$constGrid = {
             ID_NAME: 'idPk',
             ICON_CLASS: 'fas',

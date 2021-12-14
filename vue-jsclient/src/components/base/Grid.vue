@@ -1,5 +1,12 @@
 <template>
     <div class="ff-grid-container">
+
+        <div class = "ff-grid-loading-modal" v-if="this.loadingData">
+            <div>
+                <font-awesome-icon :icon=this.$constComponent.ICON_SPINNER size="4x" spin/>
+            </div>
+        </div>
+
         <div class="ff-grid" :ref=this.REF_DIV_TABLE>
             <table class="ff-table" :ref=REF_TABLE>
                 <thead class="ff-thead" :ref=this.REF_THEAD>
@@ -42,6 +49,22 @@
             </table>
 
         </div>
+
+
+        <div class="toolbar">
+            <div class="toolbarButton"  v-if="pConfig.toolbar.show" :ref=this.REF_TOOLBAR >
+                <template v-for="ph in pConfig.toolbar.actionButton">
+                    <div class="divButton">
+                        <my-button @click="this.emitActionToolbar($event, ph.emitAction)" :heightButton=22 :buttonType=2 :title="ph.tooltip" :style=cfgIconColor(ph.icon.color)>
+                            <font-awesome-icon :icon=this.cfgIconPictureAction(ph.icon) size="1x"/>
+                        </my-button>
+                    </div>
+                </template>
+
+                <div class="dataSelected" :title=this.showSelectedData>{{this.showSelectedData}}</div>
+            </div>
+        </div>
+
 
         <div class="paginate" >
             <div class="divButton">
@@ -114,20 +137,6 @@
 
         </div>
 
-        <div class="toolbar">
-            <div class="toolbarButton"  v-if="pConfig.toolbar.show" :ref=this.REF_TOOLBAR >
-                <template v-for="ph in pConfig.toolbar.actionButton">
-                    <div class="divButton">
-                        <my-button @click="this.emitActionToolbar($event, ph.emitAction)" :heightButton=22 :buttonType=2 :title="ph.tooltip" :style=cfgIconColor(ph.icon.color)>
-                            <font-awesome-icon :icon=this.cfgIconPictureAction(ph.icon) size="1x"/>
-                        </my-button>
-                    </div>
-                </template>
-
-                <div class="dataSelected" :title=this.showSelectedData>{{this.showSelectedData}}</div>
-            </div>
-        </div>
-
     </div>
 </template>
 
@@ -191,13 +200,19 @@
         },
 		mounted() {
 		    this.getDataFromServer();
-		    this.cfgGrid();
+			this.cfgGrid();
+
+		    /*
+
 			this.goToPage(null, '1');
 
             this.$nextTick(function () {
                 this.initGrid();
 	            this.goToPage(null, '1');       // prima data initializam page
+
+                console.log("init grid: ", this.rezultData);
             });
+            */
 
 			// this.$vanilla.paginateArray(new Array())
 
@@ -206,17 +221,33 @@
         },
         methods: {
 	        getDataFromServer: function () {
-		        /*
+
+
 		        let uri = this.$url.getUrl(this.pConfig.cfg.urlData);
 		        this.axios
 			        .post(uri, this.post)
-			        .then(response => {
-			             this.rezultData = response.data;
-				        }
+			        .then(
+			        	response => {
+                            this.rezultData = response.data;
+
+					        //this.cfgGrid();
+					        this.goToPage(null, '1');
+
+					        this.$nextTick(function () {
+						        this.initGrid();
+						        this.goToPage(null, '1');       // prima data initializam page
+
+					        }).finally(() => {
+                                this.loadingData = false;
+						    });
+
+
+                         }
 			        )
 			        .catch(error => console.log(error));
-                */
-		        this.rezultData = this.getTestData();
+
+
+		         this.rezultData = this.getTestData();
 
 	        },
             getDataSelected: function () {
@@ -241,18 +272,19 @@
 
             },
             enabledToolBar: function (enabled){
+                if(this.pConfig.toolbar.show) {
+                    let buttons = this.$refs[this.REF_TOOLBAR].getElementsByTagName('button');
 
+                    for (let i = 0; i < buttons.length; i++) {
 
-	        	let buttons = this.$refs[this.REF_TOOLBAR].getElementsByTagName('button');
+                        if (enabled) {
+                            this.$vanilla.enabledButton(buttons[i]);
+                        }
+                        else {
+                            this.$vanilla.disableButton(buttons[i]);
+                        }
 
-	            for(let i=0; i<buttons.length; i++){
-
-		            if(enabled){
-			            this.$vanilla.enabledButton(buttons[i]);
-		            }else{
-			            this.$vanilla.disableButton(buttons[i]);
-		            }
-
+                    }
                 }
 
             },
@@ -567,6 +599,7 @@
         },
 		data () {
 			return {
+				loadingData: true,
 				rezultData: new Array(),
                 selectdRow: {},
                 showSelectedData: '...',

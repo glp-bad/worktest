@@ -18,11 +18,9 @@ class TestSearchController extends Controller {
 		return $this->getRezult();
 	}
 
-
 	public function getGridDataTest(Request $request){
 		return json_encode($this->getRezultForGrid());
 	}
-
 
     public function getDataSearch(Request $request)
     {
@@ -38,16 +36,16 @@ class TestSearchController extends Controller {
 		return $rezulset;
 	}
 
-
 	private function getRezultForGrid(){
 		$rezulset = array();
-		for ($x = 0; $x <= 1000; $x++) {
-			$rezulset[]=['id'=> $x, 'caption' => 'GRID ma duc la piata de ' . $x, "contract" => $x*473];
+		for ($x = 0; $x <= 100000; $x++) {
+			$rezulset[]=['id'=> $x, 'caption' => 'GRID from php app ma duc la piata de ' . $x, "contract" => $x*473];
 		}
+
+		// sleep(10);
 
 		return $rezulset;
 	}
-
 
 }
 

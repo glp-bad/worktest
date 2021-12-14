@@ -45,7 +45,7 @@
                     recordsPerPage: 13
                 },
                 toolbar: {
-                	show: true,
+                	show: false,
 	                fieldShow: {
                 		field: ['contract'],
                         separator: " ",
