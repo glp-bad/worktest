@@ -144,53 +144,59 @@ $ff-caption-text-height: 22px;
 		}
 
 	}
-        .paginate{
-	        padding: 2px 7px 2px 2px;
-	        display: inline-flex;
-	        justify-content: flex-start;
-	        //background: #C5FE00;
-            .divButton {
-	            margin-top: 1px;
-                margin-left: 4px;
-	            //line-height: 30px; vertical-align: middle;
-            }
+    .paginate{
+	    border-radius: 4px;
+        padding: 4px 7px 4px 2px;
+        display: inline-flex;
+        justify-content: flex-end;
+        //background: #C5FE00;
+	    border: 1px solid lighten($ff-base,45%);
 
-	        .divButtonDinamic {
-		        margin-top: 1px;
-		        margin-left: 4px;
-		        //line-height: 30px; vertical-align: middle;
-
-		        .divSapacer{
-			        width: 35px;
-			        height: 22px;
-			        border-radius: 4px;
-			        background: $ff-background-color-wokbench;
-			        // border: 1px solid darken($ff-base, 20%);
-		        }
-	        }
-
-	        .divButtonGoTo {
-		        //background: red;
-	            margin-top: 1px;
-		        margin-left: 10px;
-		        margin-right: 5px;
-	        }
-
-	        .divInputGoto {
-		        //background: #005cc5;
-	        }
-
-	        .divLabelInfo {
-		        //background: #9561e2;
-		        width: 70px;
-		        text-align: right;
-		        label{
-			        position: relative;
-			        top: 22%;
-		        }
-	        }
-
+        .divButton {
+            margin-top: 1px;
+            margin-left: 4px;
+            //line-height: 30px; vertical-align: middle;
         }
+
+        .divButtonDinamic {
+	        margin-top: 1px;
+	        margin-left: 4px;
+	        //line-height: 30px; vertical-align: middle;
+
+	        .divSapacer{
+		        width: 35px;
+		        height: 22px;
+		        border-radius: 4px;
+		        background: $ff-background-color-wokbench;
+		        // border: 1px solid darken($ff-base, 20%);
+	        }
+        }
+
+        .divButtonGoTo {
+	        //background: red;
+            margin-top: 1px;
+	        margin-left: 20px;
+	        margin-right: 5px;
+        }
+
+        .divInputGoto {
+	        //background: #005cc5;
+        }
+
+        .divLabelInfo {
+	        display: inline-block;
+	        //background: #9561e2;
+	        width: 70px;
+	        //text-align: right;
+	        label{
+		        position: relative;
+		        display: block;
+		        top: 22%;
+		        text-align: right;
+	        }
+        }
+
+    }
 
 
 

@@ -103,7 +103,7 @@
             <div class="divInputGoto">
                 <page-nr-field :ref=this.REF_INPUT_PAGE_NR
                                :size=1
-                               :pPlaceHolder="'nr. page'">
+                               :pPlaceHolder="'nr. page'" v-on:keyup="privateEnterGotoPage">
 
                 </page-nr-field>
             </div>
@@ -255,6 +255,11 @@
 
                 }
 
+            },
+	        privateEnterGotoPage: function (event){
+	            if(event.key == 'Enter'){
+	            	this.jumpPage();
+                }
             },
             privatedPageToolDraw: function (pageNumber){
 		        let buttonArrayLenght = this.paginate.pag.buttons.bt.length;
@@ -550,7 +555,7 @@
                 //dataTest.push({name: 'Vasile',  'fact de curaj': 'se duce la piata si face cumparaturii 004 si inca un shir foarte lung sper eu', rez: 'nu a castigat nimic 004', var: 'variaza + 4', id: 92});
                 //dataTest.push({name: 'Ion',     'fact de curaj': 'se duce la piata si face cumparaturii 005', rez: 'nu a castigat nimic 005', var: 'variaza + 5', id: 93});
 
-                for(let i=0; i<41; i++){
+                for(let i=0; i<72; i++){
                     dataTest.push({id: i, caption: i+' Vasile fact de curaj', contract: '766600' + i });
                     // dataTest.push({name: i+' Ion',  act: 'se duce la piata si face cumparaturii 00' + i, rez: 'nu a castigat nimic ' +i, var: 'variaza +' + i, id: i+30});
                 }
