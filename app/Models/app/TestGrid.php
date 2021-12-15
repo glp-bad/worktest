@@ -19,7 +19,7 @@ class TestGrid extends Model{
 
 		// dd($pageNumber, $perPage);
 
-		$limitId = 30;
+		$limitId = 99;
 
 		$count = DB::select(
 			'select count(*) as c from test_grid_data where id < :id' ,
@@ -30,10 +30,18 @@ class TestGrid extends Model{
 
 
 		$pageNumber = ($pageNumber-1) * $perPage;
+
+		/*
 		$rezult = DB::select(
 			"select * from test_grid_data where id < :id order by id desc  LIMIT $perPage OFFSET $pageNumber;" ,
 			['id'=> $limitId]
 		);
+		*/
+
+        $rezult = DB::select(
+            "select * from test_grid_data;"
+        );
+
 
 		$dataWithPaginate['records'] = $rezult;
 

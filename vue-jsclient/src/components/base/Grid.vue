@@ -172,6 +172,7 @@
                 CLASS_DINAMIC_BUTTON_PAG: 'divButtonDinamic',
 	            CLASS_PERMANENT_OVER: 'ff-button-selected',
                 cfgInit: true,
+                allDataFromServer: true,            // when paginate from server is true
                 paginate: {
                     buttonGoStart:{
                         id: 'b1',
@@ -202,65 +203,48 @@
 		mounted() {
 			this.cfgGrid();
 			this.getDataFromServer();
-
-		    /*
-
-			this.goToPage(null, '1');
-
-            this.$nextTick(function () {
-                this.initGrid();
-	            this.goToPage(null, '1');       // prima data initializam page
-
-                console.log("init grid: ", this.rezultData);
-            });
-            */
-
-			// this.$vanilla.paginateArray(new Array())
-
 		},
         computed: {
         },
         methods: {
 	        getDataFromServer: function () {
-
-
-
 		        let uri = this.$url.getUrl(this.pConfig.cfg.urlData);
-		        this.axios
-			        .post(uri, this.post)
-			        .then(
-			        	response => {
-					        this.loadingData = true;
-					        this.paginate.totalRecords = response.data.paginate.records;
-					        this.rezultData = response.data.records;
 
-                         }
-			        )
-			        .catch(error => console.log(error)
-                    )
-                    .finally(() => {
+                if(this.engine.allDataFromServer) {
+                    this.axios
+                        .post(uri, this.post)
+                        .then(
+                            response => {
+                                this.loadingData = true;
+                                this.paginate.totalRecords = response.data.paginate.records;
+                                this.rezultData = response.data.records;
+                            }
+                        ).catch(error => console.log(error)
+                    ).finally(() => {
+                        if (this.engine.cfgInit) {
+                            this.privateSetPaginatePag(1);
+                            this.$nextTick(function () {
+                                this.initGrid();
+                                this.goToPage(null, '1');
+                            });
+                            this.engine.cfgInit = false;
+                        }
 
-	                    if(this.engine.cfgInit){
-		                    this.privateSetPaginatePag(1);
-		                    this.$nextTick(function () {
-			                    this.initGrid();
-			                    this.goToPage(null, '1');
+                        if (this.pConfig.cfg.paginateLocal) {
+                            this.engine.allDataFromServer = false;
+                        }
 
-		                    })
-
-		                    this.engine.cfgInit = false;
-	                    }
-
-
+                        this.privatedPageToolDraw(this.post.paginate.pageNumber);
+                        this.privateSetPaginatePag(this.post.paginate.pageNumber);
+                        this.privateCfgPaginateArrowButton();
                         this.loadingData = false;
-
-	                    console.log('fin finally: ', this.rezultData);
-
-		            });
-
-		         // this.rezultData = this.getTestData();
-
-	        },
+                    });
+                } else {
+                    this.privatedPageToolDraw(this.post.paginate.pageNumber);
+                    this.privateSetPaginatePag(this.post.paginate.pageNumber);
+                    this.privateCfgPaginateArrowButton();
+                }
+		    },
             getDataSelected: function () {
 		        return this.selectdRow;
 	        },
@@ -375,34 +359,13 @@
 
 		        }
 
-
-		        // when server paginate data
-		        if(!this.pConfig.cfg.paginateLocal){
 			        this.post.paginate.pageNumber = pageNumber;
 			        this.post.paginate.perPage = this.pConfig.cfg.recordsPerPage;
-
-			        if(!this.engine.cfgInit) {
-			        	console.log('apelez getDataFromServer din GOTPAGE');
-				        this.getDataFromServer();
-			        }
-
-			        console.log("PageNumber: ", this.post.paginate.pageNumber);
-			        console.log("PerPage: ", this.post.paginate.perPage);
-                }
-
-		        // new way
-	            this.privatedPageToolDraw(pageNumber);
-	            this.privateSetPaginatePag(pageNumber);
-	            this.privateCfgPaginateArrowButton();
-
-	            // reset data selection
-	            this.resetSelectionRow();
+				    this.getDataFromServer();
+	                this.resetSelectionRow();
 	        },
             privateSetPaginatePag: function (pageNumber){
-
 	            let paginate = this.$vanilla.paginateArray(this.rezultData, pageNumber, this.pConfig.cfg.recordsPerPage, this.pConfig.cfg.paginateLocal, this.paginate.totalRecords);
-
-	            console.log('privateSetPaginatePag: am paginat', paginate.data);
 
                 this.paginate.pag.data        = paginate.data;
                 this.paginate.pag.next_page   = paginate.next_page;
@@ -637,7 +600,7 @@
                     pag: this.$vanilla.paginateArray(new Array())
                 },
 				post: {
-					    paginate:{ 'perPage': this.pConfig.cfg.recordsPerPage , 'pageNumber': 1  }
+					    paginate:{ 'perPage': this.pConfig.cfg.recordsPerPage , 'pageNumber': 1, 'countRecords': -1  }
 				}
             }
 		}
