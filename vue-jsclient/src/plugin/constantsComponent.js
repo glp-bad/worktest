@@ -19,7 +19,7 @@ const constantsComponent = {
                 CAPTION_TYPE_ACTION: 'action',
                 TABLE_FIELD_NAME: 'tableFieldName',
                 getHeader: function (id, caption, width, tableFieldName, type) {
-                    return {id: id, caption: caption,   width: width,  tableFieldName: tableFieldName,    type: type};
+                    return {id: id, caption: caption,   width: width,  tableFieldName: tableFieldName,  type: type};
                 }
             },
             BODY:{

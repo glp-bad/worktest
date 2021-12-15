@@ -110,7 +110,6 @@ const appHelper = {
                             break;
                         }
                     }
-
                     return returnVal;
                 },
 
@@ -127,21 +126,30 @@ const appHelper = {
 		            }
 		            return buttonArray;
 	            },
-                paginateArray: function (items, page, per_page){
+                paginateArray: function (items, page, per_page, paginateLocal, totalRecords){
                     var page = page || 1,
                         per_page = per_page || 10,
                         offset = (page - 1) * per_page;
 
-                    var  paginatedItems = items.slice(offset).slice(0, per_page);
-                    var  total_pages = Math.ceil(items.length / per_page);
+	                var  paginatedItems = null;
+	                var  total_pages = null;
+	                var  total = items.length;;
 
+                    if(paginateLocal){
+	                    paginatedItems = items.slice(offset).slice(0, per_page);
+	                    total_pages = Math.ceil(total / per_page);
+                    }else{
+	                    paginatedItems = items;
+	                    total_pages = Math.ceil(totalRecords / per_page);
+	                    total = totalRecords;
+                    }
 
                     return {
                         page: page,
                         per_page: per_page,
                         pre_page: page - 1 ? page - 1 : null,
                         next_page: (total_pages > page) ? page + 1 : null,
-                        total: items.length,
+                        total: total,
                         total_pages: total_pages,
                         data: paginatedItems,
 	                    buttons: {

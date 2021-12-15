@@ -24,30 +24,31 @@
         created() {
             this.gridConfig = {
                 header: [
-                    this.$constGrid.HEADER.getHeader(1,'Descriere',400,'caption', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
-                    this.$constGrid.HEADER.getHeader(2,'Contract',70,'contract', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
-                    //this.$constGrid.HEADER.getHeader(3,'Rezultat mai bun',120,'rez', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
-                    //this.$constGrid.HEADER.getHeader(4,'Variabile',50,'var', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
-                    this.$constGrid.HEADER.getHeader(5,'action',50,null, this.$constGrid.HEADER.CAPTION_TYPE_ACTION)
+	                this.$constGrid.HEADER.getHeader(1,'idFiled',30,'id', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
+	                this.$constGrid.HEADER.getHeader(2,'Nume',120,'name', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
+                    this.$constGrid.HEADER.getHeader(3,'Descriere',400,'description', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
+                    //this.$constGrid.HEADER.getHeader(4,'Rezultat mai bun',120,'rez', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
+                    //this.$constGrid.HEADER.getHeader(5,'Variabile',50,'var', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
+                    this.$constGrid.HEADER.getHeader(6,'action',50,null, this.$constGrid.HEADER.CAPTION_TYPE_ACTION)
                 ],
 	            actionButtonHeader: [
-                	this.$constGrid.getActionButton(9, 'Altceva din functie', 'altCeca', this.$constGrid.getIcon('fas','skull', '#adad00')),
-                    this.$constGrid.getActionButton(6, 'Print din functie', 'invoicePrint', this.$constGrid.ICON_PRINT),
-                    this.$constGrid.getActionButton(7, 'Edit din functie', 'deleteCeva', this.$constGrid.ICON_DELETE),
-                    this.$constGrid.getActionButton(8, 'Delete din functie', 'editCeva', this.$constGrid.ICON_EDIT)
+                	this.$constGrid.getActionButton(7, 'Altceva din functie', 'altCeca', this.$constGrid.getIcon('fas','skull', '#adad00')),
+                    this.$constGrid.getActionButton(8, 'Print din functie', 'invoicePrint', this.$constGrid.ICON_PRINT),
+                    this.$constGrid.getActionButton(9, 'Edit din functie', 'deleteCeva', this.$constGrid.ICON_DELETE),
+                    this.$constGrid.getActionButton(10, 'Delete din functie', 'editCeva', this.$constGrid.ICON_EDIT)
                 ],
-                returnField: ['contract'],
+                returnField: ['name'],             // return field when selected row
                 cfg: {
-	                width: 590,
+	                width: 700,
                     height: 350,
                     urlData: 'gridDataTest',
-                    paginateLocal: true,         // when false server paginate
-                    recordsPerPage: 13
+                    paginateLocal: false,         // when false server paginate
+                    recordsPerPage: 10
                 },
                 toolbar: {
                 	show: false,
 	                fieldShow: {
-                		field: ['contract'],
+                		field: ['name'],        // shon on selection with mouse or keyboard
                         separator: " ",
                         includeIdPk: true
                     },

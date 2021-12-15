@@ -26,7 +26,7 @@
                 <tbody class="ff-tbody" :ref=REF_TABLE_BODY>
                     <tr v-for="(tr, index) in this.paginate.pag.data" :idPk="tr.id" v-on:keydown.prevent="cfgKeyNavigate($event)" v-on:click.prevent="cfgMouseNavigate($event)" v-bind:key="index">
                         <template v-for="(td, index) in tr">
-                            <td v-if="index != 'id'" :tabindex=this.cfgGetTabIndex() v-bind:key="index">
+                            <td :tabindex=this.cfgGetTabIndex() v-bind:key="index">
                                 <div class="div--left-align " :style="cgfTDStyle(index)" :title="td" :fieldName="index">{{td}}</div>
                             </td>
                         </template>
@@ -171,6 +171,7 @@
 	            CLASS_SELECTED: 'selected',
                 CLASS_DINAMIC_BUTTON_PAG: 'divButtonDinamic',
 	            CLASS_PERMANENT_OVER: 'ff-button-selected',
+                cfgInit: true,
                 paginate: {
                     buttonGoStart:{
                         id: 'b1',
@@ -199,8 +200,8 @@
 
         },
 		mounted() {
-		    this.getDataFromServer();
 			this.cfgGrid();
+			this.getDataFromServer();
 
 		    /*
 
@@ -223,31 +224,41 @@
 	        getDataFromServer: function () {
 
 
+
 		        let uri = this.$url.getUrl(this.pConfig.cfg.urlData);
 		        this.axios
 			        .post(uri, this.post)
 			        .then(
 			        	response => {
-                            this.rezultData = response.data;
-
-					        //this.cfgGrid();
-					        this.goToPage(null, '1');
-
-					        this.$nextTick(function () {
-						        this.initGrid();
-						        this.goToPage(null, '1');       // prima data initializam page
-
-					        }).finally(() => {
-                                this.loadingData = false;
-						    });
-
+					        this.loadingData = true;
+					        this.paginate.totalRecords = response.data.paginate.records;
+					        this.rezultData = response.data.records;
 
                          }
 			        )
-			        .catch(error => console.log(error));
+			        .catch(error => console.log(error)
+                    )
+                    .finally(() => {
+
+	                    if(this.engine.cfgInit){
+		                    this.privateSetPaginatePag(1);
+		                    this.$nextTick(function () {
+			                    this.initGrid();
+			                    this.goToPage(null, '1');
+
+		                    })
+
+		                    this.engine.cfgInit = false;
+	                    }
 
 
-		         this.rezultData = this.getTestData();
+                        this.loadingData = false;
+
+	                    console.log('fin finally: ', this.rezultData);
+
+		            });
+
+		         // this.rezultData = this.getTestData();
 
 	        },
             getDataSelected: function () {
@@ -364,6 +375,21 @@
 
 		        }
 
+
+		        // when server paginate data
+		        if(!this.pConfig.cfg.paginateLocal){
+			        this.post.paginate.pageNumber = pageNumber;
+			        this.post.paginate.perPage = this.pConfig.cfg.recordsPerPage;
+
+			        if(!this.engine.cfgInit) {
+			        	console.log('apelez getDataFromServer din GOTPAGE');
+				        this.getDataFromServer();
+			        }
+
+			        console.log("PageNumber: ", this.post.paginate.pageNumber);
+			        console.log("PerPage: ", this.post.paginate.perPage);
+                }
+
 		        // new way
 	            this.privatedPageToolDraw(pageNumber);
 	            this.privateSetPaginatePag(pageNumber);
@@ -374,14 +400,16 @@
 	        },
             privateSetPaginatePag: function (pageNumber){
 
-	        	let paginate = this.$vanilla.paginateArray(this.rezultData, pageNumber, this.pConfig.cfg.recordsPerPage);
+	            let paginate = this.$vanilla.paginateArray(this.rezultData, pageNumber, this.pConfig.cfg.recordsPerPage, this.pConfig.cfg.paginateLocal, this.paginate.totalRecords);
 
-	        	this.paginate.pag.data        = paginate.data;
-	            this.paginate.pag.next_page   = paginate.next_page;
-	            this.paginate.pag.page        = paginate.page;
-	            this.paginate.pag.pre_page    = paginate.pre_page;
-	            this.paginate.pag.total       = paginate.total;
-	            this.paginate.pag.total_pages = paginate.total_pages;
+	            console.log('privateSetPaginatePag: am paginat', paginate.data);
+
+                this.paginate.pag.data        = paginate.data;
+                this.paginate.pag.next_page   = paginate.next_page;
+                this.paginate.pag.page        = paginate.page;
+                this.paginate.pag.pre_page    = paginate.pre_page;
+                this.paginate.pag.total       = paginate.total;
+                this.paginate.pag.total_pages = paginate.total_pages;
 
             },
             privateCfgPaginateArrowButton:function(){
@@ -442,7 +470,7 @@
                 let cells = this.engine.trCurent.cells;
 
                 for (const c of cells) {
-                    let fieldName = c.firstChild.getAttribute(this.$constGrid.BODY.FIELD_NAME);
+                   let fieldName = c.firstChild.getAttribute(this.$constGrid.BODY.FIELD_NAME);
                    if(this.pConfig.returnField.includes(fieldName)){
                         finalSelected[fieldName] = c.innerText;
                     }
@@ -604,10 +632,13 @@
                 selectdRow: {},
                 showSelectedData: '...',
                 paginate: {
+					totalRecords: 0,
 				    buttonPageNumber: ['22','23','34','45','56','68'],
                     pag: this.$vanilla.paginateArray(new Array())
                 },
-				post: {wordSearch: null}
+				post: {
+					    paginate:{ 'perPage': this.pConfig.cfg.recordsPerPage , 'pageNumber': 1  }
+				}
             }
 		}
 	}

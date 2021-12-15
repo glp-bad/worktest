@@ -8,8 +8,11 @@
 
 namespace App\Http\Controllers\App;
 
+
 use App\Http\Controllers\Controller;
 use \Illuminate\Http\Request;
+
+use App\Models\app\TestGrid;
 
 class TestSearchController extends Controller {
 
@@ -19,7 +22,7 @@ class TestSearchController extends Controller {
 	}
 
 	public function getGridDataTest(Request $request){
-		return json_encode($this->getRezultForGrid());
+		return json_encode($this->getRezultForGrid($request->paginate['pageNumber'],$request->paginate['perPage']));
 	}
 
     public function getDataSearch(Request $request)
@@ -36,7 +39,12 @@ class TestSearchController extends Controller {
 		return $rezulset;
 	}
 
-	private function getRezultForGrid(){
+	private function getRezultForGrid($pageNumber, $perPage){
+
+		$rezulset = TestGrid::getData($pageNumber, $perPage);
+
+
+		/*
 		$rezulset = array();
 		for ($x = 0; $x <= 100000; $x++) {
 			$rezulset[]=['id'=> $x, 'caption' => 'GRID from php app ma duc la piata de ' . $x, "contract" => $x*473];
@@ -44,8 +52,14 @@ class TestSearchController extends Controller {
 
 		// sleep(10);
 
+		*/
+
+		// dd($rezulset);
+
 		return $rezulset;
 	}
+
+
 
 }
 
