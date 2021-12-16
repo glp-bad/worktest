@@ -46,7 +46,7 @@ $ff-caption-text-height: 22px;
 				position: sticky;
 				top: 0;
 
-				th {
+				.th {
 					border: 1px solid darken($ff-base, 20%);
 					font-size: map-get($ff-grid, "header-font-size");
 					font-weight: bold;
@@ -65,11 +65,36 @@ $ff-caption-text-height: 22px;
 						text-align: center;
 					}
 
-					div {
-						white-space: nowrap;
-						overflow: hidden;
-						text-overflow: ellipsis;
-						cursor: default;
+					.divHeader {
+						display: flex;                  /* establish flex container */
+						flex-direction: row;            /* default value; can be omitted */
+						flex-wrap: nowrap;              /* default value; can be omitted */
+						justify-content: space-between; /* switched from default (flex-start, see below) */
+
+						.divCaptionFilter {
+							display: flex;                  /* establish flex container */
+
+							.divFilter{
+								padding-left: 5px;
+								padding-right: 5px;
+								cursor: pointer;
+							}
+
+							.divCaption {
+								// background: blueviolet;
+								white-space: nowrap;
+								overflow: hidden;
+								text-overflow: ellipsis;
+								margin-left: 5px;
+
+							}
+						}
+
+						.divOrder {
+							cursor: pointer;
+							//background: black;
+						}
+
 					}
 
 				}

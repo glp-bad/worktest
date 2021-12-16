@@ -12,13 +12,29 @@
                 <thead class="ff-thead" :ref=this.REF_THEAD>
                     <tr :idPk="-1">
                         <template v-for="ph in pConfig.header">
-                            <th :id=ph.id v-if="ph.type == 'field'" class="th--left-align">
-                                <div :title=ph.caption>
-                                    {{ph.caption}}</div>
+                            <th :id=ph.id v-if="ph.type == 'field'" class="th th--left-align">
+                                <div class="divHeader">
+                                    <div class="divCaptionFilter">
+                                        <div v-if="ph.filterBy" class="divFilter" >
+                                            <font-awesome-icon :icon=this.cfgIconPictureAction(this.$constGrid.ICON_FILTER) size="1x"/>
+                                        </div>
+                                        <div class="divCaption" :title=ph.caption>
+                                            {{ph.caption}}
+                                        </div>
+                                    </div>
+
+                                    <div v-if="ph.orderBy" class="divOrder">
+                                        <font-awesome-icon :icon=this.cfgIconPictureAction(this.$constGrid.ICON_UP_ORDER) size="1x"/>
+                                    </div>
+
+
+
+                                </div>
                             </th>
-                            <th :id=ph.id v-if="ph.type !== 'field'" class="th--center-align">
-                                <div :title=ph.caption>
-                                    {{ph.caption}}</div>
+                            <th :id=ph.id v-if="ph.type !== 'field'" class="th th--center-align">
+                                <div class="divCaption" :title=ph.caption>
+                                    {{ph.caption}}
+                                </div>
                             </th>
                         </template>
                      </tr>
@@ -30,6 +46,7 @@
                                 <div class="div--left-align " :style="cgfTDStyle(index)" :title="td" :fieldName="index">{{td}}</div>
                             </td>
                         </template>
+
                         <td :tabindex=this.cfgGetTabIndex()>
                             <div class="div--center-align-action-group" >
                                 <div class="toolbar-icon-inline" >
@@ -43,6 +60,7 @@
                                 </div>
                             </div>
                         </td>
+
                     </tr>
                 </tbody>
                 <tfoot></tfoot>
@@ -171,6 +189,7 @@
 	            CLASS_SELECTED: 'selected',
                 CLASS_DINAMIC_BUTTON_PAG: 'divButtonDinamic',
 	            CLASS_PERMANENT_OVER: 'ff-button-selected',
+                clientDev: true,                    // pentru dezvoltare interjata wit vue-cli server
                 cfgInit: true,
                 allDataFromServer: true,            // when paginate from server is true
                 paginate: {
@@ -208,42 +227,59 @@
         },
         methods: {
 	        getDataFromServer: function () {
-		        let uri = this.$url.getUrl(this.pConfig.cfg.urlData);
 
-                if(this.engine.allDataFromServer) {
-                    this.axios
-                        .post(uri, this.post)
-                        .then(
-                            response => {
-                                this.loadingData = true;
-                                this.paginate.totalRecords = response.data.paginate.records;
-                                this.rezultData = response.data.records;
-                            }
-                        ).catch(error => console.log(error)
-                    ).finally(() => {
-                        if (this.engine.cfgInit) {
-                            this.privateSetPaginatePag(1);
-                            this.$nextTick(function () {
-                                this.initGrid();
-                                this.goToPage(null, '1');
-                            });
-                            this.engine.cfgInit = false;
-                        }
+		        if(this.engine.clientDev){
+			        this.rezultData = this.getTestData();
 
-                        if (this.pConfig.cfg.paginateLocal) {
-                            this.engine.allDataFromServer = false;
-                        }
+			        if (this.engine.cfgInit) {
+				        this.privateSetPaginatePag(1);
+				        this.$nextTick(function () {
+					        this.initGrid();
+					        this.goToPage(null, '1');
+				        });
+				        this.engine.cfgInit = false;
+			        }
 
-                        this.privatedPageToolDraw(this.post.paginate.pageNumber);
-                        this.privateSetPaginatePag(this.post.paginate.pageNumber);
-                        this.privateCfgPaginateArrowButton();
-                        this.loadingData = false;
-                    });
-                } else {
-                    this.privatedPageToolDraw(this.post.paginate.pageNumber);
-                    this.privateSetPaginatePag(this.post.paginate.pageNumber);
-                    this.privateCfgPaginateArrowButton();
-                }
+			        this.engine.allDataFromServer = false;
+
+			        this.privateLoadAndDrawGrid();
+			        this.loadingData = false;
+
+                }else {
+			        let uri = this.$url.getUrl(this.pConfig.cfg.urlData);
+
+			        if (this.engine.allDataFromServer) {
+				        this.axios
+					        .post(uri, this.post)
+					        .then(response => {
+						        this.loadingData = true;
+						        this.paginate.totalRecords = response.data.paginate.records;
+						        this.rezultData = response.data.records;
+					        }).catch(error => console.log(error)).finally(() => {
+					        if (this.engine.cfgInit) {
+						        this.privateSetPaginatePag(1);
+						        this.$nextTick(function () {
+							        this.initGrid();
+							        this.goToPage(null, '1');
+						        });
+						        this.engine.cfgInit = false;
+					        }
+
+					        if (this.pConfig.cfg.paginateLocal) {
+						        this.engine.allDataFromServer = false;
+					        }
+
+					        this.privateLoadAndDrawGrid();
+					        this.loadingData = false;
+				        });
+			        }
+			        else {
+				        this.privateLoadAndDrawGrid();
+
+			        }
+
+		        }
+
 		    },
             getDataSelected: function () {
 		        return this.selectdRow;
@@ -281,6 +317,12 @@
 
                     }
                 }
+
+            },
+            privateLoadAndDrawGrid: function(){
+	            this.privatedPageToolDraw(this.post.paginate.pageNumber);
+	            this.privateSetPaginatePag(this.post.paginate.pageNumber);
+	            this.privateCfgPaginateArrowButton();
 
             },
 	        privateEnterGotoPage: function (event){
@@ -575,11 +617,9 @@
             },
             getTestData: function () {
                 let dataTest = new Array();
-                //dataTest.push({name: 'Vasile',  'fact de curaj': 'se duce la piata si face cumparaturii 004 si inca un shir foarte lung sper eu', rez: 'nu a castigat nimic 004', var: 'variaza + 4', id: 92});
-                //dataTest.push({name: 'Ion',     'fact de curaj': 'se duce la piata si face cumparaturii 005', rez: 'nu a castigat nimic 005', var: 'variaza + 5', id: 93});
 
                 for(let i=0; i<72; i++){
-                    dataTest.push({id: i, caption: i+' Vasile fact de curaj', contract: '766600' + i });
+                    dataTest.push({id: i, name: '766600' + i, description: i+' Vasile fact de curaj - JS generate' });
                     // dataTest.push({name: i+' Ion',  act: 'se duce la piata si face cumparaturii 00' + i, rez: 'nu a castigat nimic ' +i, var: 'variaza +' + i, id: i+30});
                 }
 
