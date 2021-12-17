@@ -24,10 +24,10 @@
                                     </div>
 
                                     <div v-if="ph.orderBy" class="divOrder">
-                                        <font-awesome-icon :icon=this.cfgIconPictureAction(this.$constGrid.ICON_UP_ORDER) size="1x"/>
+                                        <my-button @click="this.privateOrderBy($event)" :heightButton=22 :buttonType=1 :style="cfgIconColor('white')">
+                                            <font-awesome-icon :icon=this.cfgIconPictureAction(this.$constGrid.ICON_UP_ORDER) size="1x" />
+                                        </my-button>
                                     </div>
-
-
 
                                 </div>
                             </th>
@@ -319,6 +319,11 @@
                 }
 
             },
+	        privateOrderBy: function (event) {
+
+
+              console.log('order by coloana: ', event);
+	        },
             privateLoadAndDrawGrid: function(){
 	            this.privatedPageToolDraw(this.post.paginate.pageNumber);
 	            this.privateSetPaginatePag(this.post.paginate.pageNumber);
