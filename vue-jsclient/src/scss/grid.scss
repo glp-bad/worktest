@@ -88,6 +88,21 @@ $ff-caption-text-height: 22px;
 								margin-left: 5px;
 
 							}
+
+                            .divDataFilter{
+                                position: absolute;
+                                display: none;
+                                box-shadow: 2px 2px 4px -4px darken($ff-base,35%);
+                                border-radius: 4px;
+                                width: auto;
+                                //hight: 30px;
+                                top: 85%;
+                                margin-left: 10px;
+
+                                background: $ff-background-color-wokbench;
+                                border: 1px solid lighten($ff-base,15%);
+
+                            }
 						}
 
 						.divOrder {

@@ -16,22 +16,25 @@
                                 <div class="divHeader">
                                     <div class="divCaptionFilter">
                                         <div v-if="ph.filterBy" class="divFilter" >
-                                            <font-awesome-icon :icon=this.cfgIconPictureAction(this.$constGrid.ICON_FILTER) size="1x"/>
+                                            <my-button @click="this.privateFilterBy($event)" :heightButton=22 :buttonType=1 :style="cfgIconColor('white')" :title="'filter...'">
+                                                <font-awesome-icon :icon=this.cfgIconPictureAction(this.$constGrid.ICON_FILTER) size="1x"/>
+                                            </my-button>
                                         </div>
                                         <div class="divCaption" :title=ph.caption>
                                             {{ph.caption}}
                                         </div>
+
+                                        <div v-if="ph.filterBy" class="divDataFilter">
+                                            <my-input-field :size=20
+                                                           :pPlaceHolder="'...'" v-on:keyup="privateEnterGotoPage">
+
+                                            </my-input-field>
+                                        </div>
+
                                     </div>
 
                                     <div v-if="ph.orderBy.order" class="divOrder">
                                         <my-button :idheader="ph.id"  @click="this.privateOrderBy($event)" :heightButton=22 :buttonType=1 :style="cfgIconColor('white')" :title="'order ...'">
-
-                                            <!-- <font-awesome-icon v-if="this.orderBy.orderAsc" :icon=this.cfgIconPictureAction(this.$constGrid.ICON_ORDER) size="1x" />
-
-                                            <font-awesome-icon v-if="this.orderBy.orderAsc" :icon=this.cfgIconPictureAction(this.$constGrid.ICON_UP_ORDER) size="1x" />
-                                            <font-awesome-icon v-if="!this.orderBy.orderAsc" :icon=this.cfgIconPictureAction(this.$constGrid.ICON_DOWN_ORDER) size="1x" />
-                                            -->
-
                                             <font-awesome-icon v-if="this.privateIconOrderBy(ph.id) == 1" :icon=this.cfgIconPictureAction(this.$constGrid.ICON_UP_ORDER) size="1x" />
                                             <font-awesome-icon v-if="this.privateIconOrderBy(ph.id) == 2" :icon=this.cfgIconPictureAction(this.$constGrid.ICON_DOWN_ORDER) size="1x" />
                                             <font-awesome-icon v-if="this.privateIconOrderBy(ph.id) == 0" :icon=this.cfgIconPictureAction(this.$constGrid.ICON_ORDER) size="1x" />
@@ -171,14 +174,17 @@
 <script>
 
 	import Button from '@/components/base/Button.vue';
-	import TextField from "@/components/base/TextField.vue";
+	import InputField from "@/components/base/InputField.vue";
+    import MyInputField from "./InputField";
 	// import { reactive, isReactive, readonly } from 'vue';
 
 	export default {
 		name: "grid",
 		components: {
+            MyInputField,
 			'my-button': Button,
-            'page-nr-field': TextField
+            'page-nr-field': InputField,
+            'text-filter': InputField
 		},
         props: {
             pConfig: {type: Object, required: true}
@@ -199,9 +205,9 @@
 	            CLASS_SELECTED: 'selected',
                 CLASS_DINAMIC_BUTTON_PAG: 'divButtonDinamic',
 	            CLASS_PERMANENT_OVER: 'ff-button-selected',
-                clientDev: true,                    // pentru dezvoltare interjata wit vue-cli server
+                clientDev: true,                    // pentru dezvoltare interfata with vue-cli server
                 cfgInit: true,
-                allDataFromServer: true,            // when paginate from server is true
+                allDataFromServer: false,            // when paginate from server is true
                 paginate: {
                     buttonGoStart:{
                         id: 'b1',
@@ -354,6 +360,15 @@
 	              this.post.orderBy.fieldName = fieldName;
                   this.post.orderBy.order = order;
             },
+            privateFilterBy: function (event){
+	            let th = event.target.closest("th");
+	            let idHeader = th.getAttribute('id');
+	            let divFilter = th.querySelectorAll('.divDataFilter')[0];
+
+                divFilter.style.display = 'block';
+
+	            console.log("privateFilterBy", divFilter, idHeader);
+            },
 	        privateOrderBy: function (event) {
 
                 let idHeader = event.target.closest("div").firstChild.getAttribute('idheader');
@@ -383,7 +398,7 @@
                 // for post data
                 this.setOrderBy(fieldName, order);
 
-                console.log(this.post.orderBy);
+                // send filter
 
             },
             privateIconOrderBy: function (idHeader){
