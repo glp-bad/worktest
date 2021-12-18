@@ -106,7 +106,13 @@ const appHelper = {
                     let returnVal = null;
                     for (let i = 0; i < objArray.length; i++) {
                         if(objArray[i][propNameId] == propId){
-                            returnVal = objArray[i][propNameReturn];
+
+                            if( propNameReturn === undefined || propNameReturn === null){
+                                returnVal = objArray[i];
+                            }else{
+                                returnVal = objArray[i][propNameReturn];
+                            }
+
                             break;
                         }
                     }

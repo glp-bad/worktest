@@ -24,12 +24,12 @@
         created() {
             this.gridConfig = {
                 header: [
-	                this.$constGrid.HEADER.getHeader(1,'idFiled',30,'id', this.$constGrid.HEADER.CAPTION_TYPE_FIELD, false, false),
-	                this.$constGrid.HEADER.getHeader(2,'Nume',120,'name', this.$constGrid.HEADER.CAPTION_TYPE_FIELD, true, false),
-                    this.$constGrid.HEADER.getHeader(3,'Descriere',400,'description', this.$constGrid.HEADER.CAPTION_TYPE_FIELD, false, true),
+	                this.$constGrid.HEADER.getHeader(1,'idFiled',30,'id', this.$constGrid.HEADER.CAPTION_TYPE_FIELD, false, false, false),
+	                this.$constGrid.HEADER.getHeader(2,'Nume',120,'name', this.$constGrid.HEADER.CAPTION_TYPE_FIELD, true, true, false),
+                    this.$constGrid.HEADER.getHeader(3,'Descriere',400,'description', this.$constGrid.HEADER.CAPTION_TYPE_FIELD, true, false, true),
                     //this.$constGrid.HEADER.getHeader(4,'Rezultat mai bun',120,'rez', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
                     //this.$constGrid.HEADER.getHeader(5,'Variabile',50,'var', this.$constGrid.HEADER.CAPTION_TYPE_FIELD),
-                    this.$constGrid.HEADER.getHeader(6,'action',50,null, this.$constGrid.HEADER.CAPTION_TYPE_ACTION, false, false)
+                    this.$constGrid.HEADER.getHeader(6,'action',50,null, this.$constGrid.HEADER.CAPTION_TYPE_ACTION, false, false, false)
                 ],
 	            actionButtonHeader: [
                 	this.$constGrid.getActionButton(7, 'Altceva din functie', 'altCeca', this.$constGrid.getIcon('fas','skull', '#adad00')),

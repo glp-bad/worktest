@@ -23,10 +23,19 @@
                                         </div>
                                     </div>
 
-                                    <div v-if="ph.orderBy" class="divOrder">
-                                        <my-button @click="this.privateOrderBy($event)" :heightButton=22 :buttonType=1 :style="cfgIconColor('white')" :title="'order ...'">
+                                    <div v-if="ph.orderBy.order" class="divOrder">
+                                        <my-button :idheader="ph.id"  @click="this.privateOrderBy($event)" :heightButton=22 :buttonType=1 :style="cfgIconColor('white')" :title="'order ...'">
+
+                                            <!-- <font-awesome-icon v-if="this.orderBy.orderAsc" :icon=this.cfgIconPictureAction(this.$constGrid.ICON_ORDER) size="1x" />
+
                                             <font-awesome-icon v-if="this.orderBy.orderAsc" :icon=this.cfgIconPictureAction(this.$constGrid.ICON_UP_ORDER) size="1x" />
                                             <font-awesome-icon v-if="!this.orderBy.orderAsc" :icon=this.cfgIconPictureAction(this.$constGrid.ICON_DOWN_ORDER) size="1x" />
+                                            -->
+
+                                            <font-awesome-icon v-if="this.privateIconOrderBy(ph.id) == 1" :icon=this.cfgIconPictureAction(this.$constGrid.ICON_UP_ORDER) size="1x" />
+                                            <font-awesome-icon v-if="this.privateIconOrderBy(ph.id) == 2" :icon=this.cfgIconPictureAction(this.$constGrid.ICON_DOWN_ORDER) size="1x" />
+                                            <font-awesome-icon v-if="this.privateIconOrderBy(ph.id) == 0" :icon=this.cfgIconPictureAction(this.$constGrid.ICON_ORDER) size="1x" />
+
                                         </my-button>
                                     </div>
 
@@ -220,6 +229,27 @@
             this.paginate.pag.buttons.bt = this.$vanilla.generateButton(this.pConfig.paginate.nrButtonShow);
 
         },
+        beforeMount(){
+            // set header for order by
+
+            let first = true; // only one column have order by, first when have many settings
+
+            for (let i = 0; i<this.pConfig.header.length; i++ ){
+
+                if(this.pConfig.header[i].orderBy.order){
+
+                    let orderDefaultIcon = null;
+                    if(this.pConfig.header[i].orderBy.defaultOrder && first){
+                        orderDefaultIcon = this.$constGrid.ORDER_ASC;
+                        first = false;
+                    }
+                    this.orderBy.header.push(this.$constGrid.getOrderByReactive(this.pConfig.header[i].id, orderDefaultIcon, this.pConfig.header[i].tableFieldName));
+
+                }
+
+            }
+
+        },
 		mounted() {
 			this.cfgGrid();
 			this.getDataFromServer();
@@ -320,19 +350,54 @@
                 }
 
             },
+            setOrderBy: function (fieldName, order){
+	              this.post.orderBy.fieldName = fieldName;
+                  this.post.orderBy.order = order;
+            },
 	        privateOrderBy: function (event) {
-                let button = event.target.closest("div").firstChild;
 
-                if(this.orderBy.orderAsc){
-                    this.orderBy.orderAsc  = false;
+                let idHeader = event.target.closest("div").firstChild.getAttribute('idheader');
+
+                let orderBy = this.$vanilla.getAtributeValueFromArrayObject(this.orderBy.header, 'id', idHeader);
+                let order = null;
+                let fieldName = null;
+
+                if(this.$check.isUndef(orderBy.order)){
+                    order = this.$constGrid.ORDER_ASC;
                 }else{
-                    this.orderBy.orderAsc  = true;
+                    order = this.$constGrid.ORDER_ASC;
+                    if(orderBy.order == this.$constGrid.ORDER_ASC){
+                        order = this.$constGrid.ORDER_DESC;
+                    }
+                }
+
+                for (let i = 0; i < this.orderBy.header.length; i++){
+                    this.orderBy.header[i].order = null;
+                    if(this.orderBy.header[i].id == idHeader){
+                        this.orderBy.header[i].order = order;
+                        fieldName = this.orderBy.header[i].fieldName;
+                    }
                 }
 
 
+                // for post data
+                this.setOrderBy(fieldName, order);
 
+                console.log(this.post.orderBy);
 
-	        },
+            },
+            privateIconOrderBy: function (idHeader){
+
+                let order = this.$vanilla.getAtributeValueFromArrayObject(this.orderBy.header, 'id', idHeader);
+	            let returnVal = 0;
+
+	            if(order.order == this.$constGrid.ORDER_ASC){
+                    returnVal = 1;
+                }else if(order.order == this.$constGrid.ORDER_DESC){
+                    returnVal = 2;
+                }
+	            return returnVal;
+            },
             privateLoadAndDrawGrid: function(){
 	            this.privatedPageToolDraw(this.post.paginate.pageNumber);
 	            this.privateSetPaginatePag(this.post.paginate.pageNumber);
@@ -578,6 +643,23 @@
                 divTable.style.width = widthPixel;
                 divTable.style.height = this.pConfig.cfg.height  + 'px';
 
+
+
+                // set header for order by
+                for (let i = 0; i<this.pConfig.header.length;   i++ ){
+                    //console.log(this.pConfig.header[i].id);
+                    //console.log(this.pConfig.header[i].orderBy);
+
+                    if(this.pConfig.header[i].orderBy){
+                        //this.orderBy.header.push({id: this.pConfig.header[i].id, order: this.$constGrid.ORDER_ASC});
+                    }
+
+                }
+
+
+                //console.log(this.orderBy.header);
+
+
             },
             cfgKeyNavigate: function (event){
                 if (event.key == 'ArrowRight') {
@@ -654,10 +736,11 @@
                     pag: this.$vanilla.paginateArray(new Array())
                 },
                 orderBy:{
-				    orderAsc: true
+                    header: new Array()
                 },
 				post: {
-					    paginate:{ 'perPage': this.pConfig.cfg.recordsPerPage , 'pageNumber': 1, 'countRecords': -1  }
+					    paginate:{ 'perPage': this.pConfig.cfg.recordsPerPage , 'pageNumber': 1, 'countRecords': -1  },
+                        orderBy: {fieldName: null, order: null}
 				}
             }
 		}

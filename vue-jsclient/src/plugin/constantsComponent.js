@@ -13,7 +13,10 @@ const constantsComponent = {
             ICON_DELETE: {fawIcon:'fas', icon: 'times', color: "darkred"},
 	        ICON_UP_ORDER: {fawIcon:'fas', icon: 'caret-up', color: null},
 	        ICON_DOWN_ORDER: {fawIcon:'fas', icon: 'caret-down', color: null},
-	        ICON_FILTER: {fawIcon:'fas', icon: 'ellipsis-v', color: null},
+            ICON_ORDER: {fawIcon:'fas', icon: 'sort', color: null},
+            ICON_FILTER: {fawIcon:'fas', icon: 'ellipsis-v', color: null},
+            ORDER_ASC: 'asc',
+            ORDER_DESC: 'desc',
             getIcon: function (fawIcon, icon, color) {
                 return {fawIcon:fawIcon, icon: icon, color: color}
             },
@@ -21,14 +24,19 @@ const constantsComponent = {
                 CAPTION_TYPE_FIELD: 'field'  ,
                 CAPTION_TYPE_ACTION: 'action',
                 TABLE_FIELD_NAME: 'tableFieldName',
-                getHeader: function (id, caption, width, tableFieldName, type, orderBy, filterBy) {
+                getHeader: function (id, caption, width, tableFieldName, type, orderBy, defaultOrder, filterBy) {
 
                 	if(type == this.CAPTION_TYPE_ACTION){
 		                orderBy = false;
+                        defaultOrder = false;
 		                filterBy = false;
 	                }
 
-                    return {id: id, caption: caption,   width: width,  tableFieldName: tableFieldName,  type: type, orderBy: orderBy, filterBy: filterBy};
+                	if(!orderBy){
+                	    defaultOrder = false;
+                    }
+
+                    return {id: id, caption: caption,   width: width,  tableFieldName: tableFieldName,  type: type, orderBy: {order: orderBy, defaultOrder: defaultOrder}, filterBy: filterBy};
                 }
             },
             BODY:{
@@ -36,6 +44,9 @@ const constantsComponent = {
             },
             getActionButton: function (id, tooltip, emitAction, icon) {
                 return {id: id, tooltip: tooltip, emitAction: emitAction, icon: icon };
+            },
+            getOrderByReactive: function (id, order, fieldName) {
+                 return {id: id, order: order, fieldName: fieldName};
             }
         }
     }
