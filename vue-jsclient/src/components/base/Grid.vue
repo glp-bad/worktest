@@ -24,8 +24,9 @@
                                     </div>
 
                                     <div v-if="ph.orderBy" class="divOrder">
-                                        <my-button @click="this.privateOrderBy($event)" :heightButton=22 :buttonType=1 :style="cfgIconColor('white')">
-                                            <font-awesome-icon :icon=this.cfgIconPictureAction(this.$constGrid.ICON_UP_ORDER) size="1x" />
+                                        <my-button @click="this.privateOrderBy($event)" :heightButton=22 :buttonType=1 :style="cfgIconColor('white')" :title="'order ...'">
+                                            <font-awesome-icon v-if="this.orderBy.orderAsc" :icon=this.cfgIconPictureAction(this.$constGrid.ICON_UP_ORDER) size="1x" />
+                                            <font-awesome-icon v-if="!this.orderBy.orderAsc" :icon=this.cfgIconPictureAction(this.$constGrid.ICON_DOWN_ORDER) size="1x" />
                                         </my-button>
                                     </div>
 
@@ -41,8 +42,8 @@
                 </thead>
                 <tbody class="ff-tbody" :ref=REF_TABLE_BODY>
                     <tr v-for="(tr, index) in this.paginate.pag.data" :idPk="tr.id" v-on:keydown.prevent="cfgKeyNavigate($event)" v-on:click.prevent="cfgMouseNavigate($event)" v-bind:key="index">
-                        <template v-for="(td, index) in tr">
-                            <td :tabindex=this.cfgGetTabIndex() v-bind:key="index">
+                        <template v-for="(td, index) in tr" v-bind:key="index">
+                            <td :tabindex=this.cfgGetTabIndex() >
                                 <div class="div--left-align " :style="cgfTDStyle(index)" :title="td" :fieldName="index">{{td}}</div>
                             </td>
                         </template>
@@ -320,9 +321,17 @@
 
             },
 	        privateOrderBy: function (event) {
+                let button = event.target.closest("div").firstChild;
+
+                if(this.orderBy.orderAsc){
+                    this.orderBy.orderAsc  = false;
+                }else{
+                    this.orderBy.orderAsc  = true;
+                }
 
 
-              console.log('order by coloana: ', event);
+
+
 	        },
             privateLoadAndDrawGrid: function(){
 	            this.privatedPageToolDraw(this.post.paginate.pageNumber);
@@ -643,6 +652,9 @@
 					totalRecords: 0,
 				    buttonPageNumber: ['22','23','34','45','56','68'],
                     pag: this.$vanilla.paginateArray(new Array())
+                },
+                orderBy:{
+				    orderAsc: true
                 },
 				post: {
 					    paginate:{ 'perPage': this.pConfig.cfg.recordsPerPage , 'pageNumber': 1, 'countRecords': -1  }
