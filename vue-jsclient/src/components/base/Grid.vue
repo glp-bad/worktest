@@ -196,6 +196,9 @@
 	        this.REF_INPUT_PAGE_NR = 'refPageNumber',
             this.REF_TOOLBAR = 'refToolbar',
             this.KEY_PRESS_CONTROL_BROWSER = ['Tab', 'Escape'],
+            this.HEADER_TYPE_HEADER = 'header',
+            this.HEADER_TYPE_FILTER_INPUT = 'filterInput',
+
 
             this.engine = {
                 tabIndexValue: 0,
@@ -375,8 +378,28 @@
             },
             privateGetFilterInputText: function (idHeader) {
 
-	        	console.log("privateGetFilterInputText: ", this.$refs[this.REF_THEAD].getElementById(idHeader));
+                console.log(this.privateGetHeaderColumn(2, this.HEADER_TYPE_FILTER_INPUT));
+            },
+            privateGetHeaderColumn: function (idHeader, type){
+	            let headers = this.$refs[this.REF_THEAD].getElementsByTagName('th');
 
+	            let headerReturn = null;
+
+	            for(let i=0; i < headers.length; i++ ){
+	                if(headers[i].getAttribute('id') == idHeader){
+                        headerReturn =  headers[i];
+                        break;
+                    }
+                }
+
+	            if(type == this.HEADER_TYPE_HEADER){
+	                // implicit do nothing
+                }else if(type == this.HEADER_TYPE_FILTER_INPUT){
+	                headerReturn = headerReturn.getElementsByTagName('input')[0];
+                }
+
+
+                return headerReturn;
             },
 	        privateReactiveShowFilterDiv: function (idHeader) {
 
