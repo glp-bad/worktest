@@ -42,8 +42,21 @@ const appHelper = {
                     return objFind;
                 }
             },
-
             app.config.globalProperties.$vanilla = {
+	            displayDivOnOff: function(div, dispaly){
+
+	            	let valReturn = 'off';
+	            	let displayMode = 'none';
+
+		            if(div.style.display === 'none' || div.style.display === ''){
+			            valReturn = 'on';
+			            displayMode = dispaly;
+		            }
+
+		            div.style.display = displayMode;
+
+		            return valReturn;
+	            },
         	    disableButton: function(htmlButton){
 		            htmlButton.setAttribute('disabled',true);
 		            htmlButton.classList.add('disable');                    // class name

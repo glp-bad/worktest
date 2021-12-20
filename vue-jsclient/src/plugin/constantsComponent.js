@@ -47,7 +47,10 @@ const constantsComponent = {
             },
             getOrderByReactive: function (id, order, fieldName) {
                  return {id: id, order: order, fieldName: fieldName};
-            }
+            },
+	        getFilterByReactive: function (id, fieldName, value, showInputDiv, type) {
+		        return {id: id, fieldName: fieldName, value: value, showInputDiv: showInputDiv, type: type};
+	        }
         }
     }
 }

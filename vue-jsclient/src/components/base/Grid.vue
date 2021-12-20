@@ -16,7 +16,7 @@
                                 <div class="divHeader">
                                     <div class="divCaptionFilter">
                                         <div v-if="ph.filterBy" class="divFilter" >
-                                            <my-button @click="this.privateFilterBy($event)" :heightButton=22 :buttonType=1 :style="cfgIconColor('white')" :title="'filter...'">
+                                            <my-button @click="this.privateShowFilterDiv($event)" :heightButton=22 :buttonType=1 :style="cfgIconColor('white')" :title="'filter...'">
                                                 <font-awesome-icon :icon=this.cfgIconPictureAction(this.$constGrid.ICON_FILTER) size="1x"/>
                                             </my-button>
                                         </div>
@@ -24,10 +24,9 @@
                                             {{ph.caption}}
                                         </div>
 
-                                        <div v-if="ph.filterBy" class="divDataFilter">
+                                        <div v-if="ph.filterBy" class="divDataFilter" v-bind:class="{ divDataFilterDisplayOn: this.privateReactiveShowFilterDiv(ph.id)}">
                                             <my-input-field :size=20
-                                                           :pPlaceHolder="'...'" v-on:keyup="privateEnterGotoPage">
-
+                                                           :pPlaceHolder="'...'" v-on:keyup="privateKeyPresFilter">
                                             </my-input-field>
                                         </div>
 
@@ -176,7 +175,7 @@
 	import Button from '@/components/base/Button.vue';
 	import InputField from "@/components/base/InputField.vue";
     import MyInputField from "./InputField";
-	// import { reactive, isReactive, readonly } from 'vue';
+
 
 	export default {
 		name: "grid",
@@ -196,6 +195,7 @@
             this.REF_TABLE_BODY = 'refBody',
 	        this.REF_INPUT_PAGE_NR = 'refPageNumber',
             this.REF_TOOLBAR = 'refToolbar',
+            this.KEY_PRESS_CONTROL_BROWSER = ['Tab', 'Escape'],
 
             this.engine = {
                 tabIndexValue: 0,
@@ -208,6 +208,9 @@
                 clientDev: true,                    // pentru dezvoltare interfata with vue-cli server
                 cfgInit: true,
                 allDataFromServer: false,            // when paginate from server is true
+	            timeOut: null,                       // delay preskey filter
+	            TIME_OUT_DELAY_FOR_FILTER: 600,
+                FILTER_MIN_CHARACTER: 3,
                 paginate: {
                     buttonGoStart:{
                         id: 'b1',
@@ -237,28 +240,38 @@
         },
         beforeMount(){
             // set header for order by
-
             let first = true; // only one column have order by, first when have many settings
 
             for (let i = 0; i<this.pConfig.header.length; i++ ){
 
+            	// for order by
                 if(this.pConfig.header[i].orderBy.order){
-
                     let orderDefaultIcon = null;
                     if(this.pConfig.header[i].orderBy.defaultOrder && first){
                         orderDefaultIcon = this.$constGrid.ORDER_ASC;
                         first = false;
                     }
                     this.orderBy.header.push(this.$constGrid.getOrderByReactive(this.pConfig.header[i].id, orderDefaultIcon, this.pConfig.header[i].tableFieldName));
+                }
+
+	            // for filter by
+	            if(this.pConfig.header[i].filterBy){
+                	// type inca nu este folosit
+                	this.filterBy.header.push(this.$constGrid.getFilterByReactive(this.pConfig.header[i].id, this.pConfig.header[i].tableFieldName, null, false, null));
 
                 }
 
+
             }
+
+
 
         },
 		mounted() {
 			this.cfgGrid();
 			this.getDataFromServer();
+
+			console.log('mounted: ', this.filterBy.header);
 		},
         computed: {
         },
@@ -360,15 +373,94 @@
 	              this.post.orderBy.fieldName = fieldName;
                   this.post.orderBy.order = order;
             },
-            privateFilterBy: function (event){
+            privateGetFilterInputText: function (idHeader) {
+
+	        	console.log("privateGetFilterInputText: ", this.$refs[this.REF_THEAD].getElementById(idHeader));
+
+            },
+	        privateReactiveShowFilterDiv: function (idHeader) {
+
+	        	let returnValue = false;
+
+	        	for(let i=0; i < this.filterBy.header.length ;i++){
+	        	    if(this.filterBy.header[i].id == idHeader){
+			            returnValue = this.filterBy.header[i].showInputDiv ;
+			            break ;
+                    }
+                }
+
+                // console.log("privateReactiveShowFilterDiv: ", this.filterBy.header);
+	        	return returnValue;
+
+	        },
+            privateShowFilterDiv: function (event) {
+
+	        	/*
+	            let th = event.target.closest("th");
+                let divFilter = th.querySelectorAll('.divDataFilter')[0];
+                let onOff = this.$vanilla.displayDivOnOff(divFilter, 'block');
+
+                if(onOff == 'on'){
+	                divFilter.getElementsByTagName("input")[0].focus();
+	                divFilter.getElementsByTagName("input")[0].select();
+                }
+                */
+
+
 	            let th = event.target.closest("th");
 	            let idHeader = th.getAttribute('id');
-	            let divFilter = th.querySelectorAll('.divDataFilter')[0];
 
-                divFilter.style.display = 'block';
+	            for(let i=0; i < this.filterBy.header.length ;i++){
 
-	            console.log("privateFilterBy", divFilter, idHeader);
+		            if(this.filterBy.header[i].id == idHeader){
+			            if(this.filterBy.header[i].showInputDiv){
+				            this.filterBy.header[i].showInputDiv = false;
+                        }else{
+				            this.filterBy.header[i].showInputDiv = true;
+                        }
+		            }else{
+			            this.filterBy.header[i].showInputDiv = false;
+                    }
+	            }
+
+	            this.privateGetFilterInputText(idHeader);
+
+	            //let idHeader = th.getAttribute('id');
+	            //console.log("privateFilterBy", divFilter, idHeader, divFilter.style.display);
+
             },
+	        privateKeyPresFilter: function (event) {
+		        if(this.KEY_PRESS_CONTROL_BROWSER.includes(event.key)) {
+			        // do nothing
+		        } else {
+			        this.privateDelayFilterCancel();
+			        let wordFilter = event.target.value;
+
+			        if(wordFilter.length >= this.engine.FILTER_MIN_CHARACTER) {
+				        this.privateDelayFilter(event.target);
+			        } else {
+				        // this.hideOption();
+			        }
+		        }
+	        },
+            privateFilterBy: function (target){
+	        	let th = target.closest('th');
+	            let headerCfg = this.$vanilla.getAtributeValueFromArrayObject(this.pConfig.header, 'id', th.getAttribute('id'));
+
+	            if(headerCfg.filterBy){
+	            	this.post.filterBy.push({'fieldName': headerCfg.tableFieldName, value:target.value});
+                }
+
+	        	console.log("privateFilterBy: acum filtrez !!!!", target.value, headerCfg.tableFieldName);
+            },
+	        privateDelayFilter: function(target){
+		        this.engine.timeOut = setTimeout( () => this.privateFilterBy(target), this.engine.TIME_OUT_DELAY_FOR_FILTER);
+	        },
+	        privateDelayFilterCancel: function(){
+		        if(this.engine.timeOut != null){
+			        clearTimeout(this.engine.timeOut);
+		        }
+	        },
 	        privateOrderBy: function (event) {
 
                 let idHeader = event.target.closest("div").firstChild.getAttribute('idheader');
@@ -394,12 +486,10 @@
                     }
                 }
 
-
                 // for post data
                 this.setOrderBy(fieldName, order);
 
                 // send filter
-
             },
             privateIconOrderBy: function (idHeader){
 
@@ -750,12 +840,16 @@
 				    buttonPageNumber: ['22','23','34','45','56','68'],
                     pag: this.$vanilla.paginateArray(new Array())
                 },
-                orderBy:{
+                orderBy: {
                     header: new Array()
+                },
+                filterBy: {
+				    header: new Array()
                 },
 				post: {
 					    paginate:{ 'perPage': this.pConfig.cfg.recordsPerPage , 'pageNumber': 1, 'countRecords': -1  },
-                        orderBy: {fieldName: null, order: null}
+                        orderBy: {fieldName: null, order: null},
+                        filterBy: new Array()
 				}
             }
 		}

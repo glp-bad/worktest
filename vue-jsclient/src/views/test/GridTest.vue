@@ -58,7 +58,7 @@
 		                this.$constGrid.getActionButton( null,  'Delete din functie', 'editCevaToolbar', this.$constGrid.ICON_EDIT)
                     ]
                 },
-                paginate:{
+                paginate: {
                 	nrButtonShow: 5
                 }
             }
