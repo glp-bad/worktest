@@ -196,10 +196,6 @@
 	        this.REF_INPUT_PAGE_NR = 'refPageNumber',
             this.REF_TOOLBAR = 'refToolbar',
             this.KEY_PRESS_CONTROL_BROWSER = ['Tab', 'Escape'],
-            this.HEADER_TYPE_HEADER = 'header',
-            this.HEADER_TYPE_FILTER_INPUT = 'filterInput',
-
-
             this.engine = {
                 tabIndexValue: 0,
                 tdCurent: null,
@@ -372,34 +368,48 @@
                 }
 
             },
+            testReactive: function () {
+                console.log('testReactive: ', this.filterBy.value);
+            },
             setOrderBy: function (fieldName, order){
 	              this.post.orderBy.fieldName = fieldName;
                   this.post.orderBy.order = order;
             },
-            privateGetFilterInputText: function (idHeader) {
-
-                console.log(this.privateGetHeaderColumn(2, this.HEADER_TYPE_FILTER_INPUT));
-            },
-            privateGetHeaderColumn: function (idHeader, type){
-	            let headers = this.$refs[this.REF_THEAD].getElementsByTagName('th');
+            privateGetHeaderColumn: function (obj){
 
 	            let headerReturn = null;
+	            let idHeader = null;
 
-	            for(let i=0; i < headers.length; i++ ){
-	                if(headers[i].getAttribute('id') == idHeader){
-                        headerReturn =  headers[i];
-                        break;
+	            if (isNaN(obj)) {
+	                // este orice obiect din interiorul th
+		            if (obj.target)
+		            {
+                        // is event
+			            headerReturn = obj.target.closest("th");
+                    }else{
+			            headerReturn = obj.closest("th");
                     }
-                }
 
-	            if(type == this.HEADER_TYPE_HEADER){
-	                // implicit do nothing
-                }else if(type == this.HEADER_TYPE_FILTER_INPUT){
-	                headerReturn = headerReturn.getElementsByTagName('input')[0];
-                }
+		            idHeader = headerReturn.getAttribute('id');
 
+	            } else {
+                    // este numar, reprezinta id header
 
-                return headerReturn;
+		            idHeader = obj;
+
+		            let headers = this.$refs[this.REF_THEAD].getElementsByTagName('th');
+
+		            for(let i=0; i < headers.length; i++ ){
+			            if(headers[i].getAttribute('id') == idHeader){
+				            headerReturn =  headers[i];
+				            break;
+			            }
+		            }
+	            }
+
+	            let filterByInput = headerReturn.getElementsByTagName('input')[0];
+
+                return {header: headerReturn, idHeader: idHeader, filterByInput: filterByInput};
             },
 	        privateReactiveShowFilterDiv: function (idHeader) {
 
@@ -411,77 +421,95 @@
 			            break ;
                     }
                 }
-
-                // console.log("privateReactiveShowFilterDiv: ", this.filterBy.header);
 	        	return returnValue;
-
 	        },
             privateShowFilterDiv: function (event) {
 
-	        	/*
-	            let th = event.target.closest("th");
-                let divFilter = th.querySelectorAll('.divDataFilter')[0];
-                let onOff = this.$vanilla.displayDivOnOff(divFilter, 'block');
-
-                if(onOff == 'on'){
-	                divFilter.getElementsByTagName("input")[0].focus();
-	                divFilter.getElementsByTagName("input")[0].select();
-                }
-                */
-
-
-	            let th = event.target.closest("th");
-	            let idHeader = th.getAttribute('id');
+	            let header = this.privateGetHeaderColumn(event);
 
 	            for(let i=0; i < this.filterBy.header.length ;i++){
 
-		            if(this.filterBy.header[i].id == idHeader){
+		            if(this.filterBy.header[i].id == header.idHeader){
 			            if(this.filterBy.header[i].showInputDiv){
 				            this.filterBy.header[i].showInputDiv = false;
                         }else{
 				            this.filterBy.header[i].showInputDiv = true;
+				            this.$nextTick(() => {header.filterByInput.focus(); header.filterByInput.select();});
                         }
 		            }else{
 			            this.filterBy.header[i].showInputDiv = false;
                     }
 	            }
 
-	            this.privateGetFilterInputText(idHeader);
-
-	            //let idHeader = th.getAttribute('id');
-	            //console.log("privateFilterBy", divFilter, idHeader, divFilter.style.display);
-
             },
 	        privateKeyPresFilter: function (event) {
 		        if(this.KEY_PRESS_CONTROL_BROWSER.includes(event.key)) {
 			        // do nothing
 		        } else {
-			        this.privateDelayFilterCancel();
+			        this.privateDelayFilterReset();
 			        let wordFilter = event.target.value;
 
-			        if(wordFilter.length >= this.engine.FILTER_MIN_CHARACTER) {
+			        this.filterBy.value = wordFilter;
+
+			        if(wordFilter.length >= this.engine.FILTER_MIN_CHARACTER || wordFilter.length == 0) {
 				        this.privateDelayFilter(event.target);
-			        } else {
-				        // this.hideOption();
 			        }
 		        }
 	        },
-            privateFilterBy: function (target){
-	        	let th = target.closest('th');
-	            let headerCfg = this.$vanilla.getAtributeValueFromArrayObject(this.pConfig.header, 'id', th.getAttribute('id'));
+            privateSetFilterValue: function (idHeader, newValue, reset) {
+	        	for(let i=0; i< this.filterBy.header.length; i++){
+	        		if(this.filterBy.header[i].id == idHeader){
 
-	            if(headerCfg.filterBy){
-	            	this.post.filterBy.push({'fieldName': headerCfg.tableFieldName, value:target.value});
+	        			if(this.filterBy.header[i].value != newValue){
+					        this.filterBy.newFilter = true;
+
+					        if(newValue.length == 0){
+						        newValue = null;
+                            }
+
+					        this.filterBy.header[i].value = newValue;
+                        }
+                    }
                 }
 
-	        	console.log("privateFilterBy: acum filtrez !!!!", target.value, headerCfg.tableFieldName);
+                if(this.filterBy.newFilter){
+	                this.privateSetPostFilterBy();
+
+	        		// send request to server
+	                console.log('privateSetFilterValue: send request filter to server');
+
+	                this.filterBy.newFilter = false;
+                }
+
+	            console.log('privateSetFilterValue: ', this.filterBy);
+
+            },
+            privateSetPostFilterBy: function () {
+
+	            for(let i=0; i< this.filterBy.header.length; i++){
+                }
+
+	            console.log('privateSetPostFilterBy: ', this.post.filterBy);
+
+            },
+            privateFilterBy: function (target){
+	        	let header = this.privateGetHeaderColumn(target);
+	            //let headerCfg = this.$vanilla.getAtributeValueFromArrayObject(this.pConfig.header, 'id', th.getAttribute('id'));
+	            //if(headerCfg.filterBy){
+	            //	this.post.filterBy.push({'fieldName': headerCfg.tableFieldName, value:target.value});
+                //}
+
+
+	            this.privateSetFilterValue(header.idHeader, header.filterByInput.value);
+
             },
 	        privateDelayFilter: function(target){
 		        this.engine.timeOut = setTimeout( () => this.privateFilterBy(target), this.engine.TIME_OUT_DELAY_FOR_FILTER);
 	        },
-	        privateDelayFilterCancel: function(){
+	        privateDelayFilterReset: function(){
 		        if(this.engine.timeOut != null){
 			        clearTimeout(this.engine.timeOut);
+			        console.log('privateDelayFilterReset <- ');
 		        }
 	        },
 	        privateOrderBy: function (event) {
@@ -867,7 +895,8 @@
                     header: new Array()
                 },
                 filterBy: {
-				    header: new Array()
+				    header: new Array(),
+                    newFilter: false
                 },
 				post: {
 					    paginate:{ 'perPage': this.pConfig.cfg.recordsPerPage , 'pageNumber': 1, 'countRecords': -1  },
