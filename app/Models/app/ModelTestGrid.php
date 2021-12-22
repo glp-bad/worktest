@@ -10,37 +10,50 @@ namespace App\Models\app;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class TestGrid extends Model{
+class ModelTestGrid extends Model{
 
 	protected $primaryKey = 'id';
 
-	static public function getData($pageNumber, $perPage){
-		// $model = new TestGrid();
+	static public function getData($pageNumber, $perPage, $gridSet){
+		$paginate = $gridSet->getPaginate();
+		$orderBy  = $gridSet->getOrder();
+		$filterBy = $gridSet->getFilter();
 
-		// dd($pageNumber, $perPage);
+		 // dd($gridSet->getFilter(), $gridSet->getOrder(), $gridSet->getPaginate());
 
 		$limitId = 99;
 
+		/*
 		$count = DB::select(
-			'select count(*) as c from test_grid_data where id < :id' ,
-			['id'=> $limitId]
+			'select count(*) as c from test_grid_data where :filterBy' ,
+			['filterBy'=> $filterBy]
+		);
+		*/
+
+		if(!empty($filterBy)){
+			$filterBy = ' where ' . $filterBy;
+		}
+
+		$count = DB::select(
+			"select count(*) as c from test_grid_data $filterBy"
 		);
 
 		$dataWithPaginate = ['paginate'=>['records'=>$count[0]->c], 'records'=>null ];
 
 
-		$pageNumber = ($pageNumber-1) * $perPage;
+		$pageNumber = $paginate['offsetPage'];
+		$perPage = $paginate['perPage'];
+
+		$rezult = DB::select(
+			"select * from test_grid_data $filterBy order by id desc  LIMIT $perPage OFFSET $pageNumber;"
+		);
+
 
 		/*
-		$rezult = DB::select(
-			"select * from test_grid_data where id < :id order by id desc  LIMIT $perPage OFFSET $pageNumber;" ,
-			['id'=> $limitId]
-		);
-		*/
-
         $rezult = DB::select(
             "select * from test_grid_data;"
         );
+		*/
 
 
 		$dataWithPaginate['records'] = $rezult;

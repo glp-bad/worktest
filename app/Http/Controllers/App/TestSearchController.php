@@ -12,7 +12,8 @@ namespace App\Http\Controllers\App;
 use App\Http\Controllers\Controller;
 use \Illuminate\Http\Request;
 
-use App\Models\app\TestGrid;
+use App\Models\app\ModelTestGrid;
+use App\allClass\GridPaginateOrderFilter;
 
 class TestSearchController extends Controller {
 
@@ -22,7 +23,10 @@ class TestSearchController extends Controller {
 	}
 
 	public function getGridDataTest(Request $request){
-		return json_encode($this->getRezultForGrid($request->paginate['pageNumber'],$request->paginate['perPage']));
+		$grid = new GridPaginateOrderFilter($request);
+
+		$rezulset = ModelTestGrid::getData($request->paginate['pageNumber'],$request->paginate['perPage'], $grid);
+		return json_encode($rezulset);
 	}
 
     public function getDataSearch(Request $request)
@@ -39,9 +43,9 @@ class TestSearchController extends Controller {
 		return $rezulset;
 	}
 
-	private function getRezultForGrid($pageNumber, $perPage){
+	private function getRezultForGrid($pageNumber, $perPage, $grid){
 
-		$rezulset = TestGrid::getData($pageNumber, $perPage);
+		$rezulset = ModelTestGrid::getData($pageNumber, $perPage, $grid);
 
 
 		/*

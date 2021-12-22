@@ -204,12 +204,12 @@
 	            CLASS_SELECTED: 'selected',
                 CLASS_DINAMIC_BUTTON_PAG: 'divButtonDinamic',
 	            CLASS_PERMANENT_OVER: 'ff-button-selected',
-                clientDev: true,                    // pentru dezvoltare interfata with vue-cli server
+                clientDev: false,                    // pentru dezvoltare interfata with vue-cli server
                 cfgInit: true,
-                allDataFromServer: false,            // when paginate from server is true
+                allDataFromServer: true,            // when paginate from server is true
 	            timeOut: null,                       // delay preskey filter
 	            TIME_OUT_DELAY_FOR_FILTER: 600,
-                FILTER_MIN_CHARACTER: 3,
+                FILTER_MIN_CHARACTER: 2,
                 paginate: {
                     buttonGoStart:{
                         id: 'b1',
@@ -268,14 +268,14 @@
         },
 		mounted() {
 			this.cfgGrid();
-			this.getDataFromServer();
-
-			console.log('mounted: ', this.filterBy.header);
+			this.getDataFromServer('mounted');
 		},
         computed: {
         },
         methods: {
-	        getDataFromServer: function () {
+	        getDataFromServer: function (fromID) {
+
+	        	console.log('getDataFromServer: ' + fromID);
 
 		        if(this.engine.clientDev){
 			        this.rezultData = this.getTestData();
@@ -318,6 +318,7 @@
 						        this.engine.allDataFromServer = false;
 					        }
 
+					        this.privateSetPaginatePag(1);
 					        this.privateLoadAndDrawGrid();
 					        this.loadingData = false;
 				        });
@@ -367,9 +368,6 @@
                     }
                 }
 
-            },
-            testReactive: function () {
-                console.log('testReactive: ', this.filterBy.value);
             },
             setOrderBy: function (fieldName, order){
 	              this.post.orderBy.fieldName = fieldName;
@@ -449,10 +447,9 @@
 			        this.privateDelayFilterReset();
 			        let wordFilter = event.target.value;
 
-			        this.filterBy.value = wordFilter;
-
 			        if(wordFilter.length >= this.engine.FILTER_MIN_CHARACTER || wordFilter.length == 0) {
 				        this.privateDelayFilter(event.target);
+
 			        }
 		        }
 	        },
@@ -460,37 +457,27 @@
 	        	for(let i=0; i< this.filterBy.header.length; i++){
 	        		if(this.filterBy.header[i].id == idHeader){
 
-	        			if(this.filterBy.header[i].value != newValue){
+	        			if(this.filterBy.header[i].filterString != newValue){
 					        this.filterBy.newFilter = true;
 
 					        if(newValue.length == 0){
 						        newValue = null;
                             }
 
-					        this.filterBy.header[i].value = newValue;
+					        this.filterBy.header[i].filterString = newValue;
                         }
                     }
                 }
 
                 if(this.filterBy.newFilter){
-	                this.privateSetPostFilterBy();
+	                this.post.filterBy = this.filterBy;
 
 	        		// send request to server
-	                console.log('privateSetFilterValue: send request filter to server');
-
-	                this.filterBy.newFilter = false;
+	                console.log('privateSetFilterValue: send request filter to server', this.post.filterBy);
+	                this.goToPage(null, "1");
+                    // this.getDataFromServer('privateSetFilterValue');
+	                // this.filterBy.newFilter = false;
                 }
-
-	            console.log('privateSetFilterValue: ', this.filterBy);
-
-            },
-            privateSetPostFilterBy: function () {
-
-	            for(let i=0; i< this.filterBy.header.length; i++){
-                }
-
-	            console.log('privateSetPostFilterBy: ', this.post.filterBy);
-
             },
             privateFilterBy: function (target){
 	        	let header = this.privateGetHeaderColumn(target);
@@ -522,7 +509,7 @@
 
                 if(this.$check.isUndef(orderBy.order)){
                     order = this.$constGrid.ORDER_ASC;
-                }else{
+                } else {
                     order = this.$constGrid.ORDER_ASC;
                     if(orderBy.order == this.$constGrid.ORDER_ASC){
                         order = this.$constGrid.ORDER_DESC;
@@ -638,7 +625,7 @@
 
 			        this.post.paginate.pageNumber = pageNumber;
 			        this.post.paginate.perPage = this.pConfig.cfg.recordsPerPage;
-				    this.getDataFromServer();
+				    this.getDataFromServer('goToPage');
 	                this.resetSelectionRow();
 	        },
             privateSetPaginatePag: function (pageNumber){
@@ -775,9 +762,6 @@
 
             },
 	        emitActionToolbar: function (event, action) {
-
-
-
             	if(this.pConfig.toolbar.show) {
 		            this.$emit(action, this.getDataSelected());
 	            }
@@ -901,7 +885,10 @@
 				post: {
 					    paginate:{ 'perPage': this.pConfig.cfg.recordsPerPage , 'pageNumber': 1, 'countRecords': -1  },
                         orderBy: {fieldName: null, order: null},
-                        filterBy: new Array()
+                        filterBy: {
+					        header: new Array(),
+                            newFilter: false
+                        }
 				}
             }
 		}

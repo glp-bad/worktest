@@ -42,7 +42,7 @@
 	                width: 700,
                     height: 350,
                     urlData: 'gridDataTest',
-                    paginateLocal: true,         // when false server paginate
+                    paginateLocal: false,         // when false server paginate
                     recordsPerPage: 10
                 },
                 toolbar: {
