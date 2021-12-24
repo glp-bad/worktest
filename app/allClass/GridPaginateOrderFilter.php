@@ -41,7 +41,7 @@ class GridPaginateOrderFilter {
 	}
 
 	public function getOrder(){
-		$sqlOrder = 'order by ' . $this->requestOrder['fieldName'] . ' ' . $this->requestOrder['order'];
+		$sqlOrder = $this->requestOrder['fieldName'] . ' ' . $this->requestOrder['order'];
 		return $sqlOrder;
 
 	}

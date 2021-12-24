@@ -41,8 +41,7 @@
                 cfg: {
 	                width: 700,
                     height: 350,
-                    urlData: 'gridDataTest',
-                    recordsPerPage: 10
+                    urlData: 'gridDataTest'
                 },
                 toolbar: {
                 	show: false,
@@ -59,7 +58,7 @@
                 },
                 paginate: {
                 	nrButtonShow: 5,
-	                paginateLocal: false         // when false server paginate
+	                recordsPerPage: 10
                 }
             }
         },

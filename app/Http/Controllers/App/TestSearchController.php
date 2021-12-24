@@ -25,7 +25,11 @@ class TestSearchController extends Controller {
 	public function getGridDataTest(Request $request){
 		$grid = new GridPaginateOrderFilter($request);
 
-		$rezulset = ModelTestGrid::getData($request->paginate['pageNumber'],$request->paginate['perPage'], $grid);
+		$rezulset = ModelTestGrid::getData($grid);
+
+		sleep(4);
+
+
 		return json_encode($rezulset);
 	}
 

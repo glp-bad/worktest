@@ -14,16 +14,13 @@ class ModelTestGrid extends Model{
 
 	protected $primaryKey = 'id';
 
-	static public function getData($pageNumber, $perPage, $gridSet){
+	static public function getData($gridSet){
 		$paginate = $gridSet->getPaginate();
 		$orderBy  = $gridSet->getOrder();
 		$filterBy = $gridSet->getFilter();
 
-		 // dd($gridSet->getFilter(), $gridSet->getOrder(), $gridSet->getPaginate());
-
-		$limitId = 99;
-
 		/*
+		 * $limitId = 99;
 		$count = DB::select(
 			'select count(*) as c from test_grid_data where :filterBy' ,
 			['filterBy'=> $filterBy]
@@ -45,7 +42,7 @@ class ModelTestGrid extends Model{
 		$perPage = $paginate['perPage'];
 
 		$rezult = DB::select(
-			"select * from test_grid_data $filterBy order by id desc  LIMIT $perPage OFFSET $pageNumber;"
+			"select * from test_grid_data $filterBy order by $orderBy  LIMIT $perPage OFFSET $pageNumber;"
 		);
 
 

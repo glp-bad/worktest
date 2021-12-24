@@ -48,8 +48,8 @@ const constantsComponent = {
             getOrderByReactive: function (id, order, fieldName) {
                  return {id: id, order: order, fieldName: fieldName};
             },
-	        getFilterByReactive: function (id, fieldName, filterString, showInputDiv, type) {
-		        return {id: id, fieldName: fieldName, filterString: filterString, showInputDiv: showInputDiv, type: type};
+	        getFilterByReactive: function (id, fieldName, filterString, showInputDiv, type, iconColor) {
+		        return {id: id, fieldName: fieldName, filterString: filterString, showInputDiv: showInputDiv, type: type, iconColor: iconColor};
 	        }
         }
     }

@@ -1,7 +1,7 @@
 <template>
     <div class="ff-grid-container">
 
-        <div class = "ff-grid-loading-modal" v-if="this.loadingData">
+        <div class = "ff-grid-loading-modal" v-if="this.showModalLoadingDiv">
             <div>
                 <font-awesome-icon :icon=this.$constComponent.ICON_SPINNER size="4x" spin/>
             </div>
@@ -16,7 +16,7 @@
                                 <div class="divHeader">
                                     <div class="divCaptionFilter">
                                         <div v-if="ph.filterBy" class="divFilter" >
-                                            <my-button @click="this.privateShowFilterDiv($event)" :heightButton=22 :buttonType=1 :style="cfgIconColor('white')" :title="'filter...'">
+                                            <my-button @click="this.privateShowFilterDiv($event)" :heightButton=22 :buttonType=1 :style="privateShowMarkFilter(ph.id)" :title="'filter...'">
                                                 <font-awesome-icon :icon=this.cfgIconPictureAction(this.$constGrid.ICON_FILTER) size="1x"/>
                                             </my-button>
                                         </div>
@@ -161,7 +161,7 @@
                 </page-nr-field>
             </div>
 
-            <div class="divLabelInfo">
+            <div class="divLabelInfo" :title="this.privatePaginateTitleRecords()">
                 <label>{{this.paginate.pag.page}}/{{this.paginate.pag.total_pages}}</label>
             </div>
 
@@ -204,9 +204,6 @@
 	            CLASS_SELECTED: 'selected',
                 CLASS_DINAMIC_BUTTON_PAG: 'divButtonDinamic',
 	            CLASS_PERMANENT_OVER: 'ff-button-selected',
-                clientDev: false,                    // pentru dezvoltare interfata with vue-cli server
-                cfgInit: true,
-                allDataFromServer: true,            // when paginate from server is true
 	            timeOut: null,                       // delay preskey filter
 	            TIME_OUT_DELAY_FOR_FILTER: 600,
                 FILTER_MIN_CHARACTER: 2,
@@ -251,12 +248,17 @@
                         first = false;
                     }
                     this.orderBy.header.push(this.$constGrid.getOrderByReactive(this.pConfig.header[i].id, orderDefaultIcon, this.pConfig.header[i].tableFieldName));
+
+                    if(this.pConfig.header[i].orderBy.defaultOrder) {
+	                    this.setOrderBy(this.pConfig.header[i].tableFieldName, orderDefaultIcon);
+                    }
+
                 }
 
 	            // for filter by
 	            if(this.pConfig.header[i].filterBy){
                 	// type inca nu este folosit
-                	this.filterBy.header.push(this.$constGrid.getFilterByReactive(this.pConfig.header[i].id, this.pConfig.header[i].tableFieldName, null, false, null));
+                	this.filterBy.header.push(this.$constGrid.getFilterByReactive(this.pConfig.header[i].id, this.pConfig.header[i].tableFieldName, null, false, null, this.cfgIconColor('white')));
 
                 }
 
@@ -276,62 +278,34 @@
         methods: {
 	        getDataFromServer: function (fromID) {
 
-	        	console.log('getDataFromServer: ' + fromID);
+		            this.showModalLoadingDiv = true;
 
-		        if(this.engine.clientDev){
-			        this.rezultData = this.getTestData();
+	        	    // fromId for debug only
+	        	    // console.log('getDataFromServer: ' + fromID);
 
-			        if (this.engine.cfgInit) {
-				        this.privateSetPaginatePag(1);
-				        this.$nextTick(function () {
-					        this.initGrid();
-					        this.goToPage(null, '1');
-				        });
-				        this.engine.cfgInit = false;
-			        }
-
-			        this.engine.allDataFromServer = false;
-
-			        this.privateLoadAndDrawGrid();
-			        this.loadingData = false;
-
-                }else {
 			        let uri = this.$url.getUrl(this.pConfig.cfg.urlData);
-
-			        console.log('URIIIIIII=> ', uri);
-
-			        if (this.engine.allDataFromServer) {
-				        this.axios
+			           this.axios
 					        .post(uri, this.post)
 					        .then(response => {
-						        this.loadingData = true;
+						        this.showModalLoadingDiv = true;
 						        this.paginate.totalRecords = response.data.paginate.records;
 						        this.rezultData = response.data.records;
-					        }).catch(error => console.log(error)).finally(() => {
-					        if (this.engine.cfgInit) {
+					        })
+                            .catch(error => console.log(error))
+                            .finally(() => {
+
 						        this.privateSetPaginatePag(1);
 						        this.$nextTick(function () {
 							        this.initGrid();
-							        this.goToPage(null, '1');
 						        });
-						        this.engine.cfgInit = false;
-					        }
 
-					        if (this.pConfig.paginate.paginateLocal) {
-						        this.engine.allDataFromServer = false;
-					        }
+                                this.privateSetPaginatePag(1);
+                                this.privateLoadAndDrawGrid();
+                                this.showModalLoadingDiv = false;
+				            });
 
-					        this.privateSetPaginatePag(1);
-					        this.privateLoadAndDrawGrid();
-					        this.loadingData = false;
-				        });
-			        }
-			        else {
-				        this.privateLoadAndDrawGrid();
 
-			        }
 
-		        }
 
 		    },
             getDataSelected: function () {
@@ -344,7 +318,7 @@
 		        }
 
 	        },
-            setFocus: function () {
+            setFocusTD: function () {
 		        this.engine.tdCurent.focus();
 
 	        },
@@ -375,6 +349,11 @@
             setOrderBy: function (fieldName, order){
 	              this.post.orderBy.fieldName = fieldName;
                   this.post.orderBy.order = order;
+
+            },
+            privatePaginateTitleRecords: function () {
+
+	        	return 'total records: ' + this.paginate.pag.total;
             },
             privateGetHeaderColumn: function (obj){
 
@@ -424,7 +403,25 @@
                 }
 	        	return returnValue;
 	        },
+            privateShowMarkFilter: function (id) {
+	        	let colorReturn = this.cfgIconColor('white');
+
+	            for(let i=0; i < this.filterBy.header.length ;i++){
+		            if( !this.$check.isUndef(this.filterBy.header[i].filterString) && this.filterBy.header[i].id == id && this.filterBy.header[i].filterString.length > 0 ){
+
+			            colorReturn = this.cfgIconColor('brown');
+			            this.filterBy.header[i].iconColor = colorReturn;
+			            break;
+                    }
+                }
+
+	            return colorReturn;
+            },
             privateShowFilterDiv: function (event) {
+
+	        	if(this.showModalLoadingDiv){
+	        		return;
+                }
 
 	            let header = this.privateGetHeaderColumn(event);
 
@@ -450,7 +447,7 @@
 			        this.privateDelayFilterReset();
 			        let wordFilter = event.target.value;
 
-			        if(wordFilter.length >= this.engine.FILTER_MIN_CHARACTER || wordFilter.length == 0) {
+			        if(wordFilter.length >= this.engine.FILTER_MIN_CHARACTER || wordFilter.length < this.engine.FILTER_MIN_CHARACTER) {
 				        this.privateDelayFilter(event.target);
 
 			        }
@@ -463,7 +460,7 @@
 	        			if(this.filterBy.header[i].filterString != newValue){
 					        this.filterBy.newFilter = true;
 
-					        if(newValue.length == 0){
+					        if(newValue.length < this.engine.FILTER_MIN_CHARACTER){
 						        newValue = null;
                             }
 
@@ -476,20 +473,11 @@
 	                this.post.filterBy = this.filterBy;
 
 	        		// send request to server
-	                console.log('privateSetFilterValue: send request filter to server', this.post.filterBy);
 	                this.goToPage(null, "1");
-                    // this.getDataFromServer('privateSetFilterValue');
-	                // this.filterBy.newFilter = false;
                 }
             },
             privateFilterBy: function (target){
 	        	let header = this.privateGetHeaderColumn(target);
-	            //let headerCfg = this.$vanilla.getAtributeValueFromArrayObject(this.pConfig.header, 'id', th.getAttribute('id'));
-	            //if(headerCfg.filterBy){
-	            //	this.post.filterBy.push({'fieldName': headerCfg.tableFieldName, value:target.value});
-                //}
-
-
 	            this.privateSetFilterValue(header.idHeader, header.filterByInput.value);
 
             },
@@ -503,6 +491,10 @@
 		        }
 	        },
 	        privateOrderBy: function (event) {
+
+		        if(this.showModalLoadingDiv){
+			        return;
+		        }
 
                 let idHeader = event.target.closest("div").firstChild.getAttribute('idheader');
 
@@ -531,6 +523,8 @@
                 this.setOrderBy(fieldName, order);
 
                 // send filter
+		        this.goToPage(null, this.post.paginate.pageNumber.toString());
+
             },
             privateIconOrderBy: function (idHeader){
 
@@ -627,12 +621,13 @@
 		        }
 
 			        this.post.paginate.pageNumber = pageNumber;
-			        this.post.paginate.perPage = this.pConfig.cfg.recordsPerPage;
+			        this.post.paginate.perPage = this.pConfig.paginate.recordsPerPage;
+
 				    this.getDataFromServer('goToPage');
 	                this.resetSelectionRow();
 	        },
             privateSetPaginatePag: function (pageNumber){
-	            let paginate = this.$vanilla.paginateArray(this.rezultData, pageNumber, this.pConfig.cfg.recordsPerPage, this.pConfig.paginate.paginateLocal, this.paginate.totalRecords);
+	            let paginate = this.$vanilla.paginateArray(this.rezultData, pageNumber, this.pConfig.paginate.recordsPerPage, false, this.paginate.totalRecords);
 
                 this.paginate.pag.data        = paginate.data;
                 this.paginate.pag.next_page   = paginate.next_page;
@@ -689,8 +684,7 @@
 
                 this.privateGetDataFromTr();
 
-                this.setFocus();
-
+                // this.setFocusTD();
             },
             privateGetDataFromTr: function (){
 
@@ -732,7 +726,7 @@
             },
             privateSelectedCell: function (td) {
                 this.engine.tdCurent = td;
-                this.setFocus();
+                this.setFocusTD();
 
             },
             privateArrowDown: function () {
@@ -784,25 +778,6 @@
                 divTable.style.width = widthPixel;
                 divTable.style.height = this.pConfig.cfg.height  + 'px';
 
-
-
-                // set header for order by
-                /*
-                for (let i = 0; i<this.pConfig.header.length;   i++ ){
-                    //console.log(this.pConfig.header[i].id);
-                    //console.log(this.pConfig.header[i].orderBy);
-
-                    if(this.pConfig.header[i].orderBy){
-                        //this.orderBy.header.push({id: this.pConfig.header[i].id, order: this.$constGrid.ORDER_ASC});
-                    }
-
-                }
-                */
-
-
-                //console.log(this.orderBy.header);
-
-
             },
             cfgKeyNavigate: function (event){
                 if (event.key == 'ArrowRight') {
@@ -836,9 +811,6 @@
                 for (let i = 0; i < headerCells.length; i++) {
                     let width = this.$vanilla.getAtributeValueFromArrayObject(this.pConfig.header,'id',headerCells[i].getAttribute('id'),'width');
                     headerCells[i].style.width = width + 'px';
-                    //headerCells[i].style.fixedWidth = width + 'px';
-                    //headerCells[i].firstChild.style.width = width + 'px';
-                    //headerCells[i].firstChild.style.fixedWidth = width + 'px';
                 }
             },
             cfgGetTabIndex: function(){
@@ -850,23 +822,11 @@
 	            return {
 	            	width: width + 'px'
                 }
-            },
-            getTestData: function () {
-                let dataTest = new Array();
-
-                for(let i=0; i<72; i++){
-                    dataTest.push({id: i, name: '766600' + i, description: i+' Vasile fact de curaj - JS generate' });
-                    // dataTest.push({name: i+' Ion',  act: 'se duce la piata si face cumparaturii 00' + i, rez: 'nu a castigat nimic ' +i, var: 'variaza +' + i, id: i+30});
-                }
-
-                // this.paginate = this.$vanilla.paginateArray(dataTest);
-                return dataTest;
             }
-
         },
 		data () {
 			return {
-				loadingData: true,
+				showModalLoadingDiv: true,
 				rezultData: new Array(),
                 selectdRow: {},
                 showSelectedData: '...',
@@ -883,7 +843,7 @@
                     newFilter: false
                 },
 				post: {
-					    paginate:{ 'perPage': this.pConfig.cfg.recordsPerPage , 'pageNumber': 1, 'countRecords': -1  },
+					    paginate:{ 'perPage': this.pConfig.paginate.recordsPerPage , 'pageNumber': 1, 'countRecords': -1  },
                         orderBy: {fieldName: null, order: null},
                         filterBy: {
 					        header: new Array(),
