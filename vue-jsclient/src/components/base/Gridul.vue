@@ -178,7 +178,7 @@
 
 
 	export default {
-		name: "grid",
+		name: "grid-ul",
 		components: {
             MyInputField,
 			'my-button': Button,
@@ -268,7 +268,8 @@
         },
 		mounted() {
 			this.cfgGrid();
-			this.getDataFromServer('mounted');
+			this.goToPage( null, '1');
+			// this.getDataFromServer('mounted');
 		},
         computed: {
         },
@@ -297,6 +298,8 @@
                 }else {
 			        let uri = this.$url.getUrl(this.pConfig.cfg.urlData);
 
+			        console.log('URIIIIIII=> ', uri);
+
 			        if (this.engine.allDataFromServer) {
 				        this.axios
 					        .post(uri, this.post)
@@ -314,7 +317,7 @@
 						        this.engine.cfgInit = false;
 					        }
 
-					        if (this.pConfig.cfg.paginateLocal) {
+					        if (this.pConfig.paginate.paginateLocal) {
 						        this.engine.allDataFromServer = false;
 					        }
 
@@ -629,7 +632,7 @@
 	                this.resetSelectionRow();
 	        },
             privateSetPaginatePag: function (pageNumber){
-	            let paginate = this.$vanilla.paginateArray(this.rezultData, pageNumber, this.pConfig.cfg.recordsPerPage, this.pConfig.cfg.paginateLocal, this.paginate.totalRecords);
+	            let paginate = this.$vanilla.paginateArray(this.rezultData, pageNumber, this.pConfig.cfg.recordsPerPage, this.pConfig.paginate.paginateLocal, this.paginate.totalRecords);
 
                 this.paginate.pag.data        = paginate.data;
                 this.paginate.pag.next_page   = paginate.next_page;

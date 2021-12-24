@@ -1,0 +1,12 @@
+-- config .env for client cue JS and local apache
+	#VUE_APP_ENV = local
+    #VUE_APP_ENV = host
+    VUE_APP_ENV = vueClient
+
+-- on /opt/lampp/htdocs/worktest/vue-jsclient/vue.config.js
+
+	devServer: {
+        // host: 'https://worktest.client'
+   	    proxy: 'https://worktest.badmintonclub.ro.mydev'
+
+     },

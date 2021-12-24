@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Controale from '../views/test/Controale.vue'
 import GridTest from '../views/test/GridTest'
+import viewGridul from '../views/test/viewGridul'
 
 const routes = [
   {
@@ -18,7 +19,8 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
    {     name: 'TestControale',   path: '/testControale',  component: Controale   },
-   {     name: 'TestGrid',        path: '/testGrid',  component: GridTest   }
+   {     name: 'TestGrid',        path: '/testGrid',  component: GridTest   },
+   {     name: 'Gridul',        path: '/viewGridul',  component: viewGridul   },
 ]
 
 const router = createRouter({

@@ -11,7 +11,7 @@ const appHelper = {
         app.config.globalProperties.$url = {
             urlAppHost: process.env.VUE_APP_URL_HOST,
             urlAppLocal: process.env.VUE_APP_URL_LOCAL,
-            environment: process.env.VUE_APP_ENV,
+	        urlClientVue: "http://localhost:8080",
             urlList: urlList,
             getUrl: function (name) {
                 let objFind = this.urlList.find( data => data.name === name);
@@ -26,6 +26,8 @@ const appHelper = {
                 let url = this.urlAppLocal;
                 if(this.environment == 'host'){
                     url = this.urlAppHost;
+                }else{
+	                url = this.urlClientVue;
                 }
                 return url;
             }

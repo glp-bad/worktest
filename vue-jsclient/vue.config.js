@@ -9,6 +9,8 @@ module.exports = {
   indexPath: 'xxx.welcome.blade.php',
   devServer: {
      // host: 'https://worktest.client'
+	 proxy: 'https://worktest.badmintonclub.ro.mydev'
+
   },
   configureWebpack: {}
 }

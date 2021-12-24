@@ -17,6 +17,19 @@ class VerifyCsrfToken extends Middleware
     ];
 
 
+	public function handle($request, Closure $next)
+	{
+
+		if (env('VUE_APP_ENV') == 'vueClient')
+		{
+			return $next($request);
+		}
+
+		return parent::handle($request, $next);
+	}
+
+
+
     /*
 		public function handle($request, Closure $next)
 		{
