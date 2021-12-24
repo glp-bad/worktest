@@ -32,14 +32,14 @@
                     this.$constGrid.HEADER.getHeader(6,'action',50,null, this.$constGrid.HEADER.CAPTION_TYPE_ACTION, false, false, false)
                 ],
 	            actionButtonHeader: [
-                	this.$constGrid.getActionButton(7, 'Altceva din functie', 'altCeca', this.$constGrid.getIcon('fas','skull', '#adad00')),
-                    this.$constGrid.getActionButton(8, 'Print din functie', 'invoicePrint', this.$constGrid.ICON_PRINT),
-                    this.$constGrid.getActionButton(9, 'Edit din functie', 'deleteCeva', this.$constGrid.ICON_DELETE),
-                    this.$constGrid.getActionButton(10, 'Delete din functie', 'editCeva', this.$constGrid.ICON_EDIT)
+                	//this.$constGrid.getActionButton(7, 'Altceva din functie', 'altCeca', this.$constGrid.getIcon('fas','skull', '#adad00')),
+                    this.$constGrid.getActionButton(8, 'Print din functie', 'invoicePrint', this.$constGrid.ICON_PRINT)
+                    //this.$constGrid.getActionButton(9, 'Edit din functie', 'deleteCeva', this.$constGrid.ICON_DELETE),
+                    //this.$constGrid.getActionButton(10, 'Delete din functie', 'editCeva', this.$constGrid.ICON_EDIT)
                 ],
                 returnField: ['name'],             // return field when selected row
                 cfg: {
-	                width: 700,
+	                width: 710,
                     height: 350,
                     urlData: 'gridDataTest'
                 },
@@ -58,7 +58,7 @@
                 },
                 paginate: {
                 	nrButtonShow: 5,
-	                recordsPerPage: 10
+	                recordsPerPage: 13
                 }
             }
         },

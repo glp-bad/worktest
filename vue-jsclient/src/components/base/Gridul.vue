@@ -89,6 +89,7 @@
 
         <div class="toolbar">
             <div class="toolbarButton"  v-if="pConfig.toolbar.show" :ref=this.REF_TOOLBAR >
+
                 <template v-for="ph in pConfig.toolbar.actionButton">
                     <div class="divButton">
                         <my-button @click="this.emitActionToolbar($event, ph.emitAction)" :heightButton=22 :buttonType=2 :title="ph.tooltip" :style=cfgIconColor(ph.icon.color)>
@@ -97,7 +98,9 @@
                     </div>
                 </template>
 
+
                 <div class="dataSelected" :title=this.showSelectedData>{{this.showSelectedData}}</div>
+
             </div>
         </div>
 

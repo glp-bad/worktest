@@ -179,8 +179,10 @@ $ff-caption-text-height: 22px;
 	.toolbar {
 		//top right bottom left
 		padding: 5px 10px 2px 5px;
-		display: inline-flex;
 		justify-content: flex-start;
+		border-top: 1px solid lighten($ff-base,45%);
+
+		background: $ff-background-color-wokbench;
 
 		.toolbarButton {
 			display: inline-flex;
@@ -190,14 +192,16 @@ $ff-caption-text-height: 22px;
 		}
 
 		.dataSelected {
-			padding-left: 5px;
-			width: 200px;
+			padding-left: 25px;
+			width: 100%;
 
 			// center flex type
 			//display: flex;
 			//justify-content: center;
 			//align-content: center;
 			//flex-direction: column;
+
+			// background: #4dc0b5;
 
 			line-height: $ff-caption-text-height;
 			vertical-align: middle;
@@ -213,8 +217,9 @@ $ff-caption-text-height: 22px;
 	    border-radius: 4px;
         padding: 4px 7px 4px 2px;
         display: inline-flex;
-        justify-content: flex-end;
-        //background: #C5FE00;
+        justify-content: center;
+	    background: $ff-background-color-wokbench;
+	    width: auto;
 	    border: 1px solid lighten($ff-base,45%);
 
         .divButton {
