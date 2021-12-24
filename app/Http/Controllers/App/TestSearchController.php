@@ -27,7 +27,7 @@ class TestSearchController extends Controller {
 
 		$rezulset = ModelTestGrid::getData($grid);
 
-		sleep(4);
+		// sleep(4);
 
 
 		return json_encode($rezulset);

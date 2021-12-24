@@ -28,6 +28,12 @@
                                             <my-input-field :size=20
                                                            :pPlaceHolder="'...'" v-on:keyup="privateKeyPresFilter">
                                             </my-input-field>
+
+                                            <my-button @click="this.privateClearFilter($event)" :heightButton=22 :buttonType=1 title="clear filter" :style="cfgIconColor(this.$constGrid.ICON_DELETE.color)">
+                                                <font-awesome-icon :icon=this.cfgIconPictureAction(this.$constGrid.ICON_DELETE) size="1x"/>
+                                            </my-button>
+
+
                                         </div>
 
                                     </div>
@@ -391,6 +397,7 @@
 
                 return {header: headerReturn, idHeader: idHeader, filterByInput: filterByInput};
             },
+
 	        privateReactiveShowFilterDiv: function (idHeader) {
 
 	        	let returnValue = false;
@@ -416,6 +423,15 @@
                 }
 
 	            return colorReturn;
+            },
+	        privateClearFilter: function(event){
+
+		        let headerReturn = this.privateGetHeaderColumn(event);
+		        headerReturn.filterByInput.value = '';
+
+		        this.privateSetFilterValue(headerReturn.idHeader ,'');
+
+
             },
             privateShowFilterDiv: function (event) {
 
@@ -645,11 +661,9 @@
 			        disableLeft = true;
                 }
 
-                if(this.paginate.pag.page == this.paginate.pag.total_pages){
+                if(this.paginate.pag.page == this.paginate.pag.total_pages || this.paginate.pag.total_pages == 0){
 	                disableRight = true;
                 }
-
-                // this.privateCfgButtonPage();
 
 	            this.$refs[this.engine.paginate.buttonGoStart.ref].disable(disableLeft);
 	            this.$refs[this.engine.paginate.buttonGoLeft.ref].disable(disableLeft);

@@ -44,7 +44,7 @@
                     urlData: 'gridDataTest'
                 },
                 toolbar: {
-                	show: false,
+                	show: true,
 	                fieldShow: {
                 		field: ['name'],        // shon on selection with mouse or keyboard
                         separator: " ",
