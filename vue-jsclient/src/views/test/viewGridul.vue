@@ -1,24 +1,29 @@
 <template>
-    <my-grid ref="gridPrint"
-             :pConfig=this.gridConfig
-             @invoicePrint="invoicePrint"
-             @editCeva="editCeva"
-             @deleteCevaToolbar="deleteCevaToolbar"
-    ></my-grid>
 
-    <br>
+    <div class="ff-grid-all">
+        <my-grid ref="gridPrint"
+                 :pConfig=this.gridConfig
+                 @invoicePrint="invoicePrint"
+                 @editCeva="editCeva"
+                 @deleteCevaToolbar="deleteCevaToolbar"
+                 @editCevaToolbar = "editCevaToolbar"
+        ></my-grid>
+        <my-grid-edit ref="refGridEdit"></my-grid-edit>
+    </div>
 
 </template>
 
 <script>
     import Gridul from '@/components/base/Gridul';
     import Button from '@/components/base/Button.vue';
+    import editGrid from '@/components/app/test/FormGridEditTest.vue';
 
     export default {
         name: "view-gridul",
         components: {
             'my-grid': Gridul,
-            'my-button': Button
+            'my-button': Button,
+            'my-grid-edit': editGrid
         },
         props: {},
         created() {
@@ -63,6 +68,7 @@
             }
         },
         mounted() {
+            console.log(this.$refs.gridPrint);
         },
         methods: {
             invoicePrint: function (selectData) {
@@ -78,7 +84,11 @@
 	        deleteCevaToolbar: function (selectData){
 		        console.log('delete de la toolbar');
 
-            }
+            },
+            editCevaToolbar: function (selectData){
+                this.$refs.refGridEdit.showForm();
+                // console.log('editToolbar', selectData);
+            },
 
         },
         data() {
