@@ -1,6 +1,6 @@
 <template>
 
-    <div class="ff-grid-all">
+    <div class="ff-grid-all" ref="refGridPrint">
         <my-grid ref="gridPrint"
                  :pConfig=this.gridConfig
                  @invoicePrint="invoicePrint"
@@ -44,7 +44,7 @@
                 ],
                 returnField: ['name'],             // return field when selected row
                 cfg: {
-	                width: 710,
+	                width: 900,
                     height: 350,
                     urlData: 'gridDataTest'
                 },
@@ -68,7 +68,7 @@
             }
         },
         mounted() {
-            console.log(this.$refs.gridPrint);
+            // console.log(this.$refs.gridPrint);
         },
         methods: {
             invoicePrint: function (selectData) {
@@ -86,8 +86,14 @@
 
             },
             editCevaToolbar: function (selectData){
-                this.$refs.refGridEdit.showForm();
+              // console.log('parent grid: ', this.$refs.refGridPrint, this.$refs.refGridPrint.offsetWidth, this.$refs.refGridPrint.style.top);
+
+                // console.log(this.$refs.refGridEdit);
+
+                 this.$refs.refGridEdit.showForm(this.$refs.refGridPrint);
                 // console.log('editToolbar', selectData);
+
+
             },
 
         },

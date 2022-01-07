@@ -3,8 +3,10 @@ $ff-caption-height: 20px;
 
 .ff-form {
 	// margin: 0 auto;
-	margin: 200px auto;
-	position: absolute;  // for draggale
+	// margin: 200px auto;
+	// position: absolute;  // for draggale
+	position: relative;  // for draggale inside to other element
+
 	z-index: 1000;
 	border: 1px solid darken(map-get($ff-modal-window, "caption-color"), 10%);
 	box-shadow: 2px 2px 10px #8e8e8e;

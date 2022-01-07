@@ -67,6 +67,24 @@ const appHelper = {
 		            htmlButton.removeAttribute('disabled');
 		            htmlButton.classList.remove('disable');                    // class name
 	            },
+	            centerDiv: function (divParent, divChild) {
+	            	//parent and child: position: relative;
+
+		            let boundingParent = divParent.getBoundingClientRect();
+		            let boundingChild = divChild.getBoundingClientRect();
+
+		            let topChild = (boundingParent.height/2) + (boundingChild.height/2) ;
+		            let leftChild = (boundingParent.width/2) - (boundingChild.width/2) ;
+
+		            //console.log('boundingParent = ', boundingParent);
+		            //console.log('boundingChild = ', boundingChild );
+		            //console.log('divChild = ', divChild );
+		            //console.log('topChild = ', topChild );
+		            //console.log('leftChild = ', leftChild, boundingParent.widht/2,  boundingChild.width/2 );
+
+		            divChild.style.top =  (topChild * -1)  + 'px';
+		            divChild.style.left = leftChild  + 'px';
+	            },
                 removeClasses: function(htmlElementArray, className){
                     for (var i = 0; i < htmlElementArray.length; i++){
                         htmlElementArray[i].classList.remove(className);

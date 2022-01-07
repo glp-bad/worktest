@@ -1,5 +1,5 @@
 <template>
-    <div class="ff-grid-container">
+    <div class="ff-grid-container" :ref=this.REF_DIV_CONTAINER>
 
         <div class = "ff-grid-loading-modal" v-if="this.showModalLoadingDiv">
             <div>
@@ -198,6 +198,7 @@
             pConfig: {type: Object, required: true}
         },
 		created() {
+			this.REF_DIV_CONTAINER = 'refDivContainer',
             this.REF_DIV_TABLE  = 'refDivTable',
             this.REF_TABLE      = 'refTable',
 			this.REF_THEAD      = 'refThead',
@@ -273,14 +274,18 @@
 
 
             }
-
-
-
         },
 		mounted() {
 			this.cfgGrid();
 			this.goToPage( null, '1');
 			// this.getDataFromServer('mounted');
+
+            // set dimension for parent div
+			let divParent = this.$refs[this.REF_DIV_CONTAINER].parentNode;
+			let bounding = divParent.getBoundingClientRect();
+			divParent.style.maxWidth = bounding.width + 'px';
+			divParent.style.maxHeight = bounding.height + 'px';
+
 		},
         computed: {
         },
