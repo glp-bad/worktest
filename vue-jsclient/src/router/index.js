@@ -19,7 +19,6 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
    {     name: 'TestControale',   path: '/testControale',  component: Controale   },
-   {     name: 'TestGrid',        path: '/testGrid',  component: GridTest   },
    {     name: 'Gridul',        path: '/viewGridul',  component: viewGridul   },
 ]
 

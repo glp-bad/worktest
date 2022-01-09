@@ -4,12 +4,8 @@ $ff-caption-text-height: 22px;
 .ff-grid-all{
     display: inline-block;
     overflow: hidden;
-    //overflow: auto;
     position: relative;
-    //height: auto;
-    //min-height: 100% !important;
-    background: #f6993f;
-
+    // background: #f6993f;        // for debug
 }
 
 .ff-grid-container {

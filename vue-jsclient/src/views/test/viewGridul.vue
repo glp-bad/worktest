@@ -8,7 +8,11 @@
                  @deleteCevaToolbar="deleteCevaToolbar"
                  @editCevaToolbar = "editCevaToolbar"
         ></my-grid>
-        <my-grid-edit ref="refGridEdit"></my-grid-edit>
+
+        <div class="ff-form-modal" ref="refModalGridEdit">
+            <my-grid-edit ref="refGridEdit"></my-grid-edit>
+        </div>
+
     </div>
 
 </template>
@@ -88,9 +92,11 @@
             editCevaToolbar: function (selectData){
               // console.log('parent grid: ', this.$refs.refGridPrint, this.$refs.refGridPrint.offsetWidth, this.$refs.refGridPrint.style.top);
 
-                // console.log(this.$refs.refGridEdit);
+                console.log(this.$refs.refGridEdit);
 
-                 this.$refs.refGridEdit.showForm(this.$refs.refGridPrint);
+                this.$refs.refModalGridEdit.style.display = 'inline-block';
+
+                this.$refs.refGridEdit.showForm(this.$refs.refGridPrint);
                 // console.log('editToolbar', selectData);
 
 

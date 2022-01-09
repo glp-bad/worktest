@@ -157,10 +157,7 @@
 			},
 
 			showForm: function (parentDiv) {
-
-
 				this.$refs[this.CONTAINER_REF].style.display = "table";
-
 				if(!this.$check.isUndef(parentDiv)){
 					this.$vanilla.centerDiv(parentDiv, this.$refs[this.CONTAINER_REF]);
                 }
