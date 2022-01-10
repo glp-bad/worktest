@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Controale from '../views/test/Controale.vue'
-import GridTest from '../views/test/GridTest'
 import viewGridul from '../views/test/viewGridul'
 
 const routes = [

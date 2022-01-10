@@ -511,7 +511,6 @@
 	        privateDelayFilterReset: function(){
 		        if(this.engine.timeOut != null){
 			        clearTimeout(this.engine.timeOut);
-			        console.log('privateDelayFilterReset <- ');
 		        }
 	        },
 	        privateOrderBy: function (event) {

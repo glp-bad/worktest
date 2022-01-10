@@ -144,7 +144,6 @@
 					this.$refs[this.DESCRIERE.ref].setValue(this.post.descriere);
                 }
 
-	            console.log("post: ", this.post);
             },
 
     		cfgNume: function () {

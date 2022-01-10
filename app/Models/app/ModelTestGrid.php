@@ -26,7 +26,7 @@ class ModelTestGrid extends Model{
 		try {
 			DB::update('update test_grid_data set name = ?, description=? where id = ?',[$nume, $descriere, $id]);
 		} catch (\Illuminate\Database\QueryException $ex){
-			$sqlMsg->messages = "Utilizatorul este deja inregistrat in baza de date!";
+			$sqlMsg->messages = "Datele nu pot fi modificate !!!!";
 			$sqlMsg->errorMsg = $ex->getMessage();
 			return $sqlMsg;
 		}
