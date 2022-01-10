@@ -12,4 +12,6 @@ export default [
 	{name: "searchTest",        url: "public/app/search"},
     {name: "searchTableTest",   url: "public/app/searchOnTable"},
 	{name: "gridDataTest",      url: "public/app/gridDataTest"},
+	{name: "gridDataTestUpdate", url: "public/app/gridDataTestUpdate"},
+
 ]

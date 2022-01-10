@@ -17,6 +17,14 @@ use App\allClass\GridPaginateOrderFilter;
 
 class TestSearchController extends Controller {
 
+
+
+	public function updateData(Request $request)
+	{
+		$sqlResponse = ModelTestGrid:: updateData($request);
+		return json_encode($sqlResponse);
+	}
+
 	public function getData(Request $request)
 	{
 		return $this->getRezult();

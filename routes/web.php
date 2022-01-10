@@ -30,6 +30,9 @@ Route::post('app/logout', [LoginController::class, 'logout'] )->middleware('auth
 // Route::post('app/searchOnTable','App\TestSearchController@getDataSearch');
 Route::post('app/searchOnTable', [TestSearchController::class, 'getDataSearch']);
 Route::post('app/gridDataTest', [TestSearchController::class, 'getGridDataTest']);
+Route::post('app/gridDataTestUpdate', [TestSearchController::class, 'updateData']);
+
+
 
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

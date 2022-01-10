@@ -42,6 +42,9 @@
 			getValue: function () {
                 return this.dataModel;
 			},
+	        setValue: function (value) {
+		        this.dataModel = value;
+	        },
 	        keydownPress: function () {
                 if(event.target.id == this.id){
 	                console.log(this.getValue());

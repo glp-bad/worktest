@@ -9,10 +9,36 @@
 namespace App\Models\app;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\helpers\response\SqlMessageResponse;
 
 class ModelTestGrid extends Model{
 
 	protected $primaryKey = 'id';
+
+
+	static public function updateData($request){
+		$id = $request->id;
+		$nume = $request->nume;
+		$descriere = $request->descriere;
+
+		$sqlMsg = new SqlMessageResponse(false,0,"");
+
+		try {
+			DB::update('update test_grid_data set name = ?, description=? where id = ?',[$nume, $descriere, $id]);
+		} catch (\Illuminate\Database\QueryException $ex){
+			$sqlMsg->messages = "Utilizatorul este deja inregistrat in baza de date!";
+			$sqlMsg->errorMsg = $ex->getMessage();
+			return $sqlMsg;
+		}
+
+		$sqlMsg->lastId = $id;
+		$sqlMsg->succes = true;
+		$sqlMsg->messages = "Datele au fost modificate";
+
+		return $sqlMsg;
+
+
+	}
 
 	static public function getData($gridSet){
 		$paginate = $gridSet->getPaginate();

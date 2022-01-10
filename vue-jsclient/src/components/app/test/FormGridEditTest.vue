@@ -21,6 +21,9 @@
                          :cTypeWindows=6
         ></validate-window>
 
+
+    <div class="ff-form-modal" ref="modalRef">
+
         <div :class=formClass.container :ref=CONTAINER_REF :id=cfgForm.id >
             <div :class=formClass.header ref="headerRef" >
                 <span class="caption" ref="captionRef"></span>
@@ -48,64 +51,20 @@
                             </td>
 
                             <td class="label bold">
-                                <label :for=PRENUME.id>{{PRENUME.caption}}</label></td>
+                                <label :for=DESCRIERE.id>{{DESCRIERE.caption}}</label></td>
                             <td class="control">
                                 <test-field
-                                        :id=PRENUME.id
-                                        :ref=PRENUME.ref
+                                        :id=DESCRIERE.id
+                                        :ref=DESCRIERE.ref
                                         maska=""
-                                        :validate=PRENUME.validate
-                                        :minlength = PRENUME.minLength
-                                        :maxlength = PRENUME.maxLength
-                                        :size = PRENUME.sizeField
+                                        :validate=DESCRIERE.validate
+                                        :minlength = DESCRIERE.minLength
+                                        :maxlength = DESCRIERE.maxLength
+                                        :size = DESCRIERE.sizeField
                                 ></test-field>
                             </td>
 
                         </tr>
-                        <tr>
-                            <td class="label bold">
-                                <label :for=AGE.id>{{AGE.caption}}</label></td>
-                            <td class="control">
-                                <test-field
-                                    :id=AGE.id
-                                    :ref=AGE.ref
-                                    maska=""
-                                    :validate   = AGE.validate
-                                    :minlength  = AGE.minLength
-                                    :maxlength  = AGE.maxLength
-                                    :size       = AGE.sizeField
-                                ></test-field>
-                            </td>
-                            <td class="label-right bold">
-                                <label :for=CONF_ACORD.id>{{CONF_ACORD.caption}}</label></td>
-                            <td class="control">
-                                <check-box
-                                    :id=CONF_ACORD.id
-                                    :ref=CONF_ACORD.ref
-                                    :validate   = CONF_ACORD.validate
-                                    :defaultValue = CONF_ACORD.defaultValue
-                                    :size       = CONF_ACORD.sizeField
-                                    :disabled = CONF_ACORD.disabled
-                                ></check-box>
-                            </td>
-
-                        </tr>
-                        <tr>
-                            <td class="label bold">
-                                <label :for=SELECT_OPTION.id>{{SELECT_OPTION.caption}}</label></td>
-
-                            <td colspan="2" class="control">
-                                <lista-numere
-                                    :pId    =SELECT_OPTION.id
-                                    :ref    =SELECT_OPTION.ref
-                                    :pName  =SELECT_OPTION.ref
-                                    :pCaptionText   ="'... alege un numar'"
-                                    :pWidth         =SELECT_OPTION.width
-                                    :validate   =SELECT_OPTION.validate
-                                ></lista-numere>
-                            </td>
-                        </tr>
-
                     </table>
                 </form>
             </div>
@@ -120,32 +79,31 @@
 
         </div>
 
+    </div>
+
 </template>
 
 <script>
 
-    import TextField from '../../base/TextField.vue';
+    import InputField from '../../base/InputField.vue';
     import Button from '../../base/Button.vue';
     import AlertWindow from '../../base/AlertWindow.vue';
     import CheckBox from '../../base/CheckBox.vue';
-    import DropDownSimple from '../../base/DropDownSimple.vue'
+    // import DropDownSimple from '../../base/DropDownSimple.vue'
 
     export default {
 		components: {
-			'test-field': TextField,
+			'test-field': InputField,
 			'check-box': CheckBox,
 			'button-send': Button,
-			'validate-window': AlertWindow,
-            'lista-numere': DropDownSimple
+			'validate-window': AlertWindow
+            // 'lista-numere': DropDownSimple
 		},
 		name: "grid-edit-test",
 		created() {
 			    this.CONTAINER_REF = 'containerRef';
 			    this.NUME       = this.cfgNume(),
-				this.PRENUME    = this.cfgPreNume(),
-                this.AGE        = this.cfgVarsta(),
-			    this.CONF_ACORD = this.cfgConfirmareAcord(),
-                this.SELECT_OPTION =  this.cfgSimpleSelect()
+				this.DESCRIERE    = this.cfgDescriere()
 		},
         mounted () {
 	        this.configForm();
@@ -154,53 +112,42 @@
 			closeForm: function () {
 				// this.$refs[this.CONTAINER_REF].remove();
 				this.$refs[this.CONTAINER_REF].style.display = "none";
+				this.$refs.modalRef.style.display = "none";
 			},
 
-			showForm: function (parentDiv) {
+			showForm: function (parentDiv, dataGridSource) {
+
+				this.$refs.modalRef.style.display = "inline-block";
 				this.$refs[this.CONTAINER_REF].style.display = "table";
 				if(!this.$check.isUndef(parentDiv)){
 					this.$vanilla.centerDiv(parentDiv, this.$refs[this.CONTAINER_REF]);
                 }
 
+                // console.log('showForm dataGridSource: ', dataGridSource);
+
+                this.setFormData(dataGridSource)
+
 			},
+            setFormData: function (dataValue) {
 
-			cfgConfirmareAcord: function(){
-				let cfg = this.$app.cfgCheckBox();
-				cfg.setIdAndRef("confirmare");
-				cfg.validate    = this.validateConfirmare;
-				cfg.caption     = "Confirm";
-				cfg.defaultValue= false;
-				cfg.disabled= false;
 
-				return cfg;
+				if(this.$check.isUndef(dataValue)){
+					this.post.nume      = this.$refs[this.NUME.ref].getValue();
+					this.post.descriere = this.$refs[this.DESCRIERE.ref].getValue();
+                }
+				else{
+					this.post.id        = dataValue.idPk;
+					this.post.nume      = dataValue.name;
+					this.post.descriere = dataValue.description;
+
+					this.$refs[this.NUME.ref].setValue(this.post.nume);
+					this.$refs[this.DESCRIERE.ref].setValue(this.post.descriere);
+                }
+
+	            console.log("post: ", this.post);
             },
-			cfgVarsta: function () {
 
-				let cfg = this.$app.cfgTextFIeld();
-
-				cfg.setIdAndRef("age");
-				cfg.minLength   = 3;
-				cfg.maxLength   = 3;
-				cfg.validate    = this.validateAge;
-				cfg.maska       = "";
-				cfg.caption     = "Varsta";
-				cfg.mandatory   = false;
-				cfg.sizeField  = 7;
-
-				return cfg;
-			},
-
-			cfgSimpleSelect: function () {
-				let cfg = this.$app.cfgSelectSimple();
-				cfg.setIdAndRef("listaNumar");
-				cfg.validate    = this.validateListaNumar;
-				cfg.caption     = "Lista numere";
-
-				return cfg;
-			},
-
-			cfgNume: function () {
-
+    		cfgNume: function () {
 				let cfg = this.$app.cfgTextFIeld();
 				    cfg.setIdAndRef("nume");
 					cfg.minLength   = 3;
@@ -213,15 +160,15 @@
 
                 return cfg;
 			},
-			cfgPreNume: function () {
+			cfgDescriere: function () {
 
 				let cfg = this.$app.cfgTextFIeld();
-				cfg.setIdAndRef("prenume");
+				cfg.setIdAndRef("descriere");
 				cfg.minLength   = 4;
-				cfg.maxLength   = 20;
-				cfg.validate    = this.validatePreNume;
+				cfg.maxLength   = 200;
+				cfg.validate    = this.validateDescriere;
 				cfg.maska       = "";
-				cfg.caption     = "Prenume referinta mai mare";
+				cfg.caption     = "Descriere";
 				cfg.mandatory   = false;
 				cfg.sizeField  = 30;
 
@@ -267,13 +214,6 @@
 
 			},
             sendData: function(){
-	            //this.$refs["numeRef"].validate();
-	            //console.log(this.$refs["numeRef"].getValue());
-	            // console.log(this.$refs);
-
-	            //var i = "numeRef";
-	            //console.log(this.$refs[i].getValue());
-
                 this.validateForm();
 
                 if(this.messageForm.length > 0){
@@ -284,15 +224,9 @@
 	                return false;
                 }
 
+	                this.setFormData(null);
 
-                    this.post.nume = this.$refs.numeRef.getValue();
-	                this.post.prenume = this.$refs.prenumeRef.getValue();
-	                this.post.accept = this.$refs.confirmareRef.getValue();
-
-	                console.log("accept: " + this.post.accept);
-
-
-	                let uri = this.$url.getUrl("addName");
+	                let uri = this.$url.getUrl("gridDataTestUpdate");
 	                this.axios
 		                .post(uri, this.post)
 		                .then(response => {
@@ -318,12 +252,6 @@
 
 
             },
-			validateAge: function () {
-				if(this.$refs[this.AGE.ref].getValue() < 5){
-					this.messageForm.push(this.$app.getFormMessageClass(this.AGE.id, this.AGE.caption,
-						'trebuie sa fie mai mare de cinci ani.'));
-                }
-			},
             validateForm: function () {
 	            this.messageForm = [];
                 this.$check.validateForm(this.$refs);
@@ -335,31 +263,22 @@
                 }
 
             },
-			validatePreNume: function () {
-				if(!this.$check.lenghtMinMax(this.$refs[this.PRENUME.ref].getValue(), this.PRENUME.minLength, this.PRENUME.maxLength)){
-					this.messageForm.push(this.$app.getFormMessageClass(this.PRENUME.id, this.PRENUME.caption,
-						'trebuie sa aiba minim ' + this.PRENUME.minLength + " si maxim " + this.PRENUME.maxLength + " caractere"));
+			validateDescriere: function () {
+
+				let obj = this.DESCRIERE;
+
+				if(!this.$check.lenghtMinMax(this.$refs[obj.ref].getValue(), obj.minLength, obj.maxLength)){
+					this.messageForm.push(this.$app.getFormMessageClass(obj.id, obj.caption,
+						'trebuie sa aiba minim ' + obj.minLength + " si maxim " + obj.maxLength + " caractere"));
 				}
-			},
-			validateConfirmare: function () {
-			},
-			validateListaNumar: function () {
-
-				console.log('trece pe aici !!! 1000');
-
-				let val = this.$refs[this.SELECT_OPTION.ref].getValue();
-				if(val.id == 0){
-					this.messageForm.push(this.$app.getFormMessageClass(this.SELECT_OPTION.id, this.SELECT_OPTION.caption,
-						'trebuie sa alegi un numar din lista'));
-                }
-            }
+			}
 
 		},
 		data () {
 			return {
 				formClass: this.$css.getCss("form"),
                 messageForm: [],
-				post:       {nume: null, prenume: null, accept: false},
+				post:       {id: null, nume: null, descriere: null},
 				cfgForm:    {id: null, closeIcon: ['fas', 'times']}
 
             }

@@ -9,9 +9,7 @@
                  @editCevaToolbar = "editCevaToolbar"
         ></my-grid>
 
-        <div class="ff-form-modal" ref="refModalGridEdit">
-            <my-grid-edit ref="refGridEdit"></my-grid-edit>
-        </div>
+        <my-grid-edit ref="refGridEdit"></my-grid-edit>
 
     </div>
 
@@ -46,9 +44,9 @@
                     //this.$constGrid.getActionButton(9, 'Edit din functie', 'deleteCeva', this.$constGrid.ICON_DELETE),
                     //this.$constGrid.getActionButton(10, 'Delete din functie', 'editCeva', this.$constGrid.ICON_EDIT)
                 ],
-                returnField: ['name'],             // return field when selected row
+                returnField: ['name', 'description'],             // return field when selected row
                 cfg: {
-	                width: 900,
+	                width: 780,
                     height: 350,
                     urlData: 'gridDataTest'
                 },
@@ -92,11 +90,11 @@
             editCevaToolbar: function (selectData){
               // console.log('parent grid: ', this.$refs.refGridPrint, this.$refs.refGridPrint.offsetWidth, this.$refs.refGridPrint.style.top);
 
-                console.log(this.$refs.refGridEdit);
+                // console.log(this.$refs.refGridEdit);
 
-                this.$refs.refModalGridEdit.style.display = 'inline-block';
+                // this.$refs.refModalGridEdit.style.display = 'inline-block';
 
-                this.$refs.refGridEdit.showForm(this.$refs.refGridPrint);
+                this.$refs.refGridEdit.showForm(this.$refs.refGridPrint, this.$refs.gridPrint.getDataSelected());
                 // console.log('editToolbar', selectData);
 
 

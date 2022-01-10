@@ -73,7 +73,7 @@ const appHelper = {
 		            let boundingParent = divParent.getBoundingClientRect();
 		            let boundingChild = divChild.getBoundingClientRect();
 
-		            let topChild = (boundingParent.height/2) + (boundingChild.height/2) ;
+		            let topChild = (boundingParent.height/2) - (boundingChild.height/2) ;
 		            let leftChild = (boundingParent.width/2) - (boundingChild.width/2) ;
 
 		            //console.log('boundingParent = ', boundingParent);
@@ -82,8 +82,9 @@ const appHelper = {
 		            //console.log('topChild = ', topChild );
 		            //console.log('leftChild = ', leftChild, boundingParent.widht/2,  boundingChild.width/2 );
 
-		            divChild.style.top =  (topChild * -1)  + 'px';
+		            divChild.style.top =  topChild  + 'px';
 		            divChild.style.left = leftChild  + 'px';
+
 	            },
                 removeClasses: function(htmlElementArray, className){
                     for (var i = 0; i < htmlElementArray.length; i++){
