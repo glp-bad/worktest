@@ -9,7 +9,9 @@
                  @editCevaToolbar = "editCevaToolbar"
         ></my-grid>
 
-        <my-grid-edit ref="refGridEdit"></my-grid-edit>
+        <my-grid-edit ref="refGridEdit"
+                      @emitUpdateGrid = "emitUpdateGrid"
+        ></my-grid-edit>
 
     </div>
 
@@ -44,7 +46,7 @@
                     //this.$constGrid.getActionButton(9, 'Edit din functie', 'deleteCeva', this.$constGrid.ICON_DELETE),
                     //this.$constGrid.getActionButton(10, 'Delete din functie', 'editCeva', this.$constGrid.ICON_EDIT)
                 ],
-                returnField: ['name', 'description'],             // return field when selected row
+                returnField: ['name', 'description'],             // return field and edit when selected row
                 cfg: {
 	                width: 780,
                     height: 350,
@@ -77,29 +79,20 @@
                 console.log('acum printez');
                 const reqObject = this.$app.getObjectReturnComponent(selectData);
                 console.log(reqObject);
-
             },
             editCeva: function () {
                 console.log('editez ceva');
-
             },
 	        deleteCevaToolbar: function (selectData){
 		        console.log('delete de la toolbar');
-
             },
             editCevaToolbar: function (selectData){
-              // console.log('parent grid: ', this.$refs.refGridPrint, this.$refs.refGridPrint.offsetWidth, this.$refs.refGridPrint.style.top);
-
-                // console.log(this.$refs.refGridEdit);
-
-                // this.$refs.refModalGridEdit.style.display = 'inline-block';
-
-                this.$refs.refGridEdit.showForm(this.$refs.refGridPrint, this.$refs.gridPrint.getDataSelected());
-                // console.log('editToolbar', selectData);
-
-
+                this.$refs.refGridEdit.showForm(this.$refs.refGridPrint, selectData, this.$constGrid.SQL_UPDATE);
             },
-
+	        emitUpdateGrid: function (actionForm, post) {
+		        this.$refs.gridPrint.refreshGrid(actionForm, post);
+                console.log('date din grid au fost modificate = ' + actionForm, post);
+	        }
         },
         data() {
             return {}

@@ -102,12 +102,14 @@
 		name: "grid-edit-test",
 		created() {
 			    this.CONTAINER_REF = 'containerRef';
-			    this.NUME       = this.cfgNume(),
-				this.DESCRIERE    = this.cfgDescriere()
+			    this.NUME       = this.cfgNume();
+				this.DESCRIERE    = this.cfgDescriere();
+                this.EMIT_UPDATEGRID = 'emitUpdateGrid';
 		},
         mounted () {
 	        this.configForm();
         },
+	    emits: ['emitUpdateGrid'],
 		methods: {
 			closeForm: function () {
 				// this.$refs[this.CONTAINER_REF].remove();
@@ -115,7 +117,9 @@
 				this.$refs.modalRef.style.display = "none";
 			},
 
-			showForm: function (parentDiv, dataGridSource) {
+			showForm: function (parentDiv, dataGridSource, actionRecord) {
+
+				this.actionForm = actionRecord;
 
 				this.$refs.modalRef.style.display = "inline-block";
 				this.$refs[this.CONTAINER_REF].style.display = "table";
@@ -130,18 +134,17 @@
 			},
             setFormData: function (dataValue) {
 
-
 				if(this.$check.isUndef(dataValue)){
-					this.post.nume      = this.$refs[this.NUME.ref].getValue();
-					this.post.descriere = this.$refs[this.DESCRIERE.ref].getValue();
+					this.post.name      = this.$refs[this.NUME.ref].getValue();
+					this.post.description = this.$refs[this.DESCRIERE.ref].getValue();
                 }
 				else{
 					this.post.id        = dataValue.idPk;
-					this.post.nume      = dataValue.name;
-					this.post.descriere = dataValue.description;
+					this.post.name      = dataValue.name;
+					this.post.description = dataValue.description;
 
-					this.$refs[this.NUME.ref].setValue(this.post.nume);
-					this.$refs[this.DESCRIERE.ref].setValue(this.post.descriere);
+					this.$refs[this.NUME.ref].setValue(this.post.name);
+					this.$refs[this.DESCRIERE.ref].setValue(this.post.description);
                 }
 
             },
@@ -229,8 +232,9 @@
 	                this.axios
 		                .post(uri, this.post)
 		                .then(response => {
-
 				                if(response.data.succes){
+				                	this.$emit(this.EMIT_UPDATEGRID, this.actionForm, this.post);
+				                	this.closeForm();
 					                this.$refs.infoWindowRef.setCaption("Succes");
 					                this.$refs.infoWindowRef.setMessage(this.$appServer.getHtmlSqlFormatMessage(response.data));
 					                this.$refs.infoWindowRef.show();
@@ -275,6 +279,7 @@
 		},
 		data () {
 			return {
+				actionForm: null,
 				formClass: this.$css.getCss("form"),
                 messageForm: [],
 				post:       {id: null, nume: null, descriere: null},

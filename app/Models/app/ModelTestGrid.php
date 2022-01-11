@@ -18,7 +18,7 @@ class ModelTestGrid extends Model{
 
 	static public function updateData($request){
 		$id = $request->id;
-		$nume = $request->nume;
+		$nume = $request->name;
 		$descriere = $request->descriere;
 
 		$sqlMsg = new SqlMessageResponse(false,0,"");
@@ -36,7 +36,6 @@ class ModelTestGrid extends Model{
 		$sqlMsg->messages = "Datele au fost modificate";
 
 		return $sqlMsg;
-
 
 	}
 

@@ -17,6 +17,10 @@ const constantsComponent = {
             ICON_FILTER: {fawIcon:'fas', icon: 'ellipsis-v', color: null},
             ORDER_ASC: 'asc',
             ORDER_DESC: 'desc',
+	        SQL_UPDATE: 'update',
+	        SQL_UPDATE_DELETE: 'updateDelete',
+	        SQL_INSERT: 'insert',
+	        SQL_DELETE: 'delete',
             getIcon: function (fawIcon, icon, color) {
                 return {fawIcon:fawIcon, icon: icon, color: color}
             },

@@ -322,6 +322,47 @@
 
 
 		    },
+            privateUpdateRecord: function (postData) {
+
+	            console.log('postData=> ', postData);
+
+	        	for(let i=0; i<this.rezultData.length; i++){
+
+	        		if(this.rezultData[i].id = postData.id){
+	        			console.log('this.rezultData=> ', this.rezultData[i]);
+	        			for(let a=0;a<this.pConfig.returnField.length; a++){
+					        this.rezultData[i][this.pConfig.returnField[a]] = postData[this.pConfig.returnField[a]];
+                        }
+
+				        console.log('this.rezultData (after update) =>',this.rezultData[i]);
+
+	        			break;
+
+                    }
+                }
+
+            },
+            refreshGrid: function (recordType, postData) {
+
+	        	let jumpToPageOne = false;
+
+	        	if(this.$check.isUndef(recordType)){
+			        jumpToPageOne = true;
+                }else{
+	        		if(recordType == this.$constGrid.SQL_UPDATE){
+	        			// no jump, update data on grid
+                        console.log(this.rezultData);
+                        this.privateUpdateRecord(postData);
+                    }else{
+				        jumpToPageOne = true;
+                    }
+                }
+
+                if(jumpToPageOne){
+	                this.goToPage(null, '1');
+                }
+
+            },
             getDataSelected: function () {
 		        return this.selectdRow;
 	        },
