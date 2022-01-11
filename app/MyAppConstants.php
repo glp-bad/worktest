@@ -12,4 +12,8 @@ class MyAppConstants {
     const ID_USER =   'ID_USER';
 	const ID_AVOCAT = 'ID_AVOCAT';
 
+	const CLIENT_SQL_UPDATE = 'update';
+	const CLIENT_SQL_INSERT = 'insert';
+	const CLIENT_SQL_DELETE = 'delete';
+
 }

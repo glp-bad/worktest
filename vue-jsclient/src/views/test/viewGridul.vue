@@ -76,9 +76,9 @@
         },
         methods: {
             invoicePrint: function (selectData) {
-                console.log('acum printez');
-                const reqObject = this.$app.getObjectReturnComponent(selectData);
-                console.log(reqObject);
+                //console.log('acum printez');
+                //const reqObject = this.$app.getObjectReturnComponent(selectData);
+                //console.log(reqObject);
             },
             editCeva: function () {
                 console.log('editez ceva');

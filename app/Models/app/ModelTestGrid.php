@@ -10,18 +10,27 @@ namespace App\Models\app;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\helpers\response\SqlMessageResponse;
+use App\MyAppConstants;
 
-class ModelTestGrid extends Model{
+class ModelTestGrid extends Model {
 
 	protected $primaryKey = 'id';
-
 
 	static public function updateData($request){
 		$id = $request->id;
 		$nume = $request->name;
-		$descriere = $request->descriere;
+		$descriere = $request->description;
+		$actionType = $request->actionType;
 
 		$sqlMsg = new SqlMessageResponse(false,0,"");
+
+		if($actionType == MyAppConstants::CLIENT_SQL_DELETE){
+			$sqlMsg->succes = false;
+			$sqlMsg->messages = "Inregistrarea nu poate fi stearsa !!!";
+
+			return $sqlMsg;
+		}
+
 
 		try {
 			DB::update('update test_grid_data set name = ?, description=? where id = ?',[$nume, $descriere, $id]);

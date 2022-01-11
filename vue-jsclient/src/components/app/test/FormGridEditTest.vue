@@ -71,7 +71,11 @@
 
             <div :class=formClass.button >
                 <div :class=formClass.buttonPozition  >
-                    <button-send :onClick="sendData">Send data</button-send>
+                    <button-send @click="sendData(this.$constGrid.SQL_UPDATE)">Update data</button-send>
+                </div>
+
+                <div :class=formClass.buttonPozition  >
+                    <button-send @click="sendData(this.$constGrid.SQL_DELETE)">Delete data</button-send>
                 </div>
             </div>
 
@@ -127,21 +131,21 @@
 					this.$vanilla.centerDiv(parentDiv, this.$refs[this.CONTAINER_REF]);
                 }
 
-                // console.log('showForm dataGridSource: ', dataGridSource);
-
-                this.setFormData(dataGridSource)
+                this.setPostData(dataGridSource, null)
 
 			},
-            setFormData: function (dataValue) {
+			setPostData: function (dataValue, actionType) {
 
 				if(this.$check.isUndef(dataValue)){
-					this.post.name      = this.$refs[this.NUME.ref].getValue();
+					this.post.name        = this.$refs[this.NUME.ref].getValue();
 					this.post.description = this.$refs[this.DESCRIERE.ref].getValue();
+					this.post.actionType  = actionType;
                 }
 				else{
-					this.post.id        = dataValue.idPk;
-					this.post.name      = dataValue.name;
+					this.post.id          = dataValue.idPk;
+					this.post.name        = dataValue.name;
 					this.post.description = dataValue.description;
+					this.post.actionType  = actionType;
 
 					this.$refs[this.NUME.ref].setValue(this.post.name);
 					this.$refs[this.DESCRIERE.ref].setValue(this.post.description);
@@ -179,10 +183,10 @@
 			configForm: function () {
 				this.cfgForm.id = '777TEST'; // this.$uuid.v1();
     			this.cfgForm.closeIcon = ['fas', 'times'];
-				// this.$refs.containerRef.style.width = '900px';
-				//this.$refs.containerRef.style.height = '120px';
-				// this.$refs.contentRef.style.width = '300px';
-				//this.$refs.contentRef.style.height = '300px';
+                    // this.$refs.containerRef.style.width = '900px';
+                    // this.$refs.containerRef.style.height = '120px';
+                    // this.$refs.contentRef.style.width = '300px';
+                    // this.$refs.contentRef.style.height = '300px';
 				this.$refs.captionRef.innerHTML="Introducere date de test";
 				this.$vanilla.dragDiv(this.$refs.containerRef, this.$refs.headerRef);
 
@@ -215,7 +219,7 @@
 
 
 			},
-            sendData: function(){
+            sendData: function(actionType){
                 this.validateForm();
 
                 if(this.messageForm.length > 0){
@@ -226,9 +230,10 @@
 	                return false;
                 }
 
-	                this.setFormData(null);
-
 	                let uri = this.$url.getUrl("gridDataTestUpdate");
+
+	                this.setPostData(null, actionType);
+
 	                this.axios
 		                .post(uri, this.post)
 		                .then(response => {
@@ -282,7 +287,7 @@
 				actionForm: null,
 				formClass: this.$css.getCss("form"),
                 messageForm: [],
-				post:       {id: null, nume: null, descriere: null},
+				post:       {},
 				cfgForm:    {id: null, closeIcon: ['fas', 'times']}
 
             }
