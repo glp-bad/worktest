@@ -60,14 +60,14 @@
                         includeIdPk: true
                     },
                 	actionButton : [
-		                this.$constGrid.getActionButton( null,  'Print din functie', 'invoicePrintToolbar', this.$constGrid.ICON_PRINT),
+		                // this.$constGrid.getActionButton( null,  'Print din functie', 'invoicePrintToolbar', this.$constGrid.ICON_PRINT),
 		                this.$constGrid.getActionButton( null,  'Edit din functie',   'deleteCevaToolbar', this.$constGrid.ICON_DELETE),
 		                this.$constGrid.getActionButton( null,  'Delete din functie', 'editCevaToolbar', this.$constGrid.ICON_EDIT)
                     ]
                 },
                 paginate: {
                 	nrButtonShow: 5,
-	                recordsPerPage: 13
+	                recordsPerPage: 10
                 }
             }
         },
