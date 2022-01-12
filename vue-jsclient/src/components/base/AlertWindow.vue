@@ -107,13 +107,13 @@
 			clickYes: function () {
 				this.pressYes = 1;
 				this.pressNo = 0;
-				this.$emit(this.myEmit.yesNo);
+				this.$emit(this.myEmit.yesNo, this.pressYes);
 				this.close();
 			},
 			clickNo: function () {
 				this.pressYes = 0;
 				this.pressNo = 1;
-				this.$emit(this.myEmit.yesNo);
+				this.$emit(this.myEmit.yesNo, this.pressYes);
 				this.close();
 			},
 			close: function () {

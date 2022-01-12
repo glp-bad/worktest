@@ -21,6 +21,13 @@
                          :cTypeWindows=6
         ></validate-window>
 
+    <validate-window ref="refYesNo"
+                     :cWidth=300
+                     :cHeight=200
+                     :cTypeWindows=3
+                     @emitYesNoButton = "emitYesNoButton"
+    ></validate-window>
+
 
     <div class="ff-form-modal" ref="modalRef">
 
@@ -123,8 +130,6 @@
 
 			showForm: function (parentDiv, dataGridSource, actionRecord) {
 
-				this.actionForm = actionRecord;
-
 				this.$refs.modalRef.style.display = "inline-block";
 				this.$refs[this.CONTAINER_REF].style.display = "table";
 				if(!this.$check.isUndef(parentDiv)){
@@ -219,10 +224,21 @@
 
 
 			},
+			emitYesNoButton: function (yes) {
+                if(yes == 1){
+	                this.deleteYes = true;
+	                this.sendData(this.$constGrid.SQL_DELETE);
+
+                }else{
+	                this.deleteYes = false;
+
+                }
+
+			},
             sendData: function(actionType){
                 this.validateForm();
 
-                if(this.messageForm.length > 0){
+                if(this.messageForm.length > 0 && actionType != this.$constGrid.SQL_DELETE){
 	                this.$refs.validateWindowRef.setCaption("Datele nu pot fi inregistrate");
 	                this.$refs.validateWindowRef.setMessage(this.$app.getHtmlFormatMessage(this.messageForm));
 	                this.$refs.validateWindowRef.show();
@@ -230,34 +246,47 @@
 	                return false;
                 }
 
-	                let uri = this.$url.getUrl("gridDataTestUpdate");
+                    if(actionType == this.$constGrid.SQL_DELETE && !this.deleteYes) {
+                          // ask operation
+                          this.$refs.refYesNo.setCaption("Delete");
+                          this.$refs.refYesNo.setMessage("Datele sterse nu mai pot fi recuperate!");
+                          this.$refs.refYesNo.show();
+                    }else{
+                	    // orice alt caz ce nu necesita confirmare
+	                    this.deleteYes = true;
+                    }
 
-	                this.setPostData(null, actionType);
 
-	                this.axios
-		                .post(uri, this.post)
-		                .then(response => {
-				                if(response.data.succes){
-				                	this.$emit(this.EMIT_UPDATEGRID, this.actionForm, this.post);
-				                	this.closeForm();
+	                if(this.deleteYes){
+		                this.deleteYes = false;
+
+		                let uri = this.$url.getUrl("gridDataTestUpdate");
+
+		                this.setPostData(null, actionType);
+
+		                this.axios
+			                .post(uri, this.post)
+			                .then(response => {
+				                if (response.data.succes) {
+					                this.$emit(this.EMIT_UPDATEGRID, actionType, this.post);
+					                this.closeForm();
 					                this.$refs.infoWindowRef.setCaption("Succes");
 					                this.$refs.infoWindowRef.setMessage(this.$appServer.getHtmlSqlFormatMessage(response.data));
 					                this.$refs.infoWindowRef.show();
-                                }else{
+				                }
+				                else {
 					                this.$refs.validateWindowRef.setCaption("Datele nu pot fi inregistrate");
 					                this.$refs.validateWindowRef.setMessage(this.$appServer.getHtmlSqlFormatMessage(response.data));
 					                this.$refs.validateWindowRef.show();
-                                }
-			                }
-		                )
-		                .catch(error => {
-			                    this.$refs.redWindowRef.setCaption("Probleme ... ");
-			                    this.$refs.redWindowRef.setMessage(error);
-			                    this.$refs.redWindowRef.show();
-                            }
-                        );
+				                }
+			                })
+			                .catch(error => {
+				                this.$refs.redWindowRef.setCaption("Probleme ... ");
+				                this.$refs.redWindowRef.setMessage(error);
+				                this.$refs.redWindowRef.show();
+			                });
 
-
+	                }
 
             },
             validateForm: function () {
@@ -284,11 +313,11 @@
 		},
 		data () {
 			return {
-				actionForm: null,
 				formClass: this.$css.getCss("form"),
                 messageForm: [],
 				post:       {},
-				cfgForm:    {id: null, closeIcon: ['fas', 'times']}
+				cfgForm:    {id: null, closeIcon: ['fas', 'times']},
+                deleteYes: false
 
             }
 		}

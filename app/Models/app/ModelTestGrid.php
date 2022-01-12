@@ -25,27 +25,40 @@ class ModelTestGrid extends Model {
 		$sqlMsg = new SqlMessageResponse(false,0,"");
 
 		if($actionType == MyAppConstants::CLIENT_SQL_DELETE){
-			$sqlMsg->succes = false;
-			$sqlMsg->messages = "Inregistrarea nu poate fi stearsa !!!";
+			try {
+				DB::delete('delete from test_grid_data  where id = ?', [$id]);
+			}
+			catch (\Illuminate\Database\QueryException $ex) {
+				$sqlMsg->messages = "Inregistrarea nu poate fi stearsa !!!";
+				$sqlMsg->errorMsg = $ex->getMessage();
+				return $sqlMsg;
+			}
 
-			return $sqlMsg;
+			$sqlMsg->lastId = -1;
+			$sqlMsg->succes = true;
+			$sqlMsg->messages = "Inregistrarea a fost stearsa";
+
 		}
 
 
-		try {
-			DB::update('update test_grid_data set name = ?, description=? where id = ?',[$nume, $descriere, $id]);
-		} catch (\Illuminate\Database\QueryException $ex){
-			$sqlMsg->messages = "Datele nu pot fi modificate !!!!";
-			$sqlMsg->errorMsg = $ex->getMessage();
-			return $sqlMsg;
+		if($actionType == MyAppConstants::CLIENT_SQL_UPDATE) {
+			try {
+				DB::update('update test_grid_data set name = ?, description=? where id = ?', [$nume, $descriere, $id]);
+			}
+			catch (\Illuminate\Database\QueryException $ex) {
+				$sqlMsg->messages = "Datele nu pot fi modificate !!!!";
+				$sqlMsg->errorMsg = $ex->getMessage();
+				return $sqlMsg;
+			}
+			$sqlMsg->lastId = $id;
+			$sqlMsg->succes = true;
+			$sqlMsg->messages = "Datele au fost modificate";
 		}
 
-		$sqlMsg->lastId = $id;
-		$sqlMsg->succes = true;
-		$sqlMsg->messages = "Datele au fost modificate";
+
+
 
 		return $sqlMsg;
-
 	}
 
 	static public function getData($gridSet){
