@@ -318,42 +318,16 @@
                                 this.showModalLoadingDiv = false;
 				            });
 
-
-
-
 		    },
-            privateUpdateRecord: function (postData) {
-	        	for(let i=0; i<this.rezultData.length; i++){
+            refreshGrid: function (recordType, externalFiltering) {
+	        	let jumpNrPage = '1';
 
-	        		if(this.rezultData[i].id == postData.id){
-	        			for(let a=0;a<this.pConfig.returnField.length; a++){
-					        this.rezultData[i][this.pConfig.returnField[a]] = postData[this.pConfig.returnField[a]];
-                        }
-	        			break;
-                    }
-                }
-            },
-            refreshGrid: function (recordType, postData) {
-
-	        	let jumpToPageOne = false;
-
-	        	if(this.$check.isUndef(recordType)){
-			        jumpToPageOne = true;
-                }else{
+	        	if(!this.$check.isUndef(recordType)){
 	        		if(recordType == this.$constGrid.SQL_UPDATE){
-	        			// no jump, update data on grid
-                        console.log("no jump, update data on grid: ", this.rezultData);
-                        this.privateUpdateRecord(postData);
-                    }else{
-				        jumpToPageOne = true;
+				        jumpNrPage = this.paginate.pag.page.toString();
                     }
                 }
-
-                if(jumpToPageOne){
-	        		console.log('delete record jumPageOne: ', jumpToPageOne);
-	                this.goToPage(null, '1');
-                }
-
+	            this.goToPage(null, jumpNrPage);
             },
             getDataSelected: function () {
 		        return this.selectdRow;

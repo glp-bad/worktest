@@ -137,6 +137,7 @@ $ff-caption-text-height: 22px;
 
 					td {
 						border-left: 1px dotted darken($ff-base, 5%);
+						// border-bottom: 1px dotted darken($ff-base, 5%);
 						.div {
 							padding: 3px;
 							white-space: nowrap;

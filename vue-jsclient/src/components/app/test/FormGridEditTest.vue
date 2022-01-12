@@ -128,7 +128,7 @@
 				this.$refs.modalRef.style.display = "none";
 			},
 
-			showForm: function (parentDiv, dataGridSource, actionRecord) {
+			showForm: function (parentDiv, dataGridSource) {
 
 				this.$refs.modalRef.style.display = "inline-block";
 				this.$refs[this.CONTAINER_REF].style.display = "table";

@@ -90,7 +90,10 @@
                 this.$refs.refGridEdit.showForm(this.$refs.refGridPrint, selectData, this.$constGrid.SQL_UPDATE);
             },
 	        emitUpdateGrid: function (actionForm, post) {
-		        this.$refs.gridPrint.refreshGrid(actionForm, post);
+
+            	let externalFiltering = null;
+
+		        this.$refs.gridPrint.refreshGrid(actionForm, externalFiltering);
                 console.log('date din grid au fost modificate = ' + actionForm, post);
 	        }
         },
