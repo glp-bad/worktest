@@ -63,12 +63,12 @@ $ff-caption-text-height: 22px;
 					padding: 5px;
 
 					&--left-align {
-						@extend th;
+						@extend th !optional;
 						text-align: left;
 					}
 
 					&--center-align {
-						@extend th;
+						@extend th !optional;
 						text-align: center;
 					}
 
