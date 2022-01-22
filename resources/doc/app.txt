@@ -10,3 +10,11 @@
    	    proxy: 'https://worktest.badmintonclub.ro.mydev'
 
      },
+
+
+-- pentru vue js client set in .htaccess
+    ## settings for vue client serve
+    #Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Headers "*"
+    #Header set Access-Control-Allow-Methods: "GET,POST,OPTIONS,DELETE,PUT"
+    #Header always set X-Content-Type-Options "*"
